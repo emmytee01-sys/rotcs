@@ -1,15 +1,22 @@
-import { Card, Typography, Table, Tag, Tabs } from 'antd'
+import { Card, Typography, Table, Tag, Tabs, Select } from 'antd'
 import { MapPin, Users, TrendingUp, ShoppingCart } from 'lucide-react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 import GeospatialHeatmap from '@/components/admin/GeospatialHeatmap'
 import BuyingPowerHeatmap from '@/components/admin/BuyingPowerHeatmap'
-import { TERRITORIAL_DATA, BUYING_POWER_DATA } from '@/utils/mockData'
+import { useState } from 'react'
+import { 
+  CONSULTANT_TERRITORIAL_DATA, 
+  CONSULTANT_BUYING_POWER_DATA,
+  COMPANIES,
+  CONSULTANT_STATES
+} from '@/utils/mockData'
 
 const { Title, Text } = Typography
+const { Option } = Select
 
 const territorialColumns = [
   {
-    title: 'Territory/LGA',
+    title: 'Territory/Region',
     dataIndex: 'territory',
     key: 'territory',
     render: (text: string) => (
@@ -57,7 +64,7 @@ const territorialColumns = [
 
 const buyingPowerColumns = [
   {
-    title: 'Territory/LGA',
+    title: 'Territory/Region',
     dataIndex: 'territory',
     key: 'territory',
     render: (text: string) => (
@@ -106,7 +113,10 @@ const buyingPowerColumns = [
   },
 ]
 
-const Geospatial = () => {
+const GeospatialIntel = () => {
+  const [selectedState, setSelectedState] = useState<string>('all')
+  const [selectedCompany, setSelectedCompany] = useState<string>('all')
+
   const tabItems = [
     {
       key: 'territorial',
@@ -118,7 +128,31 @@ const Geospatial = () => {
       ),
       children: (
         <div>
-          <Text type="secondary">User density and economic activity across jurisdictions</Text>
+          <div className="flex flex-wrap gap-3 mb-4">
+            <Select
+              value={selectedState}
+              onChange={setSelectedState}
+              className="w-full sm:w-[180px]"
+              size="large"
+            >
+              <Option value="all">All States</Option>
+              {CONSULTANT_STATES.map(state => (
+                <Option key={state.id} value={state.id}>{state.name}</Option>
+              ))}
+            </Select>
+            <Select
+              value={selectedCompany}
+              onChange={setSelectedCompany}
+              className="w-full sm:w-[180px]"
+              size="large"
+            >
+              <Option value="all">All Companies</Option>
+              {COMPANIES.map((company) => (
+                <Option key={company} value={company}>{company}</Option>
+              ))}
+            </Select>
+          </div>
+          <Text type="secondary">Multi-state user density and economic activity across jurisdictions</Text>
 
           {/* Heatmap */}
           <GeospatialHeatmap />
@@ -127,11 +161,11 @@ const Geospatial = () => {
           <Card className="mt-6">
             <Title level={4}>
               <TrendingUp className="inline mr-2" size={20} />
-              Regional Leaderboard
+              Multi-State Regional Leaderboard
             </Title>
             <div className="overflow-x-auto">
               <Table
-                dataSource={TERRITORIAL_DATA}
+                dataSource={CONSULTANT_TERRITORIAL_DATA}
                 columns={territorialColumns}
                 pagination={false}
                 rowKey="territory"
@@ -144,13 +178,13 @@ const Geospatial = () => {
           <Card className="mt-6">
             <Title level={4}>TGV Distribution by Territory</Title>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={TERRITORIAL_DATA}>
+              <BarChart data={CONSULTANT_TERRITORIAL_DATA}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="territory" />
                 <YAxis />
                 <Tooltip formatter={(value: any) => `₦${(value / 1000000).toFixed(1)}M`} />
                 <Bar dataKey="ggr" radius={[8, 8, 0, 0]}>
-                  {TERRITORIAL_DATA.map((entry, index) => (
+                  {CONSULTANT_TERRITORIAL_DATA.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Bar>
@@ -170,7 +204,31 @@ const Geospatial = () => {
       ),
       children: (
         <div>
-          <Text type="secondary">Total spend and transaction analysis across regions</Text>
+          <div className="flex flex-wrap gap-3 mb-4">
+            <Select
+              value={selectedState}
+              onChange={setSelectedState}
+              className="w-full sm:w-[180px]"
+              size="large"
+            >
+              <Option value="all">All States</Option>
+              {CONSULTANT_STATES.map(state => (
+                <Option key={state.id} value={state.id}>{state.name}</Option>
+              ))}
+            </Select>
+            <Select
+              value={selectedCompany}
+              onChange={setSelectedCompany}
+              className="w-full sm:w-[180px]"
+              size="large"
+            >
+              <Option value="all">All Companies</Option>
+              {COMPANIES.map((company) => (
+                <Option key={company} value={company}>{company}</Option>
+              ))}
+            </Select>
+          </div>
+          <Text type="secondary">Multi-state total spend and transaction analysis across regions</Text>
 
           {/* Buying Power Heatmap */}
           <BuyingPowerHeatmap />
@@ -179,11 +237,11 @@ const Geospatial = () => {
           <Card className="mt-6">
             <Title level={4}>
               <TrendingUp className="inline mr-2" size={20} />
-              Regional Spend Leaderboard
+              Multi-State Regional Spend Leaderboard
             </Title>
             <div className="overflow-x-auto">
               <Table
-                dataSource={BUYING_POWER_DATA}
+                dataSource={CONSULTANT_BUYING_POWER_DATA}
                 columns={buyingPowerColumns}
                 pagination={false}
                 rowKey="territory"
@@ -196,13 +254,13 @@ const Geospatial = () => {
           <Card className="mt-6">
             <Title level={4}>Total Spend Distribution by Territory</Title>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={BUYING_POWER_DATA}>
+              <BarChart data={CONSULTANT_BUYING_POWER_DATA}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="territory" />
                 <YAxis />
                 <Tooltip formatter={(value: any) => `₦${(value / 1000000).toFixed(1)}M`} />
                 <Bar dataKey="totalSpend" radius={[8, 8, 0, 0]}>
-                  {BUYING_POWER_DATA.map((entry, index) => (
+                  {CONSULTANT_BUYING_POWER_DATA.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Bar>
@@ -216,9 +274,9 @@ const Geospatial = () => {
 
   return (
     <div>
-      <Title level={2}>Geospatial Analytics</Title>
+      <Title level={2}>Geospatial Intel</Title>
       <Text type="secondary" className="block mb-4">
-        Analyze territorial intelligence and regional buying power across jurisdictions
+        Multi-state territorial intelligence and regional buying power analysis
       </Text>
       <Card className="mt-4">
         <Tabs 
@@ -236,4 +294,4 @@ const Geospatial = () => {
   )
 }
 
-export default Geospatial
+export default GeospatialIntel

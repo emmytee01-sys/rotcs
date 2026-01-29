@@ -99,7 +99,7 @@ const OperatorDetailModal = ({ visible, onClose, operator }: OperatorDetailModal
                     {operator.lastPayment}
                   </Descriptions.Item>
                   <Descriptions.Item label="Variance">
-                    {(operator.variance * 100).toFixed(2)}%
+                    {(Math.abs((operator.taxPaid / operator.taxDue) - 1) * 100).toFixed(2)}%
                   </Descriptions.Item>
                   <Descriptions.Item label="Compliance Rate">
                     <Progress percent={complianceRate} size="small" />

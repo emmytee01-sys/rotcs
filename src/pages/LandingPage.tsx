@@ -117,17 +117,19 @@ const LandingPage = () => {
         {/* Right side - Video background with curvy border */}
         <div className="w-full lg:w-1/2 relative overflow-hidden lg:[clip-path:ellipse(100%_100%_at_100%_50%)]">
           <video 
-            src={heroVideo}
             autoPlay
             loop
             muted
             playsInline
             controls={false}
+            preload="auto"
             disablePictureInPicture
             disableRemotePlayback
             className="w-full h-full object-cover"
             style={{ pointerEvents: 'none' }}
-          />
+          >
+            <source src={heroVideo} type="video/mp4" />
+          </video>
         </div>
       </div>
 

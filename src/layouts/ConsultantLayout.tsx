@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Outlet, Link, useLocation } from 'react-router-dom'
 import { Layout, Menu, Drawer, Button } from 'antd'
-import { Globe, Search, Activity, LogOut, User, Menu as MenuIcon } from 'lucide-react'
+import { Globe, Search, Map, Activity, LogOut, User, Menu as MenuIcon, MessageCircle } from 'lucide-react'
 import { useLogoutConfirm } from '@/hooks/useLogoutConfirm'
+import logoImage from '@/assets/logo.png'
 
 const { Header, Sider, Content } = Layout
 
@@ -23,9 +24,19 @@ const ConsultantLayout = () => {
       label: <Link to="/consultant/state" style={{ fontSize: '15px', fontWeight: 500 }}>State Deep Dive</Link>,
     },
     {
+      key: '/consultant/geospatial',
+      icon: <Map size={24} />,
+      label: <Link to="/consultant/geospatial" style={{ fontSize: '15px', fontWeight: 500 }}>Geospatial Intel</Link>,
+    },
+    {
       key: '/consultant/forensics',
       icon: <Activity size={24} />,
       label: <Link to="/consultant/forensics" style={{ fontSize: '15px', fontWeight: 500 }}>Forensics</Link>,
+    },
+    {
+      key: '/consultant/support',
+      icon: <MessageCircle size={24} />,
+      label: <Link to="/consultant/support" style={{ fontSize: '15px', fontWeight: 500 }}>Support</Link>,
     },
     {
       key: '/consultant/profile',
@@ -39,6 +50,9 @@ const ConsultantLayout = () => {
     if (location.pathname.startsWith('/consultant/state')) {
       return '/consultant/state'
     }
+    if (location.pathname.startsWith('/consultant/geospatial')) {
+      return '/consultant/geospatial'
+    }
     return location.pathname
   }
 
@@ -48,9 +62,16 @@ const ConsultantLayout = () => {
         background: '#008751',
         borderBottomColor: 'rgba(255,255,255,0.1)',
       }}>
-        <div className="text-center">
-          <div className="text-xl font-bold tracking-tight" style={{ fontFamily: 'Source Serif 4, serif' }}>ROTCS</div>
-          <div className="text-xs opacity-90 font-medium" style={{ letterSpacing: '0.05em' }}>CONSULTANT</div>
+        <div className="flex items-center justify-center px-4">
+          <img 
+            src={logoImage} 
+            alt="ROTCS Logo" 
+            style={{ 
+              height: '48px',
+              width: 'auto',
+              objectFit: 'contain'
+            }}
+          />
         </div>
       </div>
       <Menu

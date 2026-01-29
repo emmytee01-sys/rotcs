@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Outlet, Link, useLocation } from 'react-router-dom'
 import { Layout, Menu, Drawer, Button } from 'antd'
-import { Home, FileText, CreditCard, Settings, User, LogOut, Menu as MenuIcon } from 'lucide-react'
+import { Home, FileText, CreditCard, Settings, User, LogOut, Menu as MenuIcon, MessageCircle } from 'lucide-react'
 import { useLogoutConfirm } from '@/hooks/useLogoutConfirm'
+import logoImage from '@/assets/logo.png'
 
 const { Header, Sider, Content } = Layout
 
@@ -33,6 +34,11 @@ const OperatorLayout = () => {
       label: <Link to="/operator/api-config" style={{ fontSize: '15px', fontWeight: 500 }}>API Config</Link>,
     },
     {
+      key: '/operator/support',
+      icon: <MessageCircle size={24} />,
+      label: <Link to="/operator/support" style={{ fontSize: '15px', fontWeight: 500 }}>Support</Link>,
+    },
+    {
       key: '/operator/profile',
       icon: <User size={24} />,
       label: <Link to="/operator/profile" style={{ fontSize: '15px', fontWeight: 500 }}>Profile Settings</Link>,
@@ -45,9 +51,16 @@ const OperatorLayout = () => {
         background: '#008751',
         borderBottomColor: 'rgba(255,255,255,0.1)',
       }}>
-        <div className="text-center">
-          <div className="text-xl font-bold tracking-tight" style={{ fontFamily: 'Source Serif 4, serif' }}>ROTCS</div>
-          <div className="text-xs opacity-90 font-medium" style={{ letterSpacing: '0.05em' }}>OPERATOR PORTAL</div>
+        <div className="flex items-center justify-center px-4">
+          <img 
+            src={logoImage} 
+            alt="ROTCS Logo" 
+            style={{ 
+              height: '48px',
+              width: 'auto',
+              objectFit: 'contain'
+            }}
+          />
         </div>
       </div>
       <Menu

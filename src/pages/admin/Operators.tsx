@@ -2,62 +2,10 @@ import { Card, Typography, Table, Tag, Badge, Row, Col, Statistic } from 'antd'
 import { Building2, CheckCircle, XCircle, AlertCircle } from 'lucide-react'
 import { useState } from 'react'
 import OperatorDetailModal from '@/components/admin/OperatorDetailModal'
+import { calculateVariance } from '@/utils/variance'
+import { OPERATORS, TOTAL_MARKET_TGV } from '@/utils/mockData'
 
 const { Title, Text } = Typography
-
-// Mock operator data
-const operatorData = [
-  {
-    id: 1,
-    name: 'Bet9ja',
-    status: 'compliant',
-    ggr: 450000000,
-    taxDue: 67500000,
-    taxPaid: 67500000,
-    lastPayment: '2026-01-01',
-    variance: 0.02,
-  },
-  {
-    id: 2,
-    name: 'SportyBet',
-    status: 'compliant',
-    ggr: 380000000,
-    taxDue: 57000000,
-    taxPaid: 57000000,
-    lastPayment: '2026-01-01',
-    variance: 0.01,
-  },
-  {
-    id: 3,
-    name: '1xBet',
-    status: 'warning',
-    ggr: 320000000,
-    taxDue: 48000000,
-    taxPaid: 45000000,
-    lastPayment: '2025-12-28',
-    variance: 0.35,
-  },
-  {
-    id: 4,
-    name: 'BetKing',
-    status: 'compliant',
-    ggr: 290000000,
-    taxDue: 43500000,
-    taxPaid: 43500000,
-    lastPayment: '2026-01-02',
-    variance: 0.03,
-  },
-  {
-    id: 5,
-    name: 'NairaBet',
-    status: 'default',
-    ggr: 180000000,
-    taxDue: 27000000,
-    taxPaid: 15000000,
-    lastPayment: '2025-12-15',
-    variance: 0.85,
-  },
-]
 
 const getStatusConfig = (status: string) => {
   switch (status) {
@@ -73,8 +21,10 @@ const getStatusConfig = (status: string) => {
 }
 
 const getVarianceTag = (variance: number) => {
-  if (variance < 0.05) return <Tag color="green">Green</Tag>
-  if (variance < 0.5) return <Tag color="orange">Amber</Tag>
+  // Variance thresholds based on documentation:
+  // Green: < 0.05%, Amber: 0.05% - 0.5%, Red: > 0.5%
+  if (variance < 0.0005) return <Tag color="green">Green</Tag>
+  if (variance < 0.005) return <Tag color="orange">Amber</Tag>
   return <Tag color="red">Red</Tag>
 }
 
@@ -142,15 +92,25 @@ const columns = [
     },
   },
   {
-    title: 'Variance',
-    dataIndex: 'variance',
-    key: 'variance',
-    render: (variance: number) => (
-      <div className="flex items-center gap-2">
-        {getVarianceTag(variance)}
-        <Text type="secondary">{(variance * 100).toFixed(2)}%</Text>
-      </div>
-    ),
+    title: 'Variance Status',
+    key: 'varianceStatus',
+    render: (_: any, record: any) => {
+      const variance = calculateVariance(record.taxDue, record.taxPaid)
+      return getVarianceTag(variance)
+    },
+  },
+  {
+    title: 'Variance %',
+    key: 'varianceValue',
+    render: (_: any, record: any) => {
+      const variance = calculateVariance(record.taxDue, record.taxPaid)
+      return <Text type="secondary">{(variance * 100).toFixed(2)}%</Text>
+    },
+    sorter: (a: any, b: any) => {
+      const varA = calculateVariance(a.taxDue, a.taxPaid)
+      const varB = calculateVariance(b.taxDue, b.taxPaid)
+      return varA - varB
+    },
   },
   {
     title: 'Last Payment',
@@ -164,10 +124,10 @@ const Operators = () => {
   const [modalVisible, setModalVisible] = useState(false)
   const [selectedOperator, setSelectedOperator] = useState<any>(null)
 
-  const compliantCount = operatorData.filter(op => op.status === 'compliant').length
-  const warningCount = operatorData.filter(op => op.status === 'warning').length
-  const defaultCount = operatorData.filter(op => op.status === 'default').length
-  const totalMarketTGV = operatorData.reduce((sum, op) => sum + op.ggr, 0)
+  const compliantCount = OPERATORS.filter(op => op.status === 'compliant').length
+  const warningCount = OPERATORS.filter(op => op.status === 'warning').length
+  const defaultCount = OPERATORS.filter(op => op.status === 'default').length
+  const totalMarketTGV = TOTAL_MARKET_TGV
 
   const handleRowClick = (record: any) => {
     setSelectedOperator(record)
@@ -185,7 +145,7 @@ const Operators = () => {
           <Card>
             <Statistic
               title="Total Operators"
-              value={operatorData.length}
+              value={OPERATORS.length}
               prefix={<Building2 size={20} className="text-blue-500" />}
             />
           </Card>
@@ -224,7 +184,7 @@ const Operators = () => {
 
       {/* Market Volume */}
       <Card className="mt-6">
-        <Title level={4}>Total Market Volume</Title>
+        <Title level={4}>Total Gaming Value</Title>
         <Statistic
           value={totalMarketTGV}
           prefix="₦"
@@ -240,7 +200,7 @@ const Operators = () => {
         <Text type="secondary" className="block mb-4">Click on any row to view detailed information</Text>
         <div className="overflow-x-auto">
           <Table
-            dataSource={operatorData}
+            dataSource={OPERATORS}
             columns={columns}
             pagination={{ pageSize: 10 }}
             rowKey="id"

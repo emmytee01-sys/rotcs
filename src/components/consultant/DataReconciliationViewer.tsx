@@ -11,8 +11,6 @@ const varianceData = [
     period: 'Dec 2025',
     reportedTGV: 320000000,
     calculatedTGV: 320500000,
-    variance: 0.15,
-    status: 'green',
   },
   {
     id: 2,
@@ -20,8 +18,6 @@ const varianceData = [
     period: 'Dec 2025',
     reportedTGV: 280000000,
     calculatedTGV: 281200000,
-    variance: 0.42,
-    status: 'amber',
   },
   {
     id: 3,
@@ -29,8 +25,6 @@ const varianceData = [
     period: 'Dec 2025',
     reportedTGV: 250000000,
     calculatedTGV: 252800000,
-    variance: 1.12,
-    status: 'red',
   },
   {
     id: 4,
@@ -38,10 +32,17 @@ const varianceData = [
     period: 'Dec 2025',
     reportedTGV: 220000000,
     calculatedTGV: 220100000,
-    variance: 0.04,
-    status: 'green',
   },
 ]
+
+const calculateVarianceStatus = (variance: number): string => {
+  // Variance thresholds based on documentation:
+  // Green: < 0.05%, Amber: 0.05% - 0.5%, Red: > 0.5%
+  // Note: variance values in data are already in percentage format (e.g., 0.15 = 0.15%)
+  if (variance < 0.05) return 'green'
+  if (variance < 0.5) return 'amber'
+  return 'red'
+}
 
 const getVarianceTag = (status: string) => {
   switch (status) {
@@ -82,41 +83,54 @@ const DataReconciliationViewer = () => {
       render: (value: number) => `₦${(value / 1000000).toFixed(1)}M`,
     },
     {
-      title: 'Variance',
-      dataIndex: 'variance',
-      key: 'variance',
-      render: (variance: number, record: any) => (
-        <div>
-          <div className="mb-1">{variance.toFixed(2)}%</div>
-          <Progress
-            percent={variance}
-            size="small"
-            showInfo={false}
-            strokeColor={
-              record.status === 'green' ? '#52c41a' : record.status === 'amber' ? '#faad14' : '#ff4d4f'
-            }
-          />
-        </div>
-      ),
-      sorter: (a: any, b: any) => a.variance - b.variance,
+      title: 'Variance %',
+      key: 'varianceValue',
+      render: (_: any, record: any) => {
+        const variance = Math.abs((record.calculatedTGV / record.reportedTGV) - 1) * 100
+        const status = calculateVarianceStatus(variance)
+        return (
+          <div>
+            <div className="mb-1">{variance.toFixed(2)}%</div>
+            <Progress
+              percent={variance}
+              size="small"
+              showInfo={false}
+              strokeColor={
+                status === 'green' ? '#52c41a' : status === 'amber' ? '#faad14' : '#ff4d4f'
+              }
+            />
+          </div>
+        )
+      },
+      sorter: (a: any, b: any) => {
+        const varA = Math.abs((a.calculatedTGV / a.reportedTGV) - 1)
+        const varB = Math.abs((b.calculatedTGV / b.reportedTGV) - 1)
+        return varA - varB
+      },
     },
     {
       title: 'Status',
-      dataIndex: 'status',
       key: 'status',
-      render: (status: string) => getVarianceTag(status),
+      render: (_: any, record: any) => {
+        const variance = Math.abs((record.calculatedTGV / record.reportedTGV) - 1) * 100
+        const status = calculateVarianceStatus(variance)
+        return getVarianceTag(status)
+      },
       filters: [
         { text: 'Green', value: 'green' },
         { text: 'Amber', value: 'amber' },
         { text: 'Red', value: 'red' },
       ],
-      onFilter: (value: any, record: any) => record.status === value,
+      onFilter: (value: any, record: any) => {
+        const variance = Math.abs((record.calculatedTGV / record.reportedTGV) - 1) * 100
+        return calculateVarianceStatus(variance) === value
+      },
     },
   ]
 
-  const greenCount = varianceData.filter((d) => d.status === 'green').length
-  const amberCount = varianceData.filter((d) => d.status === 'amber').length
-  const redCount = varianceData.filter((d) => d.status === 'red').length
+  const greenCount = varianceData.filter((d) => calculateVarianceStatus(Math.abs((d.calculatedTGV / d.reportedTGV) - 1) * 100) === 'green').length
+  const amberCount = varianceData.filter((d) => calculateVarianceStatus(Math.abs((d.calculatedTGV / d.reportedTGV) - 1) * 100) === 'amber').length
+  const redCount = varianceData.filter((d) => calculateVarianceStatus(Math.abs((d.calculatedTGV / d.reportedTGV) - 1) * 100) === 'red').length
 
   return (
     <Card>

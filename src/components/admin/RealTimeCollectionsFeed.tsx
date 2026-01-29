@@ -1,67 +1,24 @@
 import { Card, Typography, Badge, Pagination, Tag } from 'antd'
 import { TrendingUp, ArrowUpRight, ArrowDownRight } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { 
+  COMPANIES, 
+  NIGERIAN_STATES, 
+  BET_TYPES, 
+  PLAYER_NAMES, 
+  INITIAL_BETTING_RECORDS,
+  BettingRecord 
+} from '@/utils/mockData'
 
 const { Title, Text } = Typography
 
-interface BettingRecord {
-  id: number
-  playerName: string
-  company: string
-  betType: string
-  stake: number
-  outcome: 'win' | 'loss'
-  payout: number
-  time: string
-  state: string
-}
-
 interface RealTimeCollectionsFeedProps {
-  selectedState: string
+  selectedState?: string
   selectedCompany: string
 }
 
-// Nigerian states
-const nigerianStates = [
-  'Lagos', 'Kano', 'Rivers', 'Kaduna', 'Oyo', 'Abuja', 'Anambra', 
-  'Delta', 'Edo', 'Enugu', 'Imo', 'Ogun', 'Ondo', 'Osun', 'Plateau'
-]
-
-// Mock betting records data
-const mockRecords: BettingRecord[] = [
-  { id: 1, playerName: 'Chidi O.', company: 'SportyBet', betType: 'Football - Premier League', stake: 5000, outcome: 'win', payout: 12500, time: 'Just now', state: 'Lagos' },
-  { id: 2, playerName: 'Amaka N.', company: 'Bet9ja', betType: 'Virtual Racing', stake: 2000, outcome: 'loss', payout: 0, time: 'Just now', state: 'Abuja' },
-  { id: 3, playerName: 'Tunde A.', company: 'BetKing', betType: 'Basketball - NBA', stake: 10000, outcome: 'win', payout: 18000, time: '1 min ago', state: 'Lagos' },
-  { id: 4, playerName: 'Ngozi M.', company: 'NairaBet', betType: 'Tennis - ATP', stake: 3500, outcome: 'win', payout: 7000, time: '2 mins ago', state: 'Rivers' },
-  { id: 5, playerName: 'Ibrahim K.', company: '1xBet', betType: 'Football - La Liga', stake: 8000, outcome: 'loss', payout: 0, time: '3 mins ago', state: 'Kano' },
-  { id: 6, playerName: 'Blessing U.', company: 'SportyBet', betType: 'Virtual Football', stake: 1500, outcome: 'win', payout: 4500, time: '5 mins ago', state: 'Oyo' },
-  { id: 7, playerName: 'Emeka P.', company: 'Bet9ja', betType: 'Cricket - IPL', stake: 6000, outcome: 'loss', payout: 0, time: '7 mins ago', state: 'Anambra' },
-  { id: 8, playerName: 'Fatima S.', company: '22Bet', betType: 'Football - Serie A', stake: 12000, outcome: 'win', payout: 24000, time: '10 mins ago', state: 'Kaduna' },
-  { id: 9, playerName: 'Oluwaseun D.', company: 'BetKing', betType: 'Boxing', stake: 4000, outcome: 'win', payout: 9200, time: '12 mins ago', state: 'Lagos' },
-  { id: 10, playerName: 'Chioma E.', company: 'NairaBet', betType: 'Horse Racing', stake: 7500, outcome: 'loss', payout: 0, time: '15 mins ago', state: 'Enugu' },
-]
-
-const companies = ['Bet9ja', 'SportyBet', '1xBet', 'BetKing', '22Bet', 'NairaBet']
-const betTypes = [
-  'Football - Premier League',
-  'Football - La Liga',
-  'Football - Serie A',
-  'Basketball - NBA',
-  'Tennis - ATP',
-  'Virtual Racing',
-  'Virtual Football',
-  'Cricket - IPL',
-  'Boxing',
-  'Horse Racing',
-]
-const playerNames = [
-  'Chidi O.', 'Amaka N.', 'Tunde A.', 'Ngozi M.', 'Ibrahim K.',
-  'Blessing U.', 'Emeka P.', 'Fatima S.', 'Oluwaseun D.', 'Chioma E.',
-  'Adebayo L.', 'Zainab H.', 'Chukwuma I.', 'Aisha B.', 'Kunle F.'
-]
-
 const RealTimeCollectionsFeed = ({ selectedState, selectedCompany }: RealTimeCollectionsFeedProps) => {
-  const [records, setRecords] = useState<BettingRecord[]>(mockRecords)
+  const [records, setRecords] = useState<BettingRecord[]>(INITIAL_BETTING_RECORDS)
   const [currentPage, setCurrentPage] = useState(1)
   const pageSize = 5
 
@@ -76,14 +33,14 @@ const RealTimeCollectionsFeed = ({ selectedState, selectedCompany }: RealTimeCol
         
         const newRecord: BettingRecord = {
           id: Date.now(),
-          playerName: playerNames[Math.floor(Math.random() * playerNames.length)],
-          company: companies[Math.floor(Math.random() * companies.length)],
-          betType: betTypes[Math.floor(Math.random() * betTypes.length)],
+          playerName: PLAYER_NAMES[Math.floor(Math.random() * PLAYER_NAMES.length)],
+          company: COMPANIES[Math.floor(Math.random() * COMPANIES.length)],
+          betType: BET_TYPES[Math.floor(Math.random() * BET_TYPES.length)],
           stake: stake,
           outcome: isWin ? 'win' : 'loss',
           payout: Math.floor(stake * multiplier),
           time: 'Just now',
-          state: nigerianStates[Math.floor(Math.random() * nigerianStates.length)],
+          state: NIGERIAN_STATES[Math.floor(Math.random() * NIGERIAN_STATES.length)],
         }
         setRecords((prev) => [newRecord, ...prev])
         setCurrentPage(1)
@@ -95,7 +52,7 @@ const RealTimeCollectionsFeed = ({ selectedState, selectedCompany }: RealTimeCol
 
   // Filter records based on selected state and company
   const filteredRecords = records.filter((record) => {
-    const stateMatch = selectedState === 'all' || record.state === selectedState
+    const stateMatch = !selectedState || selectedState === 'all' || record.state === selectedState
     const companyMatch = selectedCompany === 'all' || record.company === selectedCompany
     return stateMatch && companyMatch
   })

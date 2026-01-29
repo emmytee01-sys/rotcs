@@ -1,20 +1,20 @@
 import { Card, Typography } from 'antd'
-import { MapPin } from 'lucide-react'
+import { TrendingUp } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
 const { Title, Text } = Typography
 
-// Mock data for heatmap points - weights spread out for visible color differentiation
-const heatmapData = [
-  { lat: 6.5244, lng: 3.3792, weight: 0.5 }, // Lagos Island - Medium (Yellow)
-  { lat: 6.6018, lng: 3.3515, weight: 0.2 }, // Ikeja - Low (Green)
-  { lat: 6.4281, lng: 3.4219, weight: 1.0 }, // Victoria Island - High (Red)
-  { lat: 6.4698, lng: 3.5852, weight: 0.5 }, // Lekki - Medium (Yellow)
-  { lat: 6.4969, lng: 3.3841, weight: 0.15 }, // Surulere - Low (Green)
-  { lat: 6.5056, lng: 3.3784, weight: 0.9 }, // Yaba - High (Red)
+// Mock data for buying power heatmap points - weights spread out for visible color differentiation
+const buyingPowerData = [
+  { lat: 6.5244, lng: 3.3792, weight: 0.6, spend: 450000000, territory: 'Lagos Island' }, // Medium (Blue)
+  { lat: 6.6018, lng: 3.3515, weight: 0.2, spend: 180000000, territory: 'Ikeja' }, // Low (Cyan)
+  { lat: 6.4281, lng: 3.4219, weight: 1.0, spend: 680000000, territory: 'Victoria Island' }, // High (Red)
+  { lat: 6.4698, lng: 3.5852, weight: 0.5, spend: 380000000, territory: 'Lekki' }, // Medium (Blue)
+  { lat: 6.4969, lng: 3.3841, weight: 0.15, spend: 150000000, territory: 'Surulere' }, // Low (Cyan)
+  { lat: 6.5056, lng: 3.3784, weight: 0.9, spend: 620000000, territory: 'Yaba' }, // High (Red)
 ]
 
-const GeospatialHeatmap = () => {
+const BuyingPowerHeatmap = () => {
   const mapContainer = useRef<HTMLDivElement>(null)
   const [mapError, setMapError] = useState<string | null>(null)
 
@@ -53,7 +53,7 @@ const GeospatialHeatmap = () => {
         })
 
         // Create heatmap layer
-        const heatmapPoints = heatmapData.map(
+        const heatmapPoints = buyingPowerData.map(
           (point) => ({
             location: new window.google.maps.LatLng(point.lat, point.lng),
             weight: point.weight,
@@ -66,30 +66,31 @@ const GeospatialHeatmap = () => {
           radius: 50,
           opacity: 0.6,
           gradient: [
-            'rgba(0, 255, 0, 0)',      // Transparent green
-            'rgba(0, 255, 0, 0.2)',    // Light green (low activity)
-            'rgba(255, 255, 0, 0.4)',  // Yellow (medium activity)
-            'rgba(255, 200, 0, 0.6)',  // Orange-yellow
-            'rgba(255, 150, 0, 0.8)',  // Orange
-            'rgba(255, 100, 0, 0.9)',  // Red-orange
-            'rgba(255, 0, 0, 1)'       // Red (high activity)
+            'rgba(0, 255, 255, 0)',      // Transparent cyan
+            'rgba(0, 255, 255, 0.3)',    // Light cyan (low spending)
+            'rgba(100, 200, 255, 0.5)',  // Light blue
+            'rgba(0, 100, 255, 0.7)',    // Blue (medium spending)
+            'rgba(100, 50, 200, 0.85)',  // Purple-blue
+            'rgba(150, 0, 150, 0.9)',    // Purple
+            'rgba(255, 0, 0, 1)'         // Red (high spending)
           ]
         })
 
-        // Add markers for high-activity areas
-        heatmapData.forEach((point, index) => {
+        // Add markers for high-spending areas
+        buyingPowerData.forEach((point) => {
           const marker = new window.google.maps.Marker({
             position: { lat: point.lat, lng: point.lng },
             map: map,
-            title: `Territory ${index + 1}`,
+            title: point.territory,
           })
 
           const infoWindow = new window.google.maps.InfoWindow({
             content: `
               <div style="padding: 8px;">
-                <h3 style="margin: 0 0 8px 0; font-weight: bold;">Territory ${index + 1}</h3>
-                <p style="margin: 4px 0;"><strong>Activity Level:</strong> ${(point.weight * 100).toFixed(0)}%</p>
-                <p style="margin: 4px 0;"><strong>Active Users:</strong> ${Math.floor(point.weight * 50000).toLocaleString()}</p>
+                <h3 style="margin: 0 0 8px 0; font-weight: bold;">${point.territory}</h3>
+                <p style="margin: 4px 0;"><strong>Total Spend:</strong> ₦${(point.spend / 1000000).toFixed(1)}M</p>
+                <p style="margin: 4px 0;"><strong>Spend Level:</strong> ${(point.weight * 100).toFixed(0)}%</p>
+                <p style="margin: 4px 0;"><strong>Transactions:</strong> ${Math.floor(point.weight * 10000).toLocaleString()}</p>
               </div>
             `,
           })
@@ -110,13 +111,13 @@ const GeospatialHeatmap = () => {
   return (
     <Card className="mt-6">
       <Title level={4}>
-        <MapPin className="inline mr-2" size={20} />
-        Active Player Heatmap
+        <TrendingUp className="inline mr-2" size={20} />
+        Regional Buying Power Heatmap
       </Title>
       {mapError ? (
         <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center" style={{ height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div>
-            <MapPin size={64} className="text-red-400 mx-auto mb-4" />
+            <TrendingUp size={64} className="text-red-400 mx-auto mb-4" />
             <Text className="text-red-600 block mb-2">{mapError}</Text>
             <Text type="secondary" className="text-sm">
               Add your Google Maps API key to the .env file as VITE_GOOGLE_MAPS_API_KEY
@@ -132,20 +133,20 @@ const GeospatialHeatmap = () => {
       )}
       <div className="mt-4 flex gap-4">
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 bg-red-500 rounded"></div>
-          <Text className="text-xs">High Activity</Text>
+          <div className="w-4 h-4 bg-red-600 rounded"></div>
+          <Text className="text-xs">High Spending</Text>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 bg-yellow-500 rounded"></div>
-          <Text className="text-xs">Medium Activity</Text>
+          <div className="w-4 h-4 bg-blue-500 rounded"></div>
+          <Text className="text-xs">Medium Spending</Text>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 bg-green-500 rounded"></div>
-          <Text className="text-xs">Low Activity</Text>
+          <div className="w-4 h-4 bg-cyan-400 rounded"></div>
+          <Text className="text-xs">Low Spending</Text>
         </div>
       </div>
     </Card>
   )
 }
 
-export default GeospatialHeatmap
+export default BuyingPowerHeatmap

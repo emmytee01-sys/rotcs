@@ -1,0 +1,13 @@
+TAX PAYMENT INVOICE
+===================
+
+Payment Reference Number: PRN-2026-01-001
+Revenue Code: 07081999
+
+Operator: Bet9ja Nigeria Limited
+Period: January 2026
+TGV: ₦320,000,000
+Tax Rate: 15%
+Tax Due: ₦48.0M
+
+Please present this invoice at any bank branch to complete your payment.

@@ -4,34 +4,23 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import RealTimeCollectionsFeed from '@/components/admin/RealTimeCollectionsFeed'
 import ExportButton from '@/components/ui/ExportButton'
 import { useState } from 'react'
+import { 
+  COMPANIES, 
+  TOTAL_MARKET_TGV, 
+  TOTAL_PLAYER_WINS, 
+  PROJECTED_REVENUE, 
+  REVENUE_TREND_DATA,
+  TOTAL_TAX_COLLECTED 
+} from '@/utils/mockData'
 
 const { Title, Text } = Typography
 const { Option } = Select
 
-// Nigerian states
-const nigerianStates = [
-  'Lagos', 'Kano', 'Rivers', 'Kaduna', 'Oyo', 'Abuja', 'Anambra', 
-  'Delta', 'Edo', 'Enugu', 'Imo', 'Ogun', 'Ondo', 'Osun', 'Plateau'
-]
-
-const companies = ['Bet9ja', 'SportyBet', '1xBet', 'BetKing', '22Bet', 'NairaBet']
-
-// Mock data
-const revenueData = [
-  { month: 'Jan', revenue: 45000000 },
-  { month: 'Feb', revenue: 52000000 },
-  { month: 'Mar', revenue: 48000000 },
-  { month: 'Apr', revenue: 61000000 },
-  { month: 'May', revenue: 55000000 },
-  { month: 'Jun', revenue: 67000000 },
-]
-
 const RevenueCenter = () => {
-  const [selectedState, setSelectedState] = useState<string>('all')
   const [selectedCompany, setSelectedCompany] = useState<string>('all')
 
-  const collectedMTD = 287000000
-  const projectedRevenue = 350000000
+  const collectedMTD = TOTAL_TAX_COLLECTED
+  const projectedRevenue = PROJECTED_REVENUE
   const progressPercent = (collectedMTD / projectedRevenue) * 100
 
   return (
@@ -45,18 +34,6 @@ const RevenueCenter = () => {
         {/* Global Filters */}
         <div className="flex flex-wrap gap-3">
           <Select
-            value={selectedState}
-            onChange={setSelectedState}
-            className="w-full sm:w-[180px]"
-            placeholder="Filter by State"
-            size="large"
-          >
-            <Option value="all">All States</Option>
-            {nigerianStates.map((state) => (
-              <Option key={state} value={state}>{state}</Option>
-            ))}
-          </Select>
-          <Select
             value={selectedCompany}
             onChange={setSelectedCompany}
             className="w-full sm:w-[180px]"
@@ -64,7 +41,7 @@ const RevenueCenter = () => {
             size="large"
           >
             <Option value="all">All Companies</Option>
-            {companies.map((company) => (
+            {COMPANIES.map((company) => (
               <Option key={company} value={company}>{company}</Option>
             ))}
           </Select>
@@ -77,7 +54,7 @@ const RevenueCenter = () => {
           <Card>
             <Statistic
               title="Total Gaming Value"
-              value={collectedMTD}
+              value={TOTAL_MARKET_TGV}
               suffix="₦"
               valueStyle={{ color: '#3f8600' }}
             />
@@ -98,7 +75,7 @@ const RevenueCenter = () => {
           <Card>
             <Statistic
               title="Total Player Wins"
-              value={240000000}
+              value={TOTAL_PLAYER_WINS}
               suffix="₦"
               prefix={<CheckCircle size={20} className="text-purple-500" />}
               valueStyle={{ color: '#722ed1' }}
@@ -135,7 +112,6 @@ const RevenueCenter = () => {
       {/* Real-Time Collections Feed - Full Width Section */}
       <div className="mt-6">
         <RealTimeCollectionsFeed 
-          selectedState={selectedState}
           selectedCompany={selectedCompany}
         />
       </div>
@@ -144,10 +120,10 @@ const RevenueCenter = () => {
       <Card className="mt-6">
         <div className="flex justify-between items-center mb-4">
           <Title level={4}>Revenue Trend (6 Months)</Title>
-          <ExportButton data={revenueData} filename="revenue-trend" />
+          <ExportButton data={REVENUE_TREND_DATA} filename="revenue-trend" />
         </div>
         <ResponsiveContainer width="100%" height={300}>
-          <AreaChart data={revenueData}>
+          <AreaChart data={REVENUE_TREND_DATA}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="month" />
             <YAxis />

@@ -1,5 +1,5 @@
-import { Card, Typography, Button, Descriptions, Steps, Radio, Space, Tag } from 'antd'
-import { CreditCard, FileText, CheckCircle } from 'lucide-react'
+import { Card, Typography, Button, Descriptions, Steps, Radio, Space, Tag, Modal } from 'antd'
+import { CreditCard, FileText, CheckCircle, Download } from 'lucide-react'
 import { useState } from 'react'
 import TaxClearanceCertificate from '@/components/operator/TaxClearanceCertificate'
 
@@ -19,6 +19,59 @@ const Payment = () => {
   }
 
   const handlePay = () => {
+    if (paymentMethod === 'branch') {
+      // Simulate PDF download for branch payment
+      const invoiceContent = `
+TAX PAYMENT INVOICE
+===================
+
+Payment Reference Number: ${prn}
+Revenue Code: ${revenueCode}
+
+Operator: Bet9ja Nigeria Limited
+Period: January 2026
+TGV: ₦320,000,000
+Tax Rate: 15%
+Tax Due: ₦${(taxDue / 1000000).toFixed(1)}M
+
+Please present this invoice at any bank branch to complete your payment.
+      `.trim()
+
+      const blob = new Blob([invoiceContent], { type: 'text/plain' })
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `Tax_Invoice_${prn}.txt`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      URL.revokeObjectURL(url)
+
+      // Show success modal
+      Modal.success({
+        title: 'Invoice Downloaded Successfully!',
+        icon: <Download size={24} className="text-green-500" />,
+        content: (
+          <div className="mt-4">
+            <Text className="block mb-2">
+              Your tax payment invoice has been downloaded.
+            </Text>
+            <Text className="block text-gray-600">
+              Please present this invoice at any bank branch to complete your payment.
+            </Text>
+            <div className="mt-4 p-3 bg-blue-50 rounded border border-blue-200">
+              <Text strong className="block mb-1">Payment Reference Number:</Text>
+              <Text className="font-mono text-lg">{prn}</Text>
+            </div>
+          </div>
+        ),
+        okText: 'Got it',
+        width: 500,
+      })
+      return
+    }
+
+    // For web payment, proceed with payment processing
     setCurrentStep(2)
     // Simulate payment processing
     setTimeout(() => {

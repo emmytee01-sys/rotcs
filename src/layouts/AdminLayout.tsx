@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Outlet, Link, useLocation } from 'react-router-dom'
 import { Layout, Menu, Drawer, Button } from 'antd'
-import { BarChart3, Map, Building2, LogOut, User, Menu as MenuIcon } from 'lucide-react'
+import { BarChart3, Map, Building2, LogOut, User, Menu as MenuIcon, MessageCircle } from 'lucide-react'
 import { useLogoutConfirm } from '@/hooks/useLogoutConfirm'
+import logoImage from '@/assets/logo.png'
 
 const { Header, Sider, Content } = Layout
 
@@ -20,12 +21,17 @@ const AdminLayout = () => {
     {
       key: '/admin/geospatial',
       icon: <Map size={24} />,
-      label: <Link to="/admin/geospatial" style={{ fontSize: '15px', fontWeight: 500 }}>Geospatial</Link>,
+      label: <Link to="/admin/geospatial" style={{ fontSize: '15px', fontWeight: 500 }}>Geospatial Intel</Link>,
     },
     {
       key: '/admin/operators',
       icon: <Building2 size={24} />,
       label: <Link to="/admin/operators" style={{ fontSize: '15px', fontWeight: 500 }}>Operators</Link>,
+    },
+    {
+      key: '/admin/support',
+      icon: <MessageCircle size={24} />,
+      label: <Link to="/admin/support" style={{ fontSize: '15px', fontWeight: 500 }}>Support</Link>,
     },
     {
       key: '/admin/profile',
@@ -40,9 +46,16 @@ const AdminLayout = () => {
         background: '#008751',
         borderBottomColor: 'rgba(255,255,255,0.1)',
       }}>
-        <div className="text-center">
-          <div className="text-xl font-bold tracking-tight" style={{ fontFamily: 'Source Serif 4, serif' }}>ROTCS</div>
-          <div className="text-xs opacity-90 font-medium" style={{ letterSpacing: '0.05em' }}>GOVERNMENT ADMIN</div>
+        <div className="flex items-center justify-center px-4">
+          <img 
+            src={logoImage} 
+            alt="ROTCS Logo" 
+            style={{ 
+              height: '48px',
+              width: 'auto',
+              objectFit: 'contain'
+            }}
+          />
         </div>
       </div>
       <Menu

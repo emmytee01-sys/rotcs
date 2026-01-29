@@ -1,21 +1,24 @@
 import { Card, Typography, Select, Row, Col } from 'antd'
-import { Globe, TrendingUp,  CheckCircle} from 'lucide-react'
+import { Globe, TrendingUp, CheckCircle } from 'lucide-react'
 import ComparativeAnalytics from '@/components/consultant/ComparativeAnalytics'
+import RealTimeCollectionsFeed from '@/components/admin/RealTimeCollectionsFeed'
+import { useState } from 'react'
+import { 
+  COMPANIES,
+  CONSULTANT_TOTAL_TGV,
+  CONSULTANT_TAX_COLLECTED,
+  CONSULTANT_PLAYER_WINS,
+  CONSULTANT_STATES
+} from '@/utils/mockData'
 
 const { Title, Text } = Typography
 const { Option } = Select
 
-// Mock multi-state data
-const states = [
-  { id: 'lagos', name: 'Lagos State', status: 'healthy', collectionRate: 98, operators: 12 },
-  { id: 'ogun', name: 'Ogun State', status: 'warning', collectionRate: 85, operators: 8 },
-  { id: 'rivers', name: 'Rivers State', status: 'healthy', collectionRate: 95, operators: 10 },
-  { id: 'kano', name: 'Kano State', status: 'healthy', collectionRate: 92, operators: 7 },
-  { id: 'oyo', name: 'Oyo State', status: 'critical', collectionRate: 65, operators: 6 },
-]
-
 
 const MultiStateHub = () => {
+  const [selectedState, setSelectedState] = useState<string>('all')
+  const [selectedCompany, setSelectedCompany] = useState<string>('all')
+
   return (
     <div>
       <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
@@ -23,25 +26,41 @@ const MultiStateHub = () => {
           <Title level={2}>Multi-State Command Hub</Title>
           <Text type="secondary">Global view of all managed jurisdictions</Text>
         </div>
-        <Select
-          defaultValue="all"
-          className="w-full sm:w-[200px]"
-          size="large"
-        >
-          <Option value="all">All States</Option>
-          {states.map(state => (
-            <Option key={state.id} value={state.id}>{state.name}</Option>
-          ))}
-        </Select>
+        <div className="flex flex-wrap gap-3">
+          <Select
+            value={selectedState}
+            onChange={setSelectedState}
+            className="w-full sm:w-[180px]"
+            size="large"
+          >
+            <Option value="all">All States</Option>
+            {CONSULTANT_STATES.map(state => (
+              <Option key={state.id} value={state.id}>{state.name}</Option>
+            ))}
+          </Select>
+          <Select
+            value={selectedCompany}
+            onChange={setSelectedCompany}
+            className="w-full sm:w-[180px]"
+            size="large"
+            placeholder="Filter by Company"
+          >
+            <Option value="all">All Companies</Option>
+            {COMPANIES.map((company) => (
+              <Option key={company} value={company}>{company}</Option>
+            ))}
+          </Select>
+        </div>
       </div>
 
-      {/* Key Metrics - Same as Admin */}
+      {/* Key Metrics - Multi-State Aggregated */}
       <Row gutter={[16, 16]} className="mb-6">
         <Col xs={24} sm={12} lg={8}>
           <Card>
             <div>
               <Text type="secondary" className="text-sm">Total Gaming Value</Text>
-              <div className="text-3xl font-bold text-green-600 mt-2">₦287,000,000</div>
+              <div className="text-3xl font-bold text-green-600 mt-2">₦{(CONSULTANT_TOTAL_TGV / 1000000).toFixed(0)}M</div>
+              <Text type="secondary" className="text-xs mt-1">Across 5 states</Text>
             </div>
           </Card>
         </Col>
@@ -49,8 +68,9 @@ const MultiStateHub = () => {
           <Card>
             <div className="flex items-start justify-between">
               <div>
-                <Text type="secondary" className="text-sm">Total Company Revenue</Text>
-                <div className="text-3xl font-bold text-blue-600 mt-2">₦350,000,000</div>
+                <Text type="secondary" className="text-sm">Total Tax Collected</Text>
+                <div className="text-3xl font-bold text-blue-600 mt-2">₦{(CONSULTANT_TAX_COLLECTED / 1000000).toFixed(0)}M</div>
+                <Text type="secondary" className="text-xs mt-1">Multi-state revenue</Text>
               </div>
               <TrendingUp size={24} className="text-blue-500 mt-2" />
             </div>
@@ -61,7 +81,8 @@ const MultiStateHub = () => {
             <div className="flex items-start justify-between">
               <div>
                 <Text type="secondary" className="text-sm">Total Player Wins</Text>
-                <div className="text-3xl font-bold text-purple-600 mt-2">₦240,000,000</div>
+                <div className="text-3xl font-bold text-purple-600 mt-2">₦{(CONSULTANT_PLAYER_WINS / 1000000).toFixed(0)}M</div>
+                <Text type="secondary" className="text-xs mt-1">Aggregate payouts</Text>
               </div>
               <CheckCircle size={24} className="text-purple-500 mt-2" />
             </div>
@@ -77,7 +98,7 @@ const MultiStateHub = () => {
               <Globe size={32} className="text-blue-500" />
               <div>
                 <Text type="secondary" className="text-xs">Total States</Text>
-                <div className="text-2xl font-bold">{states.length}</div>
+                <div className="text-2xl font-bold">{CONSULTANT_STATES.length}</div>
               </div>
             </div>
           </Card>
@@ -89,7 +110,7 @@ const MultiStateHub = () => {
               <div>
                 <Text type="secondary" className="text-xs">Compliant States</Text>
                 <div className="text-2xl font-bold text-green-600">
-                  {states.filter(s => s.status === 'healthy').length}
+                  {CONSULTANT_STATES.filter(s => s.status === 'healthy').length}
                 </div>
               </div>
             </div>
@@ -102,7 +123,7 @@ const MultiStateHub = () => {
               <div>
                 <Text type="secondary" className="text-xs">Avg Compliance Rate</Text>
                 <div className="text-2xl font-bold text-purple-600">
-                  {Math.round(states.reduce((sum, s) => sum + s.collectionRate, 0) / states.length)}%
+                  {Math.round(CONSULTANT_STATES.reduce((sum, s) => sum + s.collectionRate, 0) / CONSULTANT_STATES.length)}%
                 </div>
               </div>
             </div>
@@ -115,13 +136,20 @@ const MultiStateHub = () => {
               <div>
                 <Text type="secondary" className="text-xs">Total Operators</Text>
                 <div className="text-2xl font-bold text-orange-600">
-                  {states.reduce((sum, s) => sum + s.operators, 0)}
+                  {CONSULTANT_STATES.reduce((sum, s) => sum + s.operators, 0)}
                 </div>
               </div>
             </div>
           </Card>
         </Col>
       </Row>
+
+      {/* Real-Time Collections Feed */}
+      <div className="mt-6">
+        <RealTimeCollectionsFeed 
+          selectedCompany={selectedCompany}
+        />
+      </div>
 
       {/* Comparative Analytics */}
       <div className="mt-6">
