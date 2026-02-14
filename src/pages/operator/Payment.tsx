@@ -3,6 +3,7 @@ import { CreditCard, CheckCircle, Download, ShieldCheck, ChevronRight, Wallet, B
 import { useState } from 'react'
 import TaxClearanceCertificate from '@/components/operator/TaxClearanceCertificate'
 import { formatCurrency } from '@/utils/formatters'
+import { jsPDF } from 'jspdf'
 
 const Payment = () => {
   const [paymentMethod, setPaymentMethod] = useState<'web' | 'branch'>('web')
@@ -26,32 +27,110 @@ const Payment = () => {
   }
 
   const handleDownloadInvoice = () => {
-    // Simulate PDF download for branch payment
-    const invoiceContent = `
-TAX PAYMENT INVOICE
-===================
+    const doc = new jsPDF()
+    const timestamp = new Date().toLocaleString()
 
-Payment Reference Number: ${prn}
-Revenue Code: ${revenueCode}
+    // Professional Header
+    doc.setFillColor(15, 23, 42) // Obsidian
+    doc.rect(0, 0, 210, 40, 'F')
+    
+    doc.setTextColor(255, 255, 255)
+    doc.setFont('helvetica', 'bold')
+    doc.setFontSize(22)
+    doc.text('ROTCS', 20, 25)
+    
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'normal')
+    doc.text('REGULATORY OVERSIGHT & TAX CALCULATION SYSTEM', 20, 32)
 
-Operator: Bet9ja Nigeria Limited
-Period: January 2026
-TGV: ₦320,000,000
-Tax Rate: 15%
-Tax Due: ₦${(taxDue / 1000000).toFixed(1)}M
+    // Invoice Title
+    doc.setTextColor(15, 23, 42)
+    doc.setFontSize(16)
+    doc.setFont('helvetica', 'bold')
+    doc.text('TAX PAYMENT INVOICE', 20, 55)
+    
+    doc.setDrawColor(16, 185, 129) // Emerald
+    doc.setLineWidth(1)
+    doc.line(20, 58, 80, 58)
 
-Please present this invoice at any bank branch to complete your payment.
-    `.trim()
+    // Data Grid
+    doc.setFontSize(10)
+    doc.setTextColor(100, 116, 139) // Slate-500
+    doc.text('PAYMENT REFERENCE', 20, 75)
+    doc.setTextColor(15, 23, 42)
+    doc.setFont('courier', 'bold')
+    doc.setFontSize(14)
+    doc.text(prn, 20, 82)
 
-    const blob = new Blob([invoiceContent], { type: 'text/plain' })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `Sovereign_Invoice_${prn}.txt`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    URL.revokeObjectURL(url)
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(10)
+    doc.setTextColor(100, 116, 139)
+    doc.text('REVENUE CODE', 120, 75)
+    doc.setTextColor(15, 23, 42)
+    doc.setFont('courier', 'bold')
+    doc.text(revenueCode, 120, 82)
+
+    // Detailed Table
+    const details = [
+      ['OPERATOR', 'Bet9ja Nigeria Limited'],
+      ['BILLING PERIOD', 'January 2026'],
+      ['GROSS VOLUME (TGV)', 'N320,000,000'],
+      ['TAX RATE', '15%'],
+    ]
+
+    let yPos = 100
+    details.forEach(([label, value]) => {
+      doc.setFont('helvetica', 'bold')
+      doc.setTextColor(100, 116, 139)
+      doc.setFontSize(8)
+      doc.text(label, 20, yPos)
+      
+      doc.setTextColor(15, 23, 42)
+      doc.setFontSize(10)
+      doc.text(value, 20, yPos + 6)
+      
+      yPos += 20
+    })
+
+    // Total Section
+    doc.setFillColor(248, 250, 252)
+    doc.rect(110, 100, 80, 46, 'F')
+    doc.setDrawColor(226, 232, 240)
+    doc.rect(110, 100, 80, 46, 'S')
+
+    doc.setTextColor(16, 185, 129)
+    doc.setFontSize(8)
+    doc.setFont('helvetica', 'bold')
+    doc.text('TOTAL TAX LIABILITY', 115, 110)
+    
+    doc.setTextColor(15, 23, 42)
+    doc.setFontSize(18)
+    doc.text(`N${(taxDue / 1000000).toFixed(1)}M`, 115, 125)
+    
+    doc.setFontSize(8)
+    doc.setTextColor(148, 163, 184)
+    doc.text(`N${taxDue.toLocaleString()}.00`, 115, 135)
+
+    // Bank Instructions
+    doc.setFont('helvetica', 'bold')
+    doc.setTextColor(15, 23, 42)
+    doc.setFontSize(11)
+    doc.text('BANKING INSTRUCTIONS', 20, 190)
+    
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(9)
+    doc.setTextColor(71, 85, 105)
+    doc.text('1. Present this document at any commercial bank branch.', 20, 198)
+    doc.text('2. Ensure the PRN matches the transaction reference on your teller.', 20, 204)
+    doc.text('3. Payment will be verified within 24 tactical hours.', 20, 210)
+
+    // Footer
+    doc.setFontSize(8)
+    doc.setTextColor(148, 163, 184)
+    doc.text(`Generated on: ${timestamp}`, 20, 280)
+    doc.text('SOVEREIGN REGULATORY TRANSMISSION V2.1', 135, 280)
+
+    doc.save(`Invoice_${prn}.pdf`)
   }
 
   const handlePay = () => {
