@@ -112,23 +112,22 @@ const BuyingPowerHeatmap = () => {
     <Card className="mt-6">
       <Title level={4}>
         <TrendingUp className="inline mr-2" size={20} />
-        Regional Buying Power Heatmap
+        Regional Spend Heatmap
       </Title>
       {mapError ? (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center" style={{ height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center h-[300px] md:h-[500px] flex items-center justify-center">
           <div>
             <TrendingUp size={64} className="text-red-400 mx-auto mb-4" />
             <Text className="text-red-600 block mb-2">{mapError}</Text>
             <Text type="secondary" className="text-sm">
-              Add your Google Maps API key to the .env file as VITE_GOOGLE_MAPS_API_KEY
+              Configuration required for full map access.
             </Text>
           </div>
         </div>
       ) : (
         <div
           ref={mapContainer}
-          className="rounded-lg"
-          style={{ height: '500px', width: '100%' }}
+          className="rounded-lg h-[300px] md:h-[500px] w-full"
         />
       )}
       <div className="mt-4 flex gap-4">

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth, UserRole } from '@/contexts/AuthContext'
+import { useAuth, UserRole } from '@/contexts/AuthContextCore'
 import Login from './Login'
 
 // Wrapper component to handle automatic redirect after login

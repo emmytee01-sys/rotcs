@@ -29,7 +29,7 @@ import OperatorSupport from './pages/operator/Support'
 import LandingPage from './pages/LandingPage'
 
 // Shared Pages
-import ProfileSettings from './pages/ProfileSettings'
+
 
 // Components
 import ProtectedRoute from './components/ProtectedRoute'
@@ -48,7 +48,6 @@ function App() {
           <Route path="geospatial" element={<Geospatial />} />
           <Route path="operators" element={<Operators />} />
           <Route path="support" element={<AdminSupport />} />
-          <Route path="profile" element={<ProfileSettings />} />
         </Route>
       </Route>
 
@@ -62,7 +61,6 @@ function App() {
           <Route path="geospatial" element={<GeospatialIntel />} />
           <Route path="forensics" element={<Forensics />} />
           <Route path="support" element={<ConsultantSupport />} />
-          <Route path="profile" element={<ProfileSettings />} />
         </Route>
       </Route>
 
@@ -75,7 +73,6 @@ function App() {
           <Route path="payment" element={<Payment />} />
           <Route path="api-config" element={<APIConfiguration />} />
           <Route path="support" element={<OperatorSupport />} />
-          <Route path="profile" element={<ProfileSettings />} />
         </Route>
       </Route>
 

@@ -10,6 +10,7 @@ import {
   COMPANIES,
   CONSULTANT_STATES
 } from '@/utils/mockData'
+import { formatCurrency } from '@/utils/formatters'
 
 const { Title, Text } = Typography
 const { Option } = Select
@@ -44,7 +45,7 @@ const territorialColumns = [
     key: 'ggr',
     render: (ggr: number) => (
       <Text className="font-semibold text-green-600">
-        ₦{(ggr / 1000000).toFixed(1)}M
+        {formatCurrency(ggr)}
       </Text>
     ),
     sorter: (a: any, b: any) => a.ggr - b.ggr,
@@ -82,7 +83,7 @@ const buyingPowerColumns = [
       <div className="flex items-center gap-2">
         <TrendingUp size={16} className="text-green-500" />
         <Text className="font-semibold text-green-600">
-          ₦{(spend / 1000000).toFixed(1)}M
+          {formatCurrency(spend)}
         </Text>
       </div>
     ),
@@ -182,7 +183,7 @@ const GeospatialIntel = () => {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="territory" />
                 <YAxis />
-                <Tooltip formatter={(value: any) => `₦${(value / 1000000).toFixed(1)}M`} />
+                <Tooltip formatter={(value: any) => formatCurrency(value)} />
                 <Bar dataKey="ggr" radius={[8, 8, 0, 0]}>
                   {CONSULTANT_TERRITORIAL_DATA.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
@@ -258,7 +259,7 @@ const GeospatialIntel = () => {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="territory" />
                 <YAxis />
-                <Tooltip formatter={(value: any) => `₦${(value / 1000000).toFixed(1)}M`} />
+                <Tooltip formatter={(value: any) => formatCurrency(value)} />
                 <Bar dataKey="totalSpend" radius={[8, 8, 0, 0]}>
                   {CONSULTANT_BUYING_POWER_DATA.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />

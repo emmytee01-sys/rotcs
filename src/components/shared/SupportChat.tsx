@@ -1,8 +1,7 @@
-import { Card, Typography, Input, Button, Avatar, Badge, Empty } from 'antd'
+import { Input, Button, Badge } from 'antd'
 import { Send, MessageCircle, User } from 'lucide-react'
-import { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
-const { Text } = Typography
 const { TextArea } = Input
 
 interface Message {
@@ -166,14 +165,6 @@ const SupportChat = ({ userRole, userName }: SupportChatProps) => {
     }
   }
 
-  const getRoleBadgeColor = (role: string) => {
-    switch (role) {
-      case 'admin': return 'blue'
-      case 'operator': return 'green'
-      case 'consultant': return 'purple'
-      default: return 'default'
-    }
-  }
 
   const formatTime = (date: Date) => {
     const now = new Date()
@@ -188,99 +179,118 @@ const SupportChat = ({ userRole, userName }: SupportChatProps) => {
   }
 
   return (
-    <div className="flex flex-col md:flex-row gap-4" style={{ height: 'calc(100vh - 200px)' }}>
-      {/* Conversations List - Hidden on mobile when conversation selected */}
-      <Card 
-        className={`${selectedConversation && currentConversation ? 'hidden md:block' : 'block'} w-full md:w-80 md:flex-shrink-0`}
-        style={{ height: '100%', overflow: 'auto' }}
-        title={
-          <div className="flex items-center gap-2">
-            <MessageCircle size={20} />
-            <span>Conversations</span>
-          </div>
-        }
+    <div className="flex flex-col md:flex-row gap-6" style={{ height: 'calc(100vh - 420px)', minHeight: '600px' }}>
+      {/* Conversations List */}
+      <div 
+        className={`${selectedConversation && currentConversation ? 'hidden md:flex' : 'flex'} flex-col w-full md:w-80 md:flex-shrink-0 bg-black/40 border-2 border-white/[0.05] rounded-[24px] overflow-hidden shadow-2xl`}
       >
-        {conversations.length === 0 ? (
-          <Empty description="No conversations yet" />
-        ) : (
-          <div className="space-y-2">
-            {conversations.map(conv => (
+        <div className="p-6 border-b border-white/5 bg-white/[0.02]">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+              <MessageCircle size={20} className="text-emerald-500" />
+            </div>
+            <span className="text-sm font-black text-white uppercase tracking-widest">Active Links</span>
+          </div>
+        </div>
+        
+        <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
+          {conversations.length === 0 ? (
+            <div className="h-full flex flex-col items-center justify-center opacity-20 italic text-xs uppercase tracking-widest text-[#64748B]">
+              No secure uplinks
+            </div>
+          ) : (
+            conversations.map(conv => (
               <div
                 key={conv.id}
                 onClick={() => setSelectedConversation(conv.id)}
-                className={`p-3 rounded-lg cursor-pointer transition-all ${
+                className={`p-4 rounded-2xl cursor-pointer transition-all border-2 group ${
                   selectedConversation === conv.id 
-                    ? 'bg-blue-50 border-2 border-blue-500' 
-                    : 'bg-gray-50 hover:bg-gray-100 border-2 border-transparent'
+                    ? 'bg-emerald-500/10 border-emerald-500/30 shadow-neon' 
+                    : 'bg-white/[0.02] border-transparent hover:bg-white/[0.05] hover:border-white/5'
                 }`}
               >
-                <div className="flex items-start gap-3">
-                  <Badge dot={conv.status === 'online'} color="green">
-                    <Avatar icon={<User size={20} />} style={{ backgroundColor: '#1890ff' }} />
+                <div className="flex items-start gap-4">
+                  <Badge dot={conv.status === 'online'} color="#10B981" offset={[-2, 32]}>
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center border-2 transition-colors ${
+                      selectedConversation === conv.id ? 'bg-emerald-500/20 border-emerald-500/40' : 'bg-black/20 border-white/10'
+                    }`}>
+                      <User size={24} className={selectedConversation === conv.id ? 'text-emerald-400' : 'text-[#64748B]'} />
+                    </div>
                   </Badge>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <Text strong className="truncate">{conv.participantName}</Text>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className={`text-sm font-black uppercase tracking-tight truncate ${selectedConversation === conv.id ? 'text-emerald-400' : 'text-white'}`}>
+                        {conv.participantName}
+                      </span>
                       {conv.unreadCount > 0 && (
-                        <Badge count={conv.unreadCount} />
+                        <div className="px-2 py-0.5 rounded-full bg-emerald-500 text-[10px] font-black text-black animate-pulse">
+                          {conv.unreadCount}
+                        </div>
                       )}
                     </div>
-                    <Text type="secondary" className="text-xs capitalize">
-                      {conv.participantRole}
-                    </Text>
-                    {conv.lastMessage && (
-                      <Text type="secondary" className="text-xs block truncate mt-1">
-                        {conv.lastMessage.content}
-                      </Text>
-                    )}
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-black text-[#64748B] uppercase tracking-widest leading-none">
+                        {conv.participantRole}
+                      </span>
+                      <span className="text-[9px] font-bold text-[#475569] tabular-nums">
+                        {conv.lastMessage ? formatTime(conv.lastMessage.timestamp) : ''}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
-        )}
-      </Card>
+            ))
+          )}
+        </div>
+      </div>
 
-      {/* Chat Panel - Full screen on mobile */}
-      <Card 
-        className={`${selectedConversation && currentConversation ? 'block' : 'hidden md:block'} flex-1`}
-        style={{ height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }}
-        title={
-          currentConversation ? (
-            <div className="flex items-center gap-3">
-              {/* Back button for mobile */}
+      {/* Chat Panel */}
+      <div 
+        className={`${selectedConversation && currentConversation ? 'flex' : 'hidden md:flex'} flex-1 flex-col bg-black/40 border-2 border-white/[0.05] rounded-[24px] overflow-hidden shadow-2xl relative`}
+      >
+        {currentConversation ? (
+          <div className="p-6 border-b border-white/5 bg-white/[0.02] flex items-center justify-between">
+            <div className="flex items-center gap-4">
               <Button
                 type="text"
-                icon={<span>←</span>}
+                icon={<span className="text-emerald-500 font-black text-lg">←</span>}
                 onClick={() => setSelectedConversation(null)}
-                className="md:hidden"
+                className="md:hidden p-0 w-8 h-8 flex items-center justify-center hover:bg-emerald-500/10"
               />
-              <Badge dot={currentConversation.status === 'online'} color="green">
-                <Avatar icon={<User size={20} />} style={{ backgroundColor: '#1890ff' }} />
+              <Badge dot={currentConversation.status === 'online'} color="#10B981" offset={[-2, 34]}>
+                <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                  <User size={24} className="text-emerald-400" />
+                </div>
               </Badge>
               <div>
-                <Text strong>{currentConversation.participantName}</Text>
-                <Text type="secondary" className="text-xs block capitalize">
-                  {currentConversation.participantRole} • {currentConversation.status}
-                </Text>
+                <h3 className="m-0 text-white text-base font-black uppercase tracking-tight leading-tight">
+                  {currentConversation.participantName}
+                </h3>
+                <span className="text-[10px] font-black text-[#64748B] uppercase tracking-[0.2em] italic">
+                  {currentConversation.participantRole} Hub • {currentConversation.status}
+                </span>
               </div>
             </div>
-          ) : (
-            'Select a conversation'
-          )
-        }
-      >
+            <div className="hidden sm:flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-[9px] font-black text-emerald-500/50 uppercase tracking-widest">Secure Link Established</span>
+            </div>
+          </div>
+        ) : null}
+
         {!currentConversation ? (
-          <div className="flex items-center justify-center h-full">
-            <Empty description="Select a conversation to start chatting" />
+          <div className="flex-1 flex flex-col items-center justify-center space-y-6 opacity-40">
+            <div className="w-20 h-20 rounded-3xl border-4 border-dashed border-white/10 flex items-center justify-center">
+              <MessageCircle size={32} className="text-[#64748B]" />
+            </div>
+            <span className="text-xs font-black uppercase tracking-[0.3em] text-[#64748B]">
+              Awaiting Secure Uplink
+            </span>
           </div>
         ) : (
-          <div className="flex flex-col" style={{ height: 'calc(100% - 0px)' }}>
-            {/* Messages - Scrollable area with padding for fixed input */}
-            <div 
-              className="flex-1 overflow-auto p-4 space-y-4" 
-              style={{ paddingBottom: '100px' }}
-            >
+          <div className="flex-1 flex flex-col min-h-0 bg-black/20">
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
               {currentConversation.messages.map(message => {
                 const isOwnMessage = message.senderRole === userRole
                 return (
@@ -288,93 +298,83 @@ const SupportChat = ({ userRole, userName }: SupportChatProps) => {
                     key={message.id}
                     className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}
                   >
-                    <div className={`max-w-[85%] md:max-w-[70%] ${isOwnMessage ? 'items-end' : 'items-start'} flex flex-col gap-1`}>
-                      <div className="flex items-center gap-2 flex-wrap">
+                    <div className={`max-w-[85%] md:max-w-[70%] flex flex-col ${isOwnMessage ? 'items-end' : 'items-start'} gap-2`}>
+                      <div className="flex items-center gap-3">
                         {!isOwnMessage && (
-                          <Avatar size="small" icon={<User size={14} />} />
+                          <div className="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
+                            <User size={12} className="text-[#64748B]" />
+                          </div>
                         )}
-                        <Text className="text-xs" type="secondary">
+                        <span className="text-[10px] font-black text-[#64748B] uppercase tracking-widest">
                           {message.senderName}
-                        </Text>
-                        <Badge 
-                          count={message.senderRole.toUpperCase()} 
-                          style={{ 
-                            backgroundColor: getRoleBadgeColor(message.senderRole) === 'blue' ? '#1890ff' : 
-                                           getRoleBadgeColor(message.senderRole) === 'green' ? '#52c41a' : '#722ed1',
-                            fontSize: '10px',
-                            height: '18px',
-                            lineHeight: '18px'
-                          }}
-                        />
+                        </span>
+                        <span className={`px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-tighter ${
+                          message.senderRole === 'admin' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 
+                          message.senderRole === 'consultant' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 
+                          'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                        }`}>
+                          {message.senderRole}
+                        </span>
                       </div>
+                      
                       <div
-                        className={`p-3 rounded-lg break-words ${
+                        className={`p-4 rounded-2xl text-sm font-medium leading-relaxed relative group transition-all ${
                           isOwnMessage
-                            ? 'bg-blue-500 text-white'
-                            : 'bg-gray-100 text-gray-900'
+                            ? 'bg-emerald-600 border border-emerald-500/50 text-white rounded-tr-none'
+                            : 'bg-white/[0.03] border border-white/10 text-[#94A3B8] rounded-tl-none'
                         }`}
                       >
-                        <Text className={isOwnMessage ? 'text-white' : ''}>
-                          {message.content}
-                        </Text>
+                        {message.content}
                       </div>
-                      <Text className="text-xs" type="secondary">
+                      
+                      <span className="text-[9px] font-bold text-[#475569] uppercase tracking-tighter tabular-nums">
                         {formatTime(message.timestamp)}
-                      </Text>
+                      </span>
                     </div>
                   </div>
                 )
               })}
               {isTyping && (
-                <div className="flex justify-start">
-                  <div className="bg-gray-100 p-3 rounded-lg">
-                    <Text type="secondary" className="text-sm">Typing...</Text>
+                <div className="flex justify-start items-center gap-3 animate-pulse">
+                  <div className="w-6 h-6 rounded-lg bg-white/5 flex items-center justify-center">
+                    <div className="w-1 h-1 rounded-full bg-emerald-500 animate-bounce" />
                   </div>
+                  <span className="text-[9px] font-black text-emerald-500/50 uppercase tracking-widest italic">Decrypting incoming transmission...</span>
                 </div>
               )}
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input - Fixed at bottom */}
-            <div 
-              className="border-t p-4 bg-white"
-              style={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                right: 0,
-                zIndex: 10
-              }}
-            >
-              <div className="flex gap-2">
+            {/* Input */}
+            <div className="p-6 border-t border-white/5 bg-white/[0.01]">
+              <div className="relative group">
                 <TextArea
                   value={messageInput}
-                  onChange={(e) => setMessageInput(e.target.value)}
-                  onPressEnter={(e) => {
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setMessageInput(e.target.value)}
+                  onPressEnter={(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
                     if (!e.shiftKey) {
                       e.preventDefault()
                       handleSendMessage()
                     }
                   }}
-                  placeholder="Type your message..."
-                  autoSize={{ minRows: 1, maxRows: 3 }}
-                  className="flex-1"
-                  style={{ fontSize: '16px' }}
+                  placeholder="Communicate with command center..."
+                  autoSize={{ minRows: 1, maxRows: 4 }}
+                  className="w-full bg-black/40 border-2 border-white/10 rounded-2xl px-6 py-4 text-white text-sm placeholder:text-[#475569] focus:border-emerald-500/50 transition-all pr-24"
+                  style={{ resize: 'none' }}
                 />
-                <Button
-                  type="primary"
-                  icon={<Send size={16} />}
+                <button
                   onClick={handleSendMessage}
                   disabled={!messageInput.trim()}
-                  className="flex-shrink-0"
+                  className="absolute right-3 bottom-3 p-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:bg-white/5 disabled:text-[#475569] text-white transition-all shadow-neon-sm active:scale-95 flex items-center gap-2 group/btn"
                 >
-                  <span className="hidden sm:inline">Send</span>
-                </Button>
+                  <Send size={18} />
+                  <span className="text-[10px] font-black uppercase tracking-widest mr-1 sm:block hidden">Transmit</span>
+                </button>
               </div>
             </div>
           </div>
         )}
-      </Card>
+      </div>
     </div>
   )
 }

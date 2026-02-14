@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Button, Modal, Form, Input, Alert } from 'antd'
 import { Lock, X } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { useAuth } from '@/contexts/AuthContext'
+import { useAuth } from '@/contexts/AuthContextCore'
 import logo from '@/assets/logo.png'
 import heroVideo from '@/assets/hero-video.mp4'
 import betkingLogo from '@/assets/betking.webp'
@@ -19,7 +19,6 @@ const LandingPage = () => {
   const [loading, setLoading] = useState(false)
   const [form] = Form.useForm()
 
-  // Redirect when user logs in
   useEffect(() => {
     if (user) {
       const dashboardPaths = {
@@ -34,7 +33,6 @@ const LandingPage = () => {
   const handleSignIn = async (values: { email: string; password: string }) => {
     setError('')
     setLoading(true)
-
     try {
       await login(values.email, values.password)
       setIsModalOpen(false)
@@ -58,186 +56,219 @@ const LandingPage = () => {
   }
 
   return (
-    <div className="h-screen w-full relative overflow-hidden bg-black">
-      {/* Video Background - Full Height on Right Side */}
-      <div className="absolute inset-0 flex">
-        {/* Left side - Black background with green glow (desktop only) */}
-        <div 
-          className="hidden lg:block lg:w-1/2 bg-black relative overflow-hidden"
-          style={{
-            background: 'radial-gradient(ellipse at center, rgba(16, 185, 129, 0.15) 0%, rgba(0, 0, 0, 1) 60%)'
-          }}
+    <div className="flex flex-col min-h-screen w-full relative overflow-hidden bg-[#020617] text-white selection:bg-blue-500/30">
+      {/* Dynamic Background Elements */}
+      <div className="absolute inset-0 z-0">
+        <video 
+          autoPlay 
+          loop 
+          muted 
+          playsInline 
+          className="absolute inset-0 w-full h-full object-cover opacity-40 brightness-75 transition-opacity"
         >
-          {/* Randomly scattered particle dots */}
-          {Array.from({ length: 80 }).map((_, i) => (
-            <div
-              key={i}
-              className="absolute rounded-full"
-              style={{
-                width: `${Math.random() * 3 + 1}px`,
-                height: `${Math.random() * 3 + 1}px`,
-                background: 'rgba(255, 255, 255, 0.3)',
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-                opacity: Math.random() * 0.5 + 0.3
-              }}
-            />
-          ))}
-          
-          {/* Floating glow effects */}
-          <div 
-            className="absolute w-32 h-32 rounded-full blur-3xl animate-pulse"
-            style={{
-              background: 'rgba(16, 185, 129, 0.3)',
-              top: '20%',
-              left: '15%',
-              animation: 'float 6s ease-in-out infinite'
-            }}
-          />
-          <div 
-            className="absolute w-24 h-24 rounded-full blur-2xl animate-pulse"
-            style={{
-              background: 'rgba(16, 185, 129, 0.2)',
-              top: '60%',
-              left: '70%',
-              animation: 'float 8s ease-in-out infinite 2s'
-            }}
-          />
-          <div 
-            className="absolute w-20 h-20 rounded-full blur-2xl animate-pulse"
-            style={{
-              background: 'rgba(16, 185, 129, 0.25)',
-              top: '40%',
-              left: '40%',
-              animation: 'float 7s ease-in-out infinite 1s'
-            }}
-          />
-        </div>
-        
-        {/* Right side - Video background with curvy border */}
-        <div className="w-full lg:w-1/2 relative overflow-hidden lg:[clip-path:ellipse(100%_100%_at_100%_50%)]">
-          <video 
-            autoPlay
-            loop
-            muted
-            playsInline
-            controls={false}
-            preload="auto"
-            disablePictureInPicture
-            disableRemotePlayback
-            className="w-full h-full object-cover"
-            style={{ pointerEvents: 'none' }}
-          >
-            <source src={heroVideo} type="video/mp4" />
-          </video>
-        </div>
+          <source src={heroVideo} type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/60 via-[#020617]/30 to-[#020617]" />
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-emerald-600/10 blur-[120px] rounded-full animate-float" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-600/10 blur-[120px] rounded-full animate-float" style={{ animationDelay: '2s' }} />
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 brightness-50 contrast-150" />
       </div>
 
-      {/* Content Layer - Positioned above video */}
-      <div className="relative z-10 h-full flex flex-col">
-        
-        {/* Header */}
-        <header className="w-full px-6 lg:px-12 py-6 flex-shrink-0 relative z-20">
-          <div className="max-w-7xl mx-auto flex items-center justify-between">
-            <motion.div 
-              className="flex items-center gap-3 cursor-pointer ml-0 lg:ml-8" 
-              onClick={() => navigate('/')}
-              initial={{ x: -50, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              <img src={logo} alt="ROTCS Logo" className="h-[50px] sm:h-[60px] lg:h-[100px] w-auto" />
-            </motion.div>
+      {/* Header */}
+      <header className="relative z-20 w-full flex-shrink-0">
+        <div className="max-w-7xl mx-auto px-6 py-6 lg:px-12 flex items-center justify-between">
+          <motion.div 
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            className="flex items-center gap-3"
+          >
+            <div className="w-12 h-12 bg-white/10 border border-white/20 rounded-xl flex items-center justify-center glass-panel shadow-xl">
+              <img src={logo} alt="ROTCS" className="h-8 w-auto brightness-110" />
+            </div>
+            <div className="hidden sm:block">
+              <span className="text-xl font-black tracking-tighter text-white block leading-none">ROTCS</span>
+              <span className="text-[10px] uppercase tracking-[0.2em] text-emerald-400 font-bold">Regulatory System</span>
+            </div>
+          </motion.div>
 
-            <motion.div
-              initial={{ x: 50, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ duration: 0.5 }}
+          <motion.div
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.1 }}
+          >
+            <Button 
+              onClick={openModal}
+              className="h-11 px-6 bg-emerald-600 hover:bg-emerald-500 border-none font-bold text-sm rounded-xl shadow-2xl shadow-emerald-600/40 transition-all flex items-center gap-2"
             >
-              <Button 
-                onClick={openModal}
-                className="h-10 sm:h-12 px-4 sm:px-8 text-sm sm:text-base font-bold border-2 border-green-400 hover:border-green-300 transition-all"
-                style={{
-                  background: 'transparent',
-                  color: 'white',
-                  borderRadius: '8px',
-                }}
-              >
-                <span className="text-white">Get Started</span>
-              </Button>
-            </motion.div>
-          </div>
-        </header>
+              <Lock size={16} />
+              Sign In
+            </Button>
+          </motion.div>
+        </div>
+      </header>
 
-        {/* Main Content */}
-        <main className="flex-1 flex items-center overflow-hidden relative z-20">
-          <div className="w-full max-w-7xl mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-2">
-            {/* Left Side - Hero Content */}
-            <motion.div 
-              className="flex items-center"
-              initial={{ x: -100, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-            >
-              <div className="max-w-xl space-y-4 sm:space-y-6 lg:space-y-8">
-                {/* Hero Title */}
-                <h1 className="text-2xl sm:text-3xl lg:text-5xl xl:text-6xl font-black leading-tight">
-                  <span className="text-green-400">Regulatory</span>
-                  <br />
-                  <span className="text-white">Oversights and </span>
-                  <span className="text-green-400">Gaming Tax</span>
-                  <br />
-                  <span className="text-white">Calculation System</span>
-                </h1>
+      {/* Hero Section */}
+      <main className="relative z-10 flex-1 flex items-center overflow-y-auto w-full">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-12 lg:gap-24 items-center w-full py-12 lg:py-24">
+          
+          {/* Left Content */}
+          <motion.div
+            initial={{ x: -40, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 1, ease: 'easeOut' }}
+            className="space-y-10 md:space-y-12 order-2 lg:order-1"
+          >
+            <div>
+              <h1 className="text-5xl md:text-7xl lg:text-[88px] bold-heading mb-8 md:mb-10 text-white leading-tight">
+                <span className="drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">Revenue</span><br />
+                <span className="bg-gradient-to-r from-emerald-400 via-white to-blue-400 bg-[length:200%_auto] animate-gradient bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(16,185,129,0.3)]">Transparency.</span>
+              </h1>
+              
+              <p className="text-lg md:text-xl lg:text-2xl text-[#94A3B8] max-w-xl mb-12 md:mb-16 leading-relaxed font-semibold">
+                Real-time monitoring and automated auditing for state-wide gaming revenue. Secure, precise, and transparent reporting.
+              </p>
 
-                {/* CTA Button */}
-                <div>
-                  <motion.button
-                    onClick={openModal}
-                    className="h-12 sm:h-14 px-6 sm:px-10 text-sm sm:text-base font-bold border-0 cursor-pointer"
-                    style={{
-                      background: '#10b981',
-                      color: 'white',
-                      borderRadius: '8px',
-                    }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+               <div className="flex flex-col sm:flex-row flex-wrap gap-5 md:gap-8">
+                <button
+                  onClick={openModal}
+                  className="h-14 md:h-16 px-10 md:px-12 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-base md:text-lg rounded-xl hover:scale-105 active:scale-95 transition-all shadow-[0_0_25px_rgba(16,185,129,0.5)] flex items-center justify-center gap-3"
+                >
+                  <Lock size={20} />
+                  Sign In
+                </button>
+              </div>
+            </div>
+
+            {/* Operator Logos */}
+            <div className="pt-10 md:pt-14 border-t-2 border-white/[0.05]">
+              <p className="text-[11px] font-black uppercase tracking-[0.3em] text-[#64748B] mb-8 md:mb-12 text-center lg:text-left">Validated Terminal Integrations</p>
+              <div className="grid grid-cols-4 items-center gap-4 sm:gap-6 md:gap-8 max-w-2xl">
+                {[
+                  { img: betkingLogo, name: 'BetKing' },
+                  { img: sportybetLogo, name: 'SportyBet' },
+                  { img: onexbetLogo, name: '1xBet' },
+                  { img: bet9jaLogo, name: 'Bet9ja' }
+                ].map((op, i) => (
+                  <motion.div 
+                    key={i}
+                    whileHover={{ scale: 1.1, y: -5 }}
+                    className="aspect-square rounded-xl bg-white/5 border border-white/10 p-3 md:p-4 flex items-center justify-center shadow-2xl transition-all cursor-pointer group hover:border-emerald-500/50"
                   >
-                    <span className="text-white">Get Started</span>
-                  </motion.button>
-                </div>
+                    <img 
+                      src={op.img} 
+                      alt={op.name} 
+                      className="max-w-full max-h-full object-contain brightness-110 transition-transform group-hover:scale-110" 
+                    />
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
 
-                {/* Betting Company Logos Section */}
-                <div className="pt-6 sm:pt-10 lg:pt-16">
-                  <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-                    <div className="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded-full bg-white flex items-center justify-center overflow-hidden">
-                      <img src={betkingLogo} alt="BetKing" className="w-full h-full object-cover" />
-                    </div>
-                    <div className="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded-full bg-white flex items-center justify-center overflow-hidden">
-                      <img src={sportybetLogo} alt="SportyBet" className="w-full h-full object-cover" />
-                    </div>
-                    <div className="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded-full bg-white flex items-center justify-center overflow-hidden">
-                      <img src={onexbetLogo} alt="1xBet" className="w-full h-full object-cover" />
-                    </div>
-                    <div className="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded-full bg-white flex items-center justify-center overflow-hidden">
-                      <img src={bet9jaLogo} alt="Bet9ja" className="w-full h-full object-cover" />
-                    </div>
+          {/* Right Visual - Massive High-Impact Gauge */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            transition={{ duration: 1.2, delay: 0.3, ease: 'backOut' }}
+            className="relative order-1 lg:order-2 flex justify-center"
+          >
+            <div className="relative z-10 bg-[#0F172A] border-2 border-white/[0.05] rounded-[48px] p-10 md:p-14 aspect-square flex flex-col items-center justify-center shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden group w-full max-w-[500px] lg:max-w-none">
+              {/* Massive Glow Orb */}
+              <div className="absolute top-[-20%] right-[-20%] w-[80%] h-[80%] bg-emerald-600/20 blur-[120px] pointer-events-none rounded-full" />
+              <div className="absolute bottom-[-20%] left-[-20%] w-[80%] h-[80%] bg-blue-600/10 blur-[120px] pointer-events-none rounded-full" />
+              
+              {/* Visual Gauge Mockup - Holographic Layers */}
+              <div className="relative w-72 h-72 md:w-[420px] md:h-[420px]">
+                {/* Background Rings */}
+                <svg className="absolute inset-0 w-full h-full transform -rotate-90">
+                  <circle cx="50%" cy="50%" r="42%" stroke="currentColor" strokeWidth="2" fill="transparent" className="text-white/5" />
+                  <circle cx="50%" cy="50%" r="45%" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-white/[0.02]" />
+                  <circle cx="50%" cy="50%" r="45%" stroke="currentColor" strokeWidth="1" fill="transparent" className="text-white/10" strokeDasharray="2 6" />
+                </svg>
+
+                {/* Main Progress Ring with Scanning Effect */}
+                <svg className="absolute inset-0 w-full h-full transform -rotate-90">
+                  {/* Glowing Track */}
+                  <circle 
+                    cx="50%" cy="50%" r="45%" stroke="url(#holographic-gradient)" strokeWidth="22" fill="transparent" 
+                    strokeLinecap="round" strokeDasharray="282.7%" strokeDashoffset="70.5%"
+                    className="opacity-20 blur-sm"
+                  />
+                  {/* Sharp Progress */}
+                  <circle 
+                    cx="50%" cy="50%" r="45%" stroke="url(#holographic-gradient)" strokeWidth="18" fill="transparent" 
+                    strokeLinecap="round" strokeDasharray="282.7%" strokeDashoffset="70.5%"
+                    className="drop-shadow-[0_0_15px_rgba(16,185,129,0.5)]"
+                  />
+                  <defs>
+                    <linearGradient id="holographic-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#10b981" />
+                      <stop offset="50%" stopColor="#34d399" />
+                      <stop offset="100%" stopColor="#60a5fa" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+
+                {/* Scanning Ray */}
+                <motion.div 
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                  className="absolute inset-0 origin-center pointer-events-none"
+                >
+                  <div className="absolute top-1/2 left-1/2 w-[50%] h-[2px] bg-gradient-to-r from-transparent via-emerald-500/40 to-emerald-400 -translate-y-1/2 origin-left" />
+                </motion.div>
+
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.5em] text-[#64748B] mb-2 drop-shadow-sm">Total Revenue Index</span>
+                  <motion.span 
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 1, delay: 0.8 }}
+                    className="text-6xl md:text-9xl font-black text-white tabular-nums tracking-tighter drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)] leading-none"
+                  >
+                    ₦14.2B
+                  </motion.span>
+                  <div className="mt-8 px-6 py-2 rounded-full bg-emerald-500/10 backdrop-blur-md border border-emerald-500/20 text-emerald-400 text-xs md:text-sm font-black flex items-center gap-3 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+                    <span className="animate-pulse w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_10px_#10b981]" />
+                    Live Auditing Active
                   </div>
                 </div>
               </div>
-            </motion.div>
 
-            {/* Right Side - Empty space (video is in background) */}
-            <div className="hidden lg:block" />
-          </div>
-        </main>
-      </div>
+              {/* Data Grid Mockup - Industrial */}
+              <div className="grid grid-cols-2 gap-5 md:gap-8 w-full mt-14 md:mt-20">
+                <div className="p-5 md:p-6 rounded-2xl bg-black/40 border border-white/10">
+                  <span className="text-[10px] md:text-xs uppercase font-black tracking-widest text-[#64748B] block mb-2">Endpoint Status</span>
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                    <span className="text-lg md:text-2xl font-black text-white italic">OPERATIONAL</span>
+                  </div>
+                </div>
+                <div className="p-5 md:p-6 rounded-2xl bg-black/40 border border-white/10">
+                  <span className="text-[10px] md:text-xs uppercase font-black tracking-widest text-[#64748B] block mb-2">Tax Accuracy</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg md:text-2xl font-black italic text-emerald-400">99.99%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Floating Data Decor */}
+            <div className="absolute -top-10 -left-10 w-24 h-24 bg-white/5 border border-white/10 rounded-2xl -rotate-12 blur-[1px] hidden lg:block" />
+            <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-emerald-600/10 border border-emerald-500/20 rounded-[50%] rotate-45 blur-[1px] hidden lg:block" />
+          </motion.div>
+        </div>
+      </main>
 
       {/* Footer */}
-      <footer className="relative z-10 w-full px-6 py-3 flex-shrink-0">
-        <div className="max-w-7xl mx-auto flex items-center justify-center">
-          <p className="text-sm text-white/70 text-center">
-            © 2026 ROTCS. Developed by <span className="text-green-400 font-semibold">Northernreach</span>
+      <footer className="relative z-10 w-full border-t border-white/5 glass-panel">
+        <div className="max-w-7xl mx-auto px-6 py-8 lg:px-12 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold text-[#64748B] uppercase tracking-widest">Powered by</span>
+            <span className="text-xs font-black text-white uppercase tracking-tighter">Northernreach</span>
+          </div>
+          <p className="text-[10px] md:text-xs font-medium text-[#64748B] text-center md:text-right">
+            © 2026 Regulatory Oversight & Tax Calculation System. All Rights Reserved.
           </p>
         </div>
       </footer>
@@ -247,91 +278,87 @@ const LandingPage = () => {
         open={isModalOpen}
         onCancel={closeModal}
         footer={null}
-        closeIcon={<X size={20} />}
+        closeIcon={<X size={18} className="text-[#94A3B8]" />}
         centered
-        width={480}
+        width={440}
         styles={{
           content: {
-            borderRadius: '16px',
+            backgroundColor: '#0F172A',
+            borderRadius: '24px',
             padding: 0,
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+            overflow: 'hidden'
           }
         }}
       >
-        <div className="p-8">
-          {/* Modal Header */}
-          <div className="text-center mb-6">
-            <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-green-600 to-green-700 rounded-2xl mb-4">
-              <Lock className="text-white" size={24} />
+        <div className="relative">
+          {/* Top Flare */}
+          <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-blue-600/20 to-transparent -z-0" />
+          
+          <div className="p-10 relative z-10">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600/20 border border-blue-500/20 rounded-2xl mb-6 shadow-inner">
+                <Lock className="text-blue-500" size={28} />
+              </div>
+              <h2 className="text-2xl font-black text-white mb-2 tracking-tight">System Portal</h2>
+              <p className="text-[#94A3B8] text-sm font-medium">Log in to your dashboard</p>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome Back</h2>
-            <p className="text-gray-600">Sign in to access your dashboard</p>
-          </div>
 
-          {/* Error Alert */}
-          {error && (
-            <Alert
-              message="Authentication Failed"
-              description={error}
-              type="error"
-              showIcon
-              closable
-              onClose={() => setError('')}
-              className="mb-4"
-            />
-          )}
+            {error && (
+              <Alert
+                message={error}
+                type="error"
+                showIcon
+                className="mb-6 rounded-xl border-red-500/20 bg-red-500/10 text-red-500 font-bold"
+              />
+            )}
 
-          {/* Sign In Form */}
-          <Form
-            form={form}
-            name="signin"
-            onFinish={handleSignIn}
-            layout="vertical"
-            size="large"
-          >
-            <Form.Item
-              label="Email"
-              name="email"
-              rules={[
-                { required: true, message: 'Please input your email!' },
-                { type: 'email', message: 'Please enter a valid email!' },
-              ]}
+            <Form
+              form={form}
+              onFinish={handleSignIn}
+              layout="vertical"
+              size="large"
+              requiredMark={false}
             >
-              <Input placeholder="Enter your email" />
-            </Form.Item>
+              <Form.Item
+                name="email"
+                rules={[{ required: true, message: 'Identity required' }]}
+              >
+                <Input 
+                  placeholder="Government Email / ID" 
+                  className="h-12 bg-black/40 border-white/10 text-white rounded-xl focus:border-blue-500/50"
+                />
+              </Form.Item>
 
-            <Form.Item
-              label="Password"
-              name="password"
-              rules={[{ required: true, message: 'Please input your password!' }]}
-            >
-              <Input.Password placeholder="Enter your password" />
-            </Form.Item>
+              <Form.Item
+                name="password"
+                rules={[{ required: true, message: 'Credentials required' }]}
+              >
+                <Input.Password 
+                  placeholder="Access Key" 
+                  className="h-12 bg-black/40 border-white/10 text-white rounded-xl focus:border-blue-500/50"
+                />
+              </Form.Item>
 
-            <Form.Item className="mb-4">
               <Button 
                 type="primary" 
                 htmlType="submit" 
                 block 
                 loading={loading}
-                className="h-12 text-base font-semibold"
-                style={{ 
-                  background: loading ? undefined : 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                  border: 'none',
-                  borderRadius: '8px'
-                }}
+                className="h-12 bg-blue-600 hover:bg-blue-500 border-none font-bold text-base rounded-xl mt-4 shadow-lg shadow-blue-600/20"
               >
-                Sign In
+                Sign In to Dashboard
               </Button>
-            </Form.Item>
-          </Form>
+            </Form>
 
-          {/* Test Credentials */}
-          <div className="text-center mt-6 pt-6 border-t border-gray-100">
-            <p className="text-xs text-gray-500 mb-2 font-medium">Test Credentials:</p>
-            <div className="space-y-1">
-              <p className="text-xs text-gray-600">Admin: admin@rotcs.gov / admin123</p>
-              <p className="text-xs text-gray-600">Consultant: consultant@rotcs.gov / consultant123</p>
-              <p className="text-xs text-gray-600">Operator: operator@rotcs.gov / operator123</p>
+            <div className="mt-8 pt-8 border-t border-white/5 text-center">
+              <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#64748B]">System Credentials</span>
+              <div className="mt-4 grid grid-cols-1 gap-2">
+                <p className="text-[11px] font-medium text-[#94A3B8]">Admin: admin@rotcs.gov / admin123</p>
+                <p className="text-[11px] font-medium text-[#94A3B8]">Consultant: consultant@rotcs.gov / consultant123</p>
+                <p className="text-[11px] font-medium text-[#94A3B8]">Operator: operator@rotcs.gov / operator123</p>
+              </div>
             </div>
           </div>
         </div>

@@ -52,8 +52,8 @@ export const OPERATORS: OperatorData[] = [
     name: 'Bet9ja',
     status: 'compliant',
     ggr: 450000000,
-    taxDue: 67500000,
-    taxPaid: 67500000,
+    taxDue: 13500000, // 450M * 0.3 * 0.1
+    taxPaid: 13500000,
     lastPayment: '2026-01-01',
   },
   {
@@ -61,8 +61,8 @@ export const OPERATORS: OperatorData[] = [
     name: 'SportyBet',
     status: 'compliant',
     ggr: 380000000,
-    taxDue: 57000000,
-    taxPaid: 57000000,
+    taxDue: 11400000, // 380M * 0.03
+    taxPaid: 11400000,
     lastPayment: '2026-01-01',
   },
   {
@@ -70,8 +70,8 @@ export const OPERATORS: OperatorData[] = [
     name: '1xBet',
     status: 'warning',
     ggr: 320000000,
-    taxDue: 48000000,
-    taxPaid: 45000000,
+    taxDue: 9600000, // 320M * 0.03
+    taxPaid: 9000000,
     lastPayment: '2025-12-28',
   },
   {
@@ -79,8 +79,8 @@ export const OPERATORS: OperatorData[] = [
     name: 'BetKing',
     status: 'compliant',
     ggr: 290000000,
-    taxDue: 43500000,
-    taxPaid: 43500000,
+    taxDue: 8700000, // 290M * 0.03
+    taxPaid: 8700000,
     lastPayment: '2026-01-02',
   },
   {
@@ -88,8 +88,8 @@ export const OPERATORS: OperatorData[] = [
     name: 'NairaBet',
     status: 'default',
     ggr: 180000000,
-    taxDue: 27000000,
-    taxPaid: 15000000,
+    taxDue: 5400000, // 180M * 0.03
+    taxPaid: 3000000,
     lastPayment: '2025-12-15',
   },
   {
@@ -97,8 +97,8 @@ export const OPERATORS: OperatorData[] = [
     name: '22Bet',
     status: 'compliant',
     ggr: 250000000,
-    taxDue: 37500000,
-    taxPaid: 37500000,
+    taxDue: 7500000, // 250M * 0.03
+    taxPaid: 7500000,
     lastPayment: '2026-01-01',
   },
 ]
@@ -107,20 +107,26 @@ export const OPERATORS: OperatorData[] = [
 // CALCULATED REVENUE METRICS
 // ============================================================================
 
+export const PLAYER_WIN_RATIO = 0.7 // 70% of TGV goes to players
+export const NET_REVENUE_TAX_RATE = 0.1 // 10% tax on (TGV - Wins)
+
 // Total Gaming Value across all operators
 export const TOTAL_MARKET_TGV = OPERATORS.reduce((sum, op) => sum + op.ggr, 0)
 
-// Total tax collected (sum of all tax paid)
-export const TOTAL_TAX_COLLECTED = OPERATORS.reduce((sum, op) => sum + op.taxPaid, 0)
-
-// Total tax due (sum of all tax due)
-export const TOTAL_TAX_DUE = OPERATORS.reduce((sum, op) => sum + op.taxDue, 0)
-
 // Total player wins (approximately 70% of TGV based on industry standards)
-export const TOTAL_PLAYER_WINS = Math.round(TOTAL_MARKET_TGV * 0.7)
+export const TOTAL_PLAYER_WINS = Math.round(TOTAL_MARKET_TGV * PLAYER_WIN_RATIO)
+
+// Net revenue (GGR) = TGV - Wins
+export const TOTAL_NET_REVENUE = TOTAL_MARKET_TGV - TOTAL_PLAYER_WINS
+
+// Total tax due (10% of Net Revenue)
+export const TOTAL_TAX_DUE = Math.round(TOTAL_NET_REVENUE * NET_REVENUE_TAX_RATE)
+
+// Total tax collected (assuming ~95% collection rate for demo purposes)
+export const TOTAL_TAX_COLLECTED = Math.round(TOTAL_TAX_DUE * 0.95)
 
 // Projected monthly revenue target
-export const PROJECTED_REVENUE = 350000000
+export const PROJECTED_REVENUE = Math.round(TOTAL_TAX_DUE * 1.2)
 
 // Revenue trend data (6 months)
 export const REVENUE_TREND_DATA = [
@@ -199,25 +205,25 @@ export const INITIAL_BETTING_RECORDS: BettingRecord[] = [
   { id: 10, playerName: 'Chioma E.', company: 'NairaBet', betType: 'Horse Racing', stake: 7500, outcome: 'loss', payout: 0, time: '15 mins ago', state: 'Enugu' },
 ]
 
-// ============================================================================
-// CONSULTANT MULTI-STATE DATA (5 States Aggregated)
-// ============================================================================
-
-// Consultant sees data from 5 states, so numbers are approximately 5x government admin
-export const CONSULTANT_TOTAL_TGV = TOTAL_MARKET_TGV * 5 // ₦9,350,000,000
-export const CONSULTANT_TAX_COLLECTED = TOTAL_TAX_COLLECTED * 5 // ₦1,437,500,000
-export const CONSULTANT_TAX_DUE = TOTAL_TAX_DUE * 5 // ₦1,552,500,000
-export const CONSULTANT_PLAYER_WINS = TOTAL_PLAYER_WINS * 5 // ₦6,545,000,000
-export const CONSULTANT_PROJECTED_REVENUE = PROJECTED_REVENUE * 5 // ₦1,750,000,000
-
-// Multi-state breakdown (5 states with slight variations)
+// Multi-state breakdown (5 states with consistent data)
 export const CONSULTANT_STATES = [
-  { id: 'lagos', name: 'Lagos State', status: 'healthy', collectionRate: 98, operators: 6, tgv: 1870000000, taxCollected: 287500000 },
-  { id: 'ogun', name: 'Ogun State', status: 'warning', collectionRate: 85, operators: 5, tgv: 1650000000, taxCollected: 247500000 },
-  { id: 'rivers', name: 'Rivers State', status: 'healthy', collectionRate: 95, operators: 7, tgv: 2100000000, taxCollected: 315000000 },
-  { id: 'kano', name: 'Kano State', status: 'healthy', collectionRate: 92, operators: 6, tgv: 1850000000, taxCollected: 277500000 },
-  { id: 'oyo', name: 'Oyo State', status: 'critical', collectionRate: 65, operators: 5, tgv: 1880000000, taxCollected: 310000000 },
+  { id: 'lagos', name: 'Lagos State', status: 'healthy', collectionRate: 98, operators: 12, tgv: 1620000000, users: 168000 },
+  { id: 'ogun', name: 'Ogun State', status: 'warning', collectionRate: 85, operators: 8, tgv: 850000000, users: 95000 },
+  { id: 'rivers', name: 'Rivers State', status: 'healthy', collectionRate: 95, operators: 10, tgv: 1240000000, users: 142000 },
+  { id: 'kano', name: 'Kano State', status: 'healthy', collectionRate: 92, operators: 7, tgv: 920000000, users: 108000 },
+  { id: 'oyo', name: 'Oyo State', status: 'critical', collectionRate: 65, operators: 6, tgv: 650000000, users: 78000 },
 ]
+
+// ============================================================================
+// CONSULTANT MULTI-STATE DATA (Aggregated from States)
+// ============================================================================
+
+export const CONSULTANT_TOTAL_TGV = CONSULTANT_STATES.reduce((sum, s) => sum + s.tgv, 0)
+export const CONSULTANT_PLAYER_WINS = Math.round(CONSULTANT_TOTAL_TGV * PLAYER_WIN_RATIO)
+export const CONSULTANT_NET_REVENUE = CONSULTANT_TOTAL_TGV - CONSULTANT_PLAYER_WINS
+export const CONSULTANT_TAX_DUE = Math.round(CONSULTANT_NET_REVENUE * NET_REVENUE_TAX_RATE)
+export const CONSULTANT_TAX_COLLECTED = Math.round(CONSULTANT_TAX_DUE * 0.95) // Aggregated collection
+export const CONSULTANT_PROJECTED_REVENUE = Math.round(CONSULTANT_TAX_DUE * 1.2)
 
 // Multi-state territorial data (aggregated across states)
 export const CONSULTANT_TERRITORIAL_DATA: TerritorialData[] = [

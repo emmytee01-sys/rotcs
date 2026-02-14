@@ -1,27 +1,20 @@
-import { Modal } from 'antd'
-import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '@/contexts/AuthContext'
-import React from 'react'
-
-const { confirm } = Modal
+import { useAuth } from '@/contexts/AuthContextCore'
+import { showConfirm } from '@/components/ui/ConfirmModal'
 
 export const useLogoutConfirm = () => {
   const navigate = useNavigate()
   const { logout } = useAuth()
 
   const showLogoutConfirm = () => {
-    confirm({
+    showConfirm({
       title: 'Confirm Logout',
-      icon: React.createElement(ExclamationCircleOutlined),
       content: 'Are you sure you want to logout? Any unsaved changes will be lost.',
       okText: 'Yes, Logout',
       cancelText: 'Cancel',
-      okType: 'danger',
+      type: 'error',
       onOk() {
-        // Clear session data via AuthContext
         logout()
-        // Redirect to landing page
         navigate('/', { replace: true })
       },
     })

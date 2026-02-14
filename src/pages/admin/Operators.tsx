@@ -4,6 +4,7 @@ import { useState } from 'react'
 import OperatorDetailModal from '@/components/admin/OperatorDetailModal'
 import { calculateVariance } from '@/utils/variance'
 import { OPERATORS, TOTAL_MARKET_TGV } from '@/utils/mockData'
+import { formatCurrency } from '@/utils/formatters'
 
 const { Title, Text } = Typography
 
@@ -69,14 +70,14 @@ const columns = [
     title: 'TGV',
     dataIndex: 'ggr',
     key: 'ggr',
-    render: (ggr: number) => <Text>₦{(ggr / 1000000).toFixed(1)}M</Text>,
+    render: (ggr: number) => <Text>{formatCurrency(ggr)}</Text>,
     sorter: (a: any, b: any) => a.ggr - b.ggr,
   },
   {
     title: 'Tax Due',
     dataIndex: 'taxDue',
     key: 'taxDue',
-    render: (taxDue: number) => <Text>₦{(taxDue / 1000000).toFixed(1)}M</Text>,
+    render: (taxDue: number) => <Text>{formatCurrency(taxDue)}</Text>,
   },
   {
     title: 'Tax Paid',
@@ -86,7 +87,7 @@ const columns = [
       const isPaid = taxPaid >= record.taxDue
       return (
         <Text className={isPaid ? 'text-green-600' : 'text-red-600'}>
-          ₦{(taxPaid / 1000000).toFixed(1)}M
+          {formatCurrency(taxPaid)}
         </Text>
       )
     },
@@ -137,7 +138,7 @@ const Operators = () => {
   return (
     <div>
       <Title level={2}>Operator Overview</Title>
-      <Text type="secondary">Market status and compliance monitoring</Text>
+      <Text type="secondary">Operator status and compliance overview</Text>
 
       {/* Summary Cards */}
       <Row gutter={[16, 16]} className="mt-6">
@@ -173,7 +174,7 @@ const Operators = () => {
         <Col xs={24} sm={12} lg={6}>
           <Card>
             <Statistic
-              title="In Default"
+              title="Late Payments"
               value={defaultCount}
               prefix={<XCircle size={20} className="text-red-500" />}
               valueStyle={{ color: '#cf1322' }}
@@ -185,12 +186,10 @@ const Operators = () => {
       {/* Market Volume */}
       <Card className="mt-6">
         <Title level={4}>Total Gaming Value</Title>
-        <Statistic
-          value={totalMarketTGV}
-          prefix="₦"
-          suffix="(TGV)"
-          valueStyle={{ color: '#1890ff', fontSize: '32px' }}
-        />
+        <div className="text-4xl font-bold text-blue-600">
+          {formatCurrency(totalMarketTGV)}
+          <span className="text-sm font-normal text-gray-500 ml-2">(TGV)</span>
+        </div>
         <Text type="secondary">Aggregate TGV across all operators</Text>
       </Card>
 

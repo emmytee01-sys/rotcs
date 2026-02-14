@@ -1,6 +1,7 @@
 import { Card, Typography } from 'antd'
 import { MapPin } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import { formatNumber } from '@/utils/formatters'
 
 const { Title, Text } = Typography
 
@@ -89,7 +90,7 @@ const GeospatialHeatmap = () => {
               <div style="padding: 8px;">
                 <h3 style="margin: 0 0 8px 0; font-weight: bold;">Territory ${index + 1}</h3>
                 <p style="margin: 4px 0;"><strong>Activity Level:</strong> ${(point.weight * 100).toFixed(0)}%</p>
-                <p style="margin: 4px 0;"><strong>Active Users:</strong> ${Math.floor(point.weight * 50000).toLocaleString()}</p>
+                <p style="margin: 4px 0;"><strong>Active Users:</strong> ${formatNumber(Math.floor(point.weight * 50000))}</p>
               </div>
             `,
           })
@@ -114,20 +115,19 @@ const GeospatialHeatmap = () => {
         Active Player Heatmap
       </Title>
       {mapError ? (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center" style={{ height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center h-[300px] md:h-[500px] flex items-center justify-center">
           <div>
             <MapPin size={64} className="text-red-400 mx-auto mb-4" />
             <Text className="text-red-600 block mb-2">{mapError}</Text>
             <Text type="secondary" className="text-sm">
-              Add your Google Maps API key to the .env file as VITE_GOOGLE_MAPS_API_KEY
+              Configuration required for full map access.
             </Text>
           </div>
         </div>
       ) : (
         <div
           ref={mapContainer}
-          className="rounded-lg"
-          style={{ height: '500px', width: '100%' }}
+          className="rounded-lg h-[300px] md:h-[500px] w-full"
         />
       )}
       <div className="mt-4 flex gap-4">

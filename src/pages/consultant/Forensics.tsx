@@ -5,7 +5,7 @@ import TransactionExplorer from '@/components/consultant/TransactionExplorer'
 
 const Forensics = () => {
   return (
-    <div>
+    <div className="mt-8">
       <Tabs
         defaultActiveKey="rtp"
         items={[

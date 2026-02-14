@@ -1,4 +1,4 @@
-import { Card, Typography, Badge, Pagination, Tag } from 'antd'
+import { Pagination } from 'antd'
 import { TrendingUp, ArrowUpRight, ArrowDownRight } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { 
@@ -10,7 +10,6 @@ import {
   BettingRecord 
 } from '@/utils/mockData'
 
-const { Title, Text } = Typography
 
 interface RealTimeCollectionsFeedProps {
   selectedState?: string
@@ -68,102 +67,117 @@ const RealTimeCollectionsFeed = ({ selectedState, selectedCompany }: RealTimeCol
   }, [selectedState, selectedCompany])
 
   return (
-    <Card className="shadow-sm">
+    <div className="bg-[#0F172A] rounded-3xl border-2 border-white/[0.03] shadow-2xl overflow-hidden flex flex-col h-full">
       {/* Header with Title and Live Badge */}
-      <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
-        <Title level={4} className="m-0 flex items-center gap-2">
-          <TrendingUp size={20} className="sm:w-6 sm:h-6" />
-          <span className="text-base sm:text-lg">Real-Time Betting Activity Feed</span>
-        </Title>
-        <div className="flex items-center gap-2 sm:gap-4">
-          <Text className="text-xs sm:text-sm text-gray-600">
-            {filteredRecords.length} record{filteredRecords.length !== 1 ? 's' : ''}
-          </Text>
-          <Badge status="processing" text="Live" className="text-sm sm:text-base" />
+      <div className="p-6 md:p-8 border-b border-white/[0.05] flex flex-wrap justify-between items-center gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+            <TrendingUp size={20} className="text-emerald-500" />
+          </div>
+          <div>
+            <h4 className="text-lg bold-heading text-white m-0 uppercase tracking-tight">Live Transactions</h4>
+            <span className="text-[10px] font-black text-[#64748B] uppercase tracking-[0.2em]">Live Feed</span>
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-black flex items-center gap-2 uppercase">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            LIVE AUDIT
+          </div>
+          <span className="text-xs font-black text-[#64748B] uppercase tabular-nums">
+            {filteredRecords.length} EVENTS
+          </span>
         </div>
       </div>
 
-      <div className="space-y-2">
+      <div className="p-4 md:p-6 space-y-3 flex-1 overflow-y-auto max-h-[600px] scrollbar-hide">
         {currentRecords.length > 0 ? (
           currentRecords.map((record) => (
             <div
               key={record.id}
-              className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg transition-all border-l-4"
+              className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-5 rounded-2xl bg-black/40 border-2 border-transparent hover:border-emerald-500/20 transition-all cursor-pointer group relative overflow-hidden"
               style={{
                 animation: record.time === 'Just now' ? 'slideIn 0.4s ease-out' : 'none',
-                background: '#f9fafb',
-                borderLeftColor: record.outcome === 'win' ? '#10b981' : '#ef4444',
               }}
             >
-              <div className="flex items-start gap-3 sm:gap-4 flex-1 w-full">
-                {/* Company Avatar */}
+              {/* Outcome Indicator Line */}
+              <div className={`absolute left-0 top-0 bottom-0 w-1 ${record.outcome === 'win' ? 'bg-emerald-500 shadow-[0_0_10px_#10B981]' : 'bg-red-500 shadow-[0_0_10px_#EF4444]'}`} />
+              
+              <div className="flex items-center gap-4 flex-1 w-full">
+                {/* Company Avatar - Industrial Style */}
                 <div
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-white font-bold text-base sm:text-lg flex-shrink-0"
-                  style={{ background: '#059669' }}
+                  className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white font-black text-xl flex-shrink-0 group-hover:bg-emerald-500/10 group-hover:border-emerald-500/30 transition-all"
                 >
                   {record.company.charAt(0)}
                 </div>
                 
                 {/* Betting Details */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex flex-wrap items-center gap-1 sm:gap-2 mb-1">
-                    <Text strong className="text-sm sm:text-base">{record.playerName}</Text>
-                    <Text type="secondary" className="text-xs">• {record.company}</Text>
-                    <Tag color="blue" className="text-xs">{record.state}</Tag>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-sm font-black text-white uppercase tracking-tight truncate">{record.playerName}</span>
+                    <span className="text-[10px] font-black text-emerald-400/80 uppercase tracking-widest bg-emerald-500/10 px-1.5 py-0.5 rounded-md">{record.state}</span>
                   </div>
-                  <Text className="text-xs sm:text-sm text-gray-600 block truncate">{record.betType}</Text>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] font-bold text-[#64748B] uppercase truncate">{record.betType}</span>
+                    <span className="text-[10px] text-white/20">|</span>
+                    <span className="text-[10px] font-bold text-white uppercase opacity-40">{record.company}</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Stake & Outcome */}
-              <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto">
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-1">
-                    {record.outcome === 'win' ? (
-                      <ArrowUpRight size={14} className="text-green-600" />
-                    ) : (
-                      <ArrowDownRight size={14} className="text-red-600" />
-                    )}
-                    <Tag color={record.outcome === 'win' ? 'success' : 'error'} className="m-0 text-xs">
-                      {record.outcome.toUpperCase()}
-                    </Tag>
-                  </div>
-                  <div className="space-y-0.5">
-                    <Text className="text-xs text-gray-500 block">Stake: ₦{record.stake.toLocaleString()}</Text>
-                    {record.outcome === 'win' && (
-                      <Text className="text-xs sm:text-sm font-bold text-green-600 block">
-                        +₦{record.payout.toLocaleString()}
-                      </Text>
-                    )}
-                  </div>
+              {/* Stake & Outcome - High Contrast */}
+              <div className="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto mt-2 sm:mt-0 pt-3 sm:pt-0 border-t sm:border-t-0 border-white/5">
+                <div className="text-right">
+                  <span className="text-[10px] font-black text-[#64748B] uppercase block">STAKE</span>
+                  <span className="text-sm font-black text-white tabular-nums">₦{record.stake.toLocaleString()}</span>
                 </div>
                 
-                {/* Timestamp */}
-                <Text type="secondary" className="text-xs flex-shrink-0">
-                  {record.time}
-                </Text>
+                <div className="text-right min-w-[100px]">
+                  {record.outcome === 'win' ? (
+                    <>
+                      <span className="text-[10px] font-black text-emerald-500 uppercase flex items-center justify-end gap-1">
+                        <ArrowUpRight size={10} /> PAYOUT
+                      </span>
+                      <span className="text-lg font-black text-emerald-400 tabular-nums">+₦{record.payout.toLocaleString()}</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="text-[10px] font-black text-red-500 uppercase flex items-center justify-end gap-1">
+                        <ArrowDownRight size={10} /> LOSS
+                      </span>
+                      <span className="text-lg font-black text-slate-500 tabular-nums">₦0.00</span>
+                    </>
+                  )}
+                </div>
+
+                <div className="hidden md:block w-[1px] h-8 bg-white/10" />
+
+                <div className="text-right">
+                  <span className="block text-[10px] font-black text-[#64748B] uppercase tracking-tighter">{record.time}</span>
+                </div>
               </div>
             </div>
           ))
         ) : (
-          <div className="text-center py-8">
-            <Text type="secondary">No betting records found for the selected filters</Text>
+          <div className="text-center py-20 bg-black/20 rounded-3xl border border-dashed border-white/10">
+            <span className="text-[#64748B] font-bold tracking-widest uppercase">No Active Data Received</span>
           </div>
         )}
       </div>
 
       {filteredRecords.length > pageSize && (
-        <div className="mt-6 flex justify-center">
+        <div className="p-6 border-t border-white/[0.05] flex justify-center">
           <Pagination
             current={currentPage}
             total={filteredRecords.length}
             pageSize={pageSize}
             onChange={setCurrentPage}
             showSizeChanger={false}
+            className="custom-pagination"
           />
         </div>
       )}
-    </Card>
+    </div>
   )
 }
 

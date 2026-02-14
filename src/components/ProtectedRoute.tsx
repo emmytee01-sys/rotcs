@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom'
-import { useAuth, UserRole } from '@/contexts/AuthContext'
+import { useAuth, UserRole } from '@/contexts/AuthContextCore'
 import { Spin } from 'antd'
 
 interface ProtectedRouteProps {

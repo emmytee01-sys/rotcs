@@ -1,4 +1,4 @@
-import { Card, Typography, Select, Row, Col } from 'antd'
+import { Select, Row, Col } from 'antd'
 import { Globe, TrendingUp, CheckCircle } from 'lucide-react'
 import ComparativeAnalytics from '@/components/consultant/ComparativeAnalytics'
 import RealTimeCollectionsFeed from '@/components/admin/RealTimeCollectionsFeed'
@@ -10,8 +10,8 @@ import {
   CONSULTANT_PLAYER_WINS,
   CONSULTANT_STATES
 } from '@/utils/mockData'
+import { formatCurrency } from '@/utils/formatters'
 
-const { Title, Text } = Typography
 const { Option } = Select
 
 
@@ -23,14 +23,16 @@ const MultiStateHub = () => {
     <div>
       <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
         <div>
-          <Title level={2}>Multi-State Command Hub</Title>
-          <Text type="secondary">Global view of all managed jurisdictions</Text>
+          <h1 className="text-4xl md:text-5xl bold-heading text-white mb-2 uppercase tracking-tight">Regional Hub</h1>
+          <p className="text-[#94A3B8] font-bold text-sm tracking-widest uppercase italic border-l-2 border-emerald-500 pl-4">
+            Multi-state revenue monitoring and reporting
+          </p>
         </div>
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-4">
           <Select
             value={selectedState}
             onChange={setSelectedState}
-            className="w-full sm:w-[180px]"
+            className="w-full sm:w-[220px] custom-select"
             size="large"
           >
             <Option value="all">All States</Option>
@@ -41,7 +43,7 @@ const MultiStateHub = () => {
           <Select
             value={selectedCompany}
             onChange={setSelectedCompany}
-            className="w-full sm:w-[180px]"
+            className="w-full sm:w-[220px] custom-select"
             size="large"
             placeholder="Filter by Company"
           >
@@ -54,93 +56,91 @@ const MultiStateHub = () => {
       </div>
 
       {/* Key Metrics - Multi-State Aggregated */}
-      <Row gutter={[16, 16]} className="mb-6">
+      <Row gutter={[24, 24]} className="mb-10">
         <Col xs={24} sm={12} lg={8}>
-          <Card>
-            <div>
-              <Text type="secondary" className="text-sm">Total Gaming Value</Text>
-              <div className="text-3xl font-bold text-green-600 mt-2">₦{(CONSULTANT_TOTAL_TGV / 1000000).toFixed(0)}M</div>
-              <Text type="secondary" className="text-xs mt-1">Across 5 states</Text>
+          <div className="p-8 rounded-3xl bg-black/40 border-2 border-white/[0.05] relative overflow-hidden group hover:border-emerald-500/30 transition-all shadow-2xl">
+            <span className="text-[10px] font-black tracking-[0.3em] text-[#64748B] uppercase block mb-4">Total Gaming Value</span>
+            <div className="text-4xl font-black text-white tabular-nums tracking-tighter">
+              {formatCurrency(CONSULTANT_TOTAL_TGV)}
             </div>
-          </Card>
+            <div className="mt-4 text-emerald-400 text-[10px] font-black uppercase italic">
+              Verified Across 5 States
+            </div>
+          </div>
         </Col>
         <Col xs={24} sm={12} lg={8}>
-          <Card>
-            <div className="flex items-start justify-between">
-              <div>
-                <Text type="secondary" className="text-sm">Total Tax Collected</Text>
-                <div className="text-3xl font-bold text-blue-600 mt-2">₦{(CONSULTANT_TAX_COLLECTED / 1000000).toFixed(0)}M</div>
-                <Text type="secondary" className="text-xs mt-1">Multi-state revenue</Text>
-              </div>
-              <TrendingUp size={24} className="text-blue-500 mt-2" />
+          <div className="p-8 rounded-3xl bg-black/40 border-2 border-white/[0.05] relative overflow-hidden group hover:border-emerald-500/30 transition-all shadow-2xl">
+            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+              <TrendingUp size={80} className="text-blue-500" />
             </div>
-          </Card>
+            <span className="text-[10px] font-black tracking-[0.3em] text-[#64748B] uppercase block mb-4">Total Tax Collected</span>
+            <div className="text-4xl font-black text-white tabular-nums tracking-tighter">
+              {formatCurrency(CONSULTANT_TAX_COLLECTED)}
+            </div>
+            <div className="mt-4 text-blue-400 text-[10px] font-black uppercase italic">
+              Multi-State Aggregated
+            </div>
+          </div>
         </Col>
         <Col xs={24} sm={12} lg={8}>
-          <Card>
-            <div className="flex items-start justify-between">
-              <div>
-                <Text type="secondary" className="text-sm">Total Player Wins</Text>
-                <div className="text-3xl font-bold text-purple-600 mt-2">₦{(CONSULTANT_PLAYER_WINS / 1000000).toFixed(0)}M</div>
-                <Text type="secondary" className="text-xs mt-1">Aggregate payouts</Text>
-              </div>
-              <CheckCircle size={24} className="text-purple-500 mt-2" />
+          <div className="p-8 rounded-3xl bg-black/40 border-2 border-white/[0.05] relative overflow-hidden group hover:border-emerald-500/30 transition-all shadow-2xl">
+            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+              <CheckCircle size={80} className="text-emerald-500" />
             </div>
-          </Card>
+            <span className="text-[10px] font-black tracking-[0.3em] text-[#64748B] uppercase block mb-4">Total Player Wins</span>
+            <div className="text-4xl font-black text-white tabular-nums tracking-tighter">
+              {formatCurrency(CONSULTANT_PLAYER_WINS)}
+            </div>
+            <div className="mt-4 text-emerald-400 text-[10px] font-black uppercase italic">
+              Integrity Verified
+            </div>
+          </div>
         </Col>
       </Row>
 
       {/* Portfolio Health Summary */}
-      <Row gutter={[16, 16]}>
+      <Row gutter={[24, 24]}>
         <Col xs={24} sm={12} lg={6}>
-          <Card>
-            <div className="flex items-center gap-3">
-              <Globe size={32} className="text-blue-500" />
-              <div>
-                <Text type="secondary" className="text-xs">Total States</Text>
-                <div className="text-2xl font-bold">{CONSULTANT_STATES.length}</div>
-              </div>
+          <div className="p-6 rounded-2xl bg-[#0F172A] border-2 border-white/[0.03] flex items-center gap-4 transition-all hover:border-emerald-500/20">
+            <Globe size={32} className="text-blue-500 opacity-50" />
+            <div>
+              <span className="text-[10px] font-black text-[#64748B] uppercase tracking-widest block mb-1">Total States</span>
+              <div className="text-2xl font-black text-white">{CONSULTANT_STATES.length}</div>
             </div>
-          </Card>
+          </div>
         </Col>
         <Col xs={24} sm={12} lg={6}>
-          <Card>
-            <div className="flex items-center gap-3">
-              <CheckCircle size={32} className="text-green-500" />
-              <div>
-                <Text type="secondary" className="text-xs">Compliant States</Text>
-                <div className="text-2xl font-bold text-green-600">
-                  {CONSULTANT_STATES.filter(s => s.status === 'healthy').length}
-                </div>
+          <div className="p-6 rounded-2xl bg-[#0F172A] border-2 border-white/[0.03] flex items-center gap-4 transition-all hover:border-emerald-500/20">
+            <CheckCircle size={32} className="text-emerald-500 opacity-50" />
+            <div>
+              <span className="text-[10px] font-black text-[#64748B] uppercase tracking-widest block mb-1">Compliant</span>
+              <div className="text-2xl font-black text-emerald-400">
+                {CONSULTANT_STATES.filter(s => s.status === 'healthy').length}
               </div>
             </div>
-          </Card>
+          </div>
         </Col>
         <Col xs={24} sm={12} lg={6}>
-          <Card>
-            <div className="flex items-center gap-3">
-              <TrendingUp size={32} className="text-purple-500" />
-              <div>
-                <Text type="secondary" className="text-xs">Avg Compliance Rate</Text>
-                <div className="text-2xl font-bold text-purple-600">
-                  {Math.round(CONSULTANT_STATES.reduce((sum, s) => sum + s.collectionRate, 0) / CONSULTANT_STATES.length)}%
-                </div>
+          <div className="p-6 rounded-2xl bg-[#0F172A] border-2 border-white/[0.03] flex items-center gap-4 transition-all hover:border-emerald-500/20">
+            <TrendingUp size={32} className="text-blue-400 opacity-50" />
+            <div>
+              <span className="text-[10px] font-black text-[#64748B] uppercase tracking-widest block mb-1">Avg Compliance</span>
+              <div className="text-2xl font-black text-blue-400">
+                {Math.round(CONSULTANT_STATES.reduce((sum, s) => sum + s.collectionRate, 0) / CONSULTANT_STATES.length)}%
               </div>
             </div>
-          </Card>
+          </div>
         </Col>
         <Col xs={24} sm={12} lg={6}>
-          <Card>
-            <div className="flex items-center gap-3">
-              <Globe size={32} className="text-orange-500" />
-              <div>
-                <Text type="secondary" className="text-xs">Total Operators</Text>
-                <div className="text-2xl font-bold text-orange-600">
-                  {CONSULTANT_STATES.reduce((sum, s) => sum + s.operators, 0)}
-                </div>
+          <div className="p-6 rounded-2xl bg-[#0F172A] border-2 border-white/[0.03] flex items-center gap-4 transition-all hover:border-emerald-500/20">
+            <Globe size={32} className="text-amber-500 opacity-50" />
+            <div>
+              <span className="text-[10px] font-black text-[#64748B] uppercase tracking-widest block mb-1">Total Operators</span>
+              <div className="text-2xl font-black text-amber-500">
+                {CONSULTANT_STATES.reduce((sum, s) => sum + s.operators, 0)}
               </div>
             </div>
-          </Card>
+          </div>
         </Col>
       </Row>
 
