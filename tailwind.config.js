@@ -8,13 +8,11 @@ export default {
     extend: {
       colors: {
         'reg-bg': '#020617',
-        'reg-bg': '#020617',
         'reg-surface': '#0F172A',
         'reg-blue': '#3B82F6',
         'reg-green': '#10B981',
         'obsidian': '#020617',
         'steel': '#0F172A',
-        'emerald': '#10B981',
         'vivid-amber': '#F59E0B',
         primary: {
           DEFAULT: '#10B981',
