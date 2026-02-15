@@ -88,7 +88,7 @@ const AdminLayout = () => {
       <Layout className="h-screen bg-[#020617] overflow-hidden">
         {/* Desktop Sidebar */}
         <Sider
-          width={280}
+          width={300}
           className="hidden lg:block fixed left-0 top-0 bottom-0 z-30"
           style={{ background: '#050811' }}
         >
@@ -101,15 +101,15 @@ const AdminLayout = () => {
           onClose={() => setMobileMenuOpen(false)}
           open={mobileMenuOpen}
           styles={{ body: { padding: 0, background: '#050811' } }}
-          width={280}
+          width={300}
           closeIcon={null}
         >
           <SidebarContent />
         </Drawer>
 
-        <Layout className="lg:ml-[280px] bg-[#020617] transition-all relative">
+        <Layout className="lg:ml-[300px] bg-[#020617] transition-all relative">
           <Header
-            className="fixed top-4 right-4 left-4 lg:left-[296px] z-20 px-8 flex items-center justify-between bg-[#0F172A]/90 backdrop-blur-2xl h-[88px] border-2 border-emerald-500/20 shadow-[0_20px_50px_rgba(0,0,0,0.8)] rounded-[24px]"
+            className="fixed top-4 right-4 left-4 lg:left-[316px] z-20 px-8 flex items-center justify-between bg-[#0F172A]/90 backdrop-blur-2xl h-[88px] border-2 border-emerald-500/20 shadow-[0_20px_50px_rgba(0,0,0,0.8)] rounded-[24px]"
           >
             <div className="flex items-center gap-4 flex-1 min-w-0">
               <Button
