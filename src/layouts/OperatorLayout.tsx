@@ -88,7 +88,7 @@ const OperatorLayout = () => {
       <Layout className="h-screen overflow-hidden">
         {/* Desktop Sidebar */}
         <Sider
-          width={280}
+          width={300}
           className="hidden lg:block fixed left-0 top-0 bottom-0 z-30"
           style={{ background: '#050811' }}
         >
@@ -101,7 +101,7 @@ const OperatorLayout = () => {
           onClose={() => setMobileMenuOpen(false)}
           open={mobileMenuOpen}
           styles={{ body: { padding: 0, background: '#050811' } }}
-          width={280}
+          width={300}
           closeIcon={null}
         >
           <SidebarContent />
@@ -109,7 +109,7 @@ const OperatorLayout = () => {
 
         <Layout className="main-content-layout">
             <Header
-              className="fixed top-4 right-4 left-4 lg:left-[296px] z-20 px-8 flex items-center justify-between bg-[#0F172A]/90 backdrop-blur-2xl h-[88px] border-2 border-emerald-500/20 shadow-[0_20px_50px_rgba(0,0,0,0.8)] rounded-[24px]"
+              className="fixed top-4 right-4 left-4 lg:left-[316px] z-20 px-8 flex items-center justify-between bg-[#0F172A]/90 backdrop-blur-2xl h-[88px] border-2 border-emerald-500/20 shadow-[0_20px_50px_rgba(0,0,0,0.8)] rounded-[24px]"
             >
             <div className="flex items-center gap-6">
               <Button
@@ -157,8 +157,32 @@ const OperatorLayout = () => {
       <style>{`
         @media (min-width: 1024px) {
           .main-content-layout {
-            margin-left: 280px !important;
+            margin-left: 300px !important;
           }
+        }
+        .ant-menu-item {
+          border-radius: 12px !important;
+          margin: 4px 0 !important;
+          height: 52px !important;
+          color: #64748B !important;
+          font-weight: 900 !important;
+          text-transform: uppercase !important;
+          letter-spacing: 0.1em !important;
+          font-size: 11px !important;
+        }
+        .ant-menu-item-active {
+          background: rgba(16, 185, 129, 0.05) !important;
+          color: white !important;
+        }
+        .ant-menu-item-selected {
+          background: linear-gradient(90deg, rgba(16, 185, 129, 0.15), transparent) !important;
+          color: #10B981 !important;
+          border-left: 4px solid #10B981 !important;
+          box-shadow: 10px 0 30px rgba(16, 185, 129, 0.1);
+        }
+        .ant-menu-item-selected .anticon, .ant-menu-item-selected svg {
+          color: #10B981 !important;
+          filter: drop-shadow(0 0 8px #10B981);
         }
       `}</style>
     </>
