@@ -147,7 +147,7 @@ const OperatorLayout = () => {
           >
             <div className="bg-[#0F172A]/40 backdrop-blur-md rounded-[32px] p-6 md:p-12 min-h-[calc(100vh-200px)] md:min-h-[calc(100vh-160px)] border-2 border-white/[0.03] shadow-[0_48px_96px_rgba(0,0,0,0.8)] relative overflow-hidden">
               {/* Internal Scanline Effect */}
-              <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(255,0,0,0.02),rgba(0,255,0,0.01),rgba(0,0,255,0.02))] bg-[length:100%_4px,3px_100%] z-50 opacity-20" />
+              <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(255,0,0,0.02),rgba(0,255,0,0.01),rgba(0,0,255,0.02))] bg-[length:100%_4px,3px_100%] z-10 opacity-20" />
               <Outlet />
             </div>
           </Content>

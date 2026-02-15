@@ -81,7 +81,7 @@ const LandingPage = () => {
           <motion.div 
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            style={{ willChange: 'transform, opacity' }}
+            style={{ willChange: 'auto' }}
             className="flex items-center gap-3"
           >
             <div className="w-12 h-12 bg-white/10 border border-white/20 rounded-xl flex items-center justify-center glass-panel shadow-xl">
@@ -97,7 +97,7 @@ const LandingPage = () => {
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.1 }}
-            style={{ willChange: 'transform, opacity' }}
+            style={{ willChange: 'auto' }}
           >
             <Button 
               onClick={openModal}
