@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Outlet, Link, useLocation } from 'react-router-dom'
 import { Layout, Menu, Drawer, Button } from 'antd'
-import { BarChart3, Map, Building2, LogOut, Menu as MenuIcon, MessageCircle } from 'lucide-react'
+import { BarChart3, Map, Building2, LogOut, Menu as MenuIcon, MessageCircle, ShieldAlert } from 'lucide-react'
 import { useLogoutConfirm } from '@/hooks/useLogoutConfirm'
 import logoImage from '@/assets/logo.png'
 
@@ -27,6 +27,11 @@ const AdminLayout = () => {
       key: '/admin/operators',
       icon: <Building2 size={22} />,
       label: <Link to="/admin/operators" className="text-[14px] font-medium transition-colors">Operators</Link>,
+    },
+    {
+      key: '/admin/anomalies',
+      icon: <ShieldAlert size={22} />,
+      label: <Link to="/admin/anomalies" className="text-[14px] font-medium transition-colors">Anomaly Detection</Link>,
     },
     {
       key: '/admin/support',

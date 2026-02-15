@@ -10,6 +10,7 @@ import RevenueCenter from './pages/admin/RevenueCenter'
 import Geospatial from './pages/admin/Geospatial'
 import Operators from './pages/admin/Operators'
 import AdminSupport from './pages/admin/Support'
+import AdminAnomalyDetection from './pages/admin/AnomalyDetection'
 
 // Consultant Pages
 import MultiStateHub from './pages/consultant/MultiStateHub'
@@ -17,6 +18,7 @@ import StateDeepDive from './pages/consultant/StateDeepDive'
 import GeospatialIntel from './pages/consultant/GeospatialIntel'
 import Forensics from './pages/consultant/Forensics'
 import ConsultantSupport from './pages/consultant/Support'
+import ConsultantAnomalyDetection from './pages/consultant/AnomalyDetection'
 
 // Operator Pages
 import OperatorHome from './pages/operator/Home'
@@ -47,6 +49,7 @@ function App() {
           <Route path="revenue" element={<RevenueCenter />} />
           <Route path="geospatial" element={<Geospatial />} />
           <Route path="operators" element={<Operators />} />
+          <Route path="anomalies" element={<AdminAnomalyDetection />} />
           <Route path="support" element={<AdminSupport />} />
         </Route>
       </Route>
@@ -60,6 +63,7 @@ function App() {
           <Route path="state/:stateId" element={<StateDeepDive />} />
           <Route path="geospatial" element={<GeospatialIntel />} />
           <Route path="forensics" element={<Forensics />} />
+          <Route path="anomalies" element={<ConsultantAnomalyDetection />} />
           <Route path="support" element={<ConsultantSupport />} />
         </Route>
       </Route>

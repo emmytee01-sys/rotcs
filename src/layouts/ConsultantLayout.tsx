@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Outlet, Link, useLocation } from 'react-router-dom'
 import { Layout, Menu, Drawer, Button } from 'antd'
-import { Globe, Search, Map, Activity, LogOut, Menu as MenuIcon, MessageCircle } from 'lucide-react'
+import { Globe, Search, Map, Activity, LogOut, Menu as MenuIcon, MessageCircle, ShieldAlert } from 'lucide-react'
 import { useLogoutConfirm } from '@/hooks/useLogoutConfirm'
 import logoImage from '@/assets/logo.png'
 
@@ -32,6 +32,11 @@ const ConsultantLayout = () => {
       key: '/consultant/forensics',
       icon: <Activity size={22} />,
       label: <Link to="/consultant/forensics" className="text-[14px] font-medium transition-colors">Forensics</Link>,
+    },
+    {
+      key: '/consultant/anomalies',
+      icon: <ShieldAlert size={22} />,
+      label: <Link to="/consultant/anomalies" className="text-[14px] font-medium transition-colors">Anomaly Detection</Link>,
     },
     {
       key: '/consultant/support',

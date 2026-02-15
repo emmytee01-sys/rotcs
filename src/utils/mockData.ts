@@ -245,3 +245,85 @@ export const CONSULTANT_BUYING_POWER_DATA: BuyingPowerData[] = [
   { territory: 'Multi-State Rural', totalSpend: 900000000, transactions: 20000, avgOrderValue: 45000, color: '#13c2c2' },
 ]
 
+// ============================================================================
+// ANOMALY DETECTION & FRAUD DATA
+// ============================================================================
+
+export interface FraudAlert {
+  id: string
+  type: 'suspicious_volume' | 'unauthorized_access' | 'tax_gap' | 'high_win_ratio'
+  severity: 'critical' | 'warning' | 'info'
+  operator: string
+  description: string
+  time: string
+  status: 'active' | 'investigating' | 'resolved'
+  region: string
+}
+
+export const FRAUD_ALERTS: FraudAlert[] = [
+  {
+    id: 'AL-001',
+    type: 'suspicious_volume',
+    severity: 'critical',
+    operator: '1xBet',
+    description: 'Abnormal GGR spike detected in Lekki sector. 400% above 24h average.',
+    time: '2 mins ago',
+    status: 'active',
+    region: 'Lagos'
+  },
+  {
+    id: 'AL-002',
+    type: 'unauthorized_access',
+    severity: 'warning',
+    operator: 'NairaBet',
+    description: 'Attempted endpoint bypass from unauthorized IP range.',
+    time: '15 mins ago',
+    status: 'investigating',
+    region: 'Ogun'
+  },
+  {
+    id: 'AL-003',
+    type: 'high_win_ratio',
+    severity: 'critical',
+    operator: 'SportyBet',
+    description: 'Win ratio anomaly: 98.5% payouts detected on Virtual Racing endpoint.',
+    time: '45 mins ago',
+    status: 'active',
+    region: 'Rivers'
+  },
+  {
+    id: 'AL-004',
+    type: 'tax_gap',
+    severity: 'warning',
+    operator: 'Bet9ja',
+    description: 'Minor variance in reported GGR vs real-time endpoint stream.',
+    time: '2 hours ago',
+    status: 'investigating',
+    region: 'Lagos'
+  },
+  {
+    id: 'AL-005',
+    type: 'suspicious_volume',
+    severity: 'info',
+    operator: 'BetKing',
+    description: 'Higher than usual betting volume detected during off-peak hours.',
+    time: '4 hours ago',
+    status: 'resolved',
+    region: 'Kano'
+  }
+]
+
+export const RISK_SCORE_DATA = [
+  { region: 'Lagos', score: 12 },
+  { region: 'Ogun', score: 38 },
+  { region: 'Rivers', score: 25 },
+  { region: 'Kano', score: 18 },
+  { region: 'Oyo', score: 65 },
+]
+
+export const FRAUD_TYPE_DISTRIBUTION = [
+  { name: 'GGR Spikes', value: 45 },
+  { name: 'Unauthorized Access', value: 20 },
+  { name: 'Payout Anomalies', value: 25 },
+  { name: 'Tax Under-reporting', value: 10 },
+]
