@@ -58,12 +58,13 @@ const LandingPage = () => {
   return (
     <div className="flex flex-col min-h-screen w-full relative overflow-hidden bg-[#020617] text-white selection:bg-blue-500/30">
       {/* Dynamic Background Elements */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 bg-[#020617]">
         <video 
           autoPlay 
           loop 
           muted 
           playsInline 
+          preload="auto"
           className="absolute inset-0 w-full h-full object-cover opacity-40 brightness-75 transition-opacity"
         >
           <source src={heroVideo} type="video/mp4" />
@@ -80,6 +81,7 @@ const LandingPage = () => {
           <motion.div 
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
+            style={{ willChange: 'transform, opacity' }}
             className="flex items-center gap-3"
           >
             <div className="w-12 h-12 bg-white/10 border border-white/20 rounded-xl flex items-center justify-center glass-panel shadow-xl">
@@ -95,6 +97,7 @@ const LandingPage = () => {
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.1 }}
+            style={{ willChange: 'transform, opacity' }}
           >
             <Button 
               onClick={openModal}
