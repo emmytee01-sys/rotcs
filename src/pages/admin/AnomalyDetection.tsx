@@ -64,7 +64,7 @@ const AnomalyDetection = () => {
   ]
 
   return (
-    <div className="space-y-10 pt-12">
+    <div className="space-y-6 md:space-y-10 pt-6 md:pt-12">
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
           <h1 className="text-4xl md:text-5xl bold-heading text-white mb-2 uppercase tracking-tight">Anomaly Detection</h1>
@@ -84,7 +84,7 @@ const AnomalyDetection = () => {
 
       <Row gutter={[24, 24]}>
         <Col xs={24} lg={16}>
-          <div className="p-8 rounded-3xl bg-[#0F172A] border-2 border-white/[0.05] shadow-2xl space-y-8">
+          <div className="p-4 md:p-8 rounded-3xl bg-[#0F172A] border-2 border-white/[0.05] shadow-2xl space-y-6 md:space-y-8">
             <div className="flex items-center justify-between">
               <h3 className="text-2xl bold-heading text-white m-0">Live Threat Feed</h3>
               <div className="flex items-center gap-3">
@@ -93,18 +93,20 @@ const AnomalyDetection = () => {
               </div>
             </div>
 
-            <Table 
-              dataSource={FRAUD_ALERTS} 
-              columns={columns} 
-              pagination={false}
-              className="custom-table"
-              rowClassName="hover:bg-red-500/5 transition-colors cursor-pointer"
-            />
+            <div className="overflow-x-auto scrollbar-hide">
+              <Table 
+                dataSource={FRAUD_ALERTS} 
+                columns={columns} 
+                pagination={false}
+                className="custom-table min-w-[600px] lg:min-w-0"
+                rowClassName="hover:bg-red-500/5 transition-colors cursor-pointer"
+              />
+            </div>
           </div>
         </Col>
 
         <Col xs={24} lg={8}>
-          <div className="p-8 rounded-3xl bg-black/40 border-2 border-white/[0.05] shadow-2xl space-y-8 h-full">
+          <div className="p-6 md:p-8 rounded-3xl bg-black/40 border-2 border-white/[0.05] shadow-2xl space-y-8 h-full">
             <h3 className="text-xl bold-heading text-white m-0 uppercase tracking-widest">Regional Risk Scores</h3>
             <div className="space-y-6">
               {RISK_SCORE_DATA.map((item, idx) => (
@@ -140,7 +142,7 @@ const AnomalyDetection = () => {
 
       <Row gutter={[24, 24]}>
         <Col xs={24} md={12}>
-          <div className="p-8 rounded-3xl bg-[#0F172A] border-2 border-white/[0.03] shadow-2xl h-full">
+          <div className="p-6 md:p-8 rounded-3xl bg-[#0F172A] border-2 border-white/[0.03] shadow-2xl h-full">
             <h3 className="text-xl bold-heading text-white mb-10">Anomaly Distribution</h3>
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
@@ -175,7 +177,7 @@ const AnomalyDetection = () => {
         </Col>
 
         <Col xs={24} md={12}>
-          <div className="p-8 rounded-3xl bg-black/40 border-2 border-white/[0.05] shadow-2xl h-full flex flex-col items-center justify-center text-center">
+          <div className="p-6 md:p-8 rounded-3xl bg-black/40 border-2 border-white/[0.05] shadow-2xl h-full flex flex-col items-center justify-center text-center">
             <div className="w-24 h-24 rounded-full bg-emerald-500/10 flex items-center justify-center mb-6 border border-emerald-500/20">
               <Zap size={40} className="text-emerald-500" />
             </div>

@@ -19,7 +19,7 @@ const ConsultantAnomalyDetection = () => {
   const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6']
 
   return (
-    <div className="space-y-10 pt-12">
+    <div className="space-y-6 md:space-y-10 pt-6 md:pt-12">
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
           <h1 className="text-4xl md:text-5xl bold-heading text-white mb-2 uppercase tracking-tight">Forensic Anomalies</h1>
@@ -39,9 +39,9 @@ const ConsultantAnomalyDetection = () => {
 
       <Row gutter={[24, 24]}>
         <Col xs={24} lg={15}>
-          <div className="p-8 rounded-3xl bg-[#0F172A] border-2 border-white/[0.05] shadow-2xl space-y-8">
-            <h3 className="text-2xl bold-heading text-white m-0">Suspicious Volume Patterns (Aggregated)</h3>
-            <div className="h-[350px]">
+          <div className="p-6 md:p-8 rounded-3xl bg-[#0F172A] border-2 border-white/[0.05] shadow-2xl space-y-6 md:space-y-8">
+            <h3 className="text-xl md:text-2xl bold-heading text-white m-0">Suspicious Volume Patterns (Aggregated)</h3>
+            <div className="h-[250px] md:h-[350px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={CONSULTANT_TERRITORIAL_DATA}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
@@ -63,12 +63,12 @@ const ConsultantAnomalyDetection = () => {
                 </BarChart>
               </ResponsiveContainer>
             </div>
-            <div className="p-6 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between">
+            <div className="p-4 md:p-6 rounded-2xl bg-white/5 border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center gap-4">
                 <Search className="text-[#94A3B8]" size={20} />
-                <span className="text-sm font-black text-white uppercase italic">Deep Dive into Lagos Metro Volume spikes</span>
+                <span className="text-sm font-black text-white uppercase italic">Volume Deep Dive</span>
               </div>
-              <Button type="primary" className="bg-blue-600 border-none font-black text-[10px] uppercase rounded-lg h-9">
+              <Button type="primary" className="w-full sm:w-auto bg-blue-600 border-none font-black text-[10px] uppercase rounded-lg h-9">
                 Open Forensics
               </Button>
             </div>
@@ -76,7 +76,7 @@ const ConsultantAnomalyDetection = () => {
         </Col>
 
         <Col xs={24} lg={9}>
-          <div className="p-8 rounded-3xl bg-black/40 border-2 border-white/[0.05] shadow-2xl h-full flex flex-col">
+          <div className="p-6 md:p-8 rounded-3xl bg-black/40 border-2 border-white/[0.05] shadow-2xl h-full flex flex-col">
             <h3 className="text-xl bold-heading text-white m-0 uppercase tracking-widest mb-8">Active Forensic Cases</h3>
             <div className="flex-1 space-y-6 overflow-y-auto">
               {FRAUD_ALERTS.slice(0, 4).map((alert, idx) => (
@@ -101,12 +101,12 @@ const ConsultantAnomalyDetection = () => {
         </Col>
       </Row>
 
-      <div className="p-10 rounded-3xl bg-gradient-to-r from-blue-900/20 to-[#0F172A] border-2 border-blue-500/10 relative overflow-hidden">
+      <div className="p-6 md:p-10 rounded-3xl bg-gradient-to-r from-blue-900/20 to-[#0F172A] border-2 border-blue-500/10 relative overflow-hidden">
         <div className="flex flex-col md:flex-row items-center justify-between gap-10 relative z-10">
           <div className="max-w-xl">
              <div className="flex items-center gap-3 mb-4">
-               <FileSearch size={32} className="text-blue-400" />
-               <h3 className="text-3xl bold-heading text-white m-0 tracking-tight">Pattern Correlation</h3>
+               <FileSearch size={32} className="text-blue-400 shrink-0" />
+               <h3 className="text-2xl md:text-3xl bold-heading text-white m-0 tracking-tight text-pretty">Pattern Correlation</h3>
              </div>
              <p className="text-lg font-medium text-[#94A3B8] leading-relaxed">
                We've identified a 0.88 correlation between <span className="text-white">Virtual Footbal peaks</span> in Kano and <span className="text-white">Unauthorized Access</span> attempts in Lagos. This suggests a coordinated syndicate operation.
@@ -115,7 +115,7 @@ const ConsultantAnomalyDetection = () => {
           <div className="shrink-0">
              <div className="text-center p-8 rounded-3xl bg-black/40 border-2 border-white/5 backdrop-blur-md">
                <span className="text-[10px] font-black text-[#64748B] uppercase tracking-[0.4em] block mb-2">Cross-Platform Linkage</span>
-               <span className="text-6xl font-black text-white tabular-nums">88<span className="text-2xl text-blue-400">%</span></span>
+               <span className="text-4xl md:text-6xl font-black text-white tabular-nums">88<span className="text-xl md:text-2xl text-blue-400">%</span></span>
                <div className="mt-4 flex flex-col items-center gap-1">
                  <span className="text-xs font-black text-blue-400 uppercase italic">HIGH CONFIDENCE</span>
                  <Progress percent={88} showInfo={false} strokeColor="#3B82F6" trailColor="rgba(255,255,255,0.05)" strokeWidth={4} />
