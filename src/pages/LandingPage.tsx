@@ -172,7 +172,7 @@ const LandingPage = () => {
             transition={{ duration: 1.2, delay: 0.3, ease: 'backOut' }}
             className="relative order-1 lg:order-2 flex justify-center"
           >
-            <div className="relative z-10 bg-[#0F172A] border-2 border-white/[0.05] rounded-[32px] md:rounded-[48px] p-6 md:p-14 aspect-square flex flex-col items-center justify-center shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden group w-full max-w-[500px] lg:max-w-none">
+            <div className="relative z-10 bg-[#0F172A] border-2 border-white/[0.05] rounded-[32px] md:rounded-[48px] p-6 md:p-14 aspect-square flex flex-col items-center justify-center shadow-2xl md:shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden group w-full max-w-[500px] lg:max-w-none">
               {/* Massive Glow Orb */}
               <div className="absolute top-[-20%] right-[-20%] w-[80%] h-[80%] bg-emerald-600/20 blur-[120px] pointer-events-none rounded-full" />
               <div className="absolute bottom-[-20%] left-[-20%] w-[80%] h-[80%] bg-blue-600/10 blur-[120px] pointer-events-none rounded-full" />
@@ -228,8 +228,8 @@ const LandingPage = () => {
                   >
                     99.8<span className="text-2xl md:text-5xl text-emerald-400/80">%</span>
                   </motion.span>
-                  <div className="mt-8 px-6 py-2 rounded-full bg-emerald-500/10 backdrop-blur-md border border-emerald-500/20 text-emerald-400 text-xs md:text-sm font-black flex items-center gap-3 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
-                    <span className="animate-pulse w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_100px_#10b981]" />
+                  <div className="mt-8 px-6 py-2 rounded-full bg-emerald-500/10 md:backdrop-blur-md border border-emerald-500/20 text-emerald-400 text-xs md:text-sm font-black flex items-center gap-3 shadow-[0_0_20px_rgba(16,185,129,0.2)] md:shadow-[0_0_100px_#10b981]">
+                    <span className="animate-pulse w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_10px_#10b981]" />
                     Sentinel-X Guard Active
                   </div>
                 </div>
@@ -294,7 +294,7 @@ const LandingPage = () => {
       >
         <div className="relative">
           {/* Top Flare */}
-          <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-blue-600/20 to-transparent -z-0" />
+          <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-blue-600/20 to-transparent z-0" />
           
           <div className="p-10 relative z-10">
             <div className="text-center mb-8">
