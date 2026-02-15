@@ -172,13 +172,13 @@ const LandingPage = () => {
             transition={{ duration: 1.2, delay: 0.3, ease: 'backOut' }}
             className="relative order-1 lg:order-2 flex justify-center"
           >
-            <div className="relative z-10 bg-[#0F172A] border-2 border-white/[0.05] rounded-[48px] p-10 md:p-14 aspect-square flex flex-col items-center justify-center shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden group w-full max-w-[500px] lg:max-w-none">
+            <div className="relative z-10 bg-[#0F172A] border-2 border-white/[0.05] rounded-[32px] md:rounded-[48px] p-6 md:p-14 aspect-square flex flex-col items-center justify-center shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden group w-full max-w-[500px] lg:max-w-none">
               {/* Massive Glow Orb */}
               <div className="absolute top-[-20%] right-[-20%] w-[80%] h-[80%] bg-emerald-600/20 blur-[120px] pointer-events-none rounded-full" />
               <div className="absolute bottom-[-20%] left-[-20%] w-[80%] h-[80%] bg-blue-600/10 blur-[120px] pointer-events-none rounded-full" />
               
               {/* Visual Gauge Mockup - Holographic Layers */}
-              <div className="relative w-72 h-72 md:w-[420px] md:h-[420px]">
+              <div className="relative w-64 h-64 md:w-[420px] md:h-[420px]">
                 {/* Background Rings */}
                 <svg className="absolute inset-0 w-full h-full transform -rotate-90">
                   <circle cx="50%" cy="50%" r="42%" stroke="currentColor" strokeWidth="2" fill="transparent" className="text-white/5" />
@@ -219,35 +219,35 @@ const LandingPage = () => {
                 </motion.div>
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.5em] text-[#64748B] mb-2 drop-shadow-sm">Total Revenue Index</span>
+                  <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.5em] text-[#64748B] mb-2 drop-shadow-sm text-center">System Integrity Pulse</span>
                   <motion.span 
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 1, delay: 0.8 }}
-                    className="text-6xl md:text-9xl font-black text-white tabular-nums tracking-tighter drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)] leading-none"
+                    className="text-5xl md:text-9xl font-black text-white tabular-nums tracking-tighter drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)] leading-none"
                   >
-                    ₦14.2B
+                    99.8<span className="text-2xl md:text-5xl text-emerald-400/80">%</span>
                   </motion.span>
                   <div className="mt-8 px-6 py-2 rounded-full bg-emerald-500/10 backdrop-blur-md border border-emerald-500/20 text-emerald-400 text-xs md:text-sm font-black flex items-center gap-3 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
-                    <span className="animate-pulse w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_10px_#10b981]" />
-                    Live Auditing Active
+                    <span className="animate-pulse w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_100px_#10b981]" />
+                    Sentinel-X Guard Active
                   </div>
                 </div>
               </div>
 
               {/* Data Grid Mockup - Industrial */}
-              <div className="grid grid-cols-2 gap-5 md:gap-8 w-full mt-14 md:mt-20">
-                <div className="p-5 md:p-6 rounded-2xl bg-black/40 border border-white/10">
+              <div className="grid grid-cols-2 gap-3 md:gap-8 w-full mt-8 md:mt-20">
+                <div className="p-4 md:p-6 rounded-2xl bg-black/40 border border-white/10">
                   <span className="text-[10px] md:text-xs uppercase font-black tracking-widest text-[#64748B] block mb-2">Endpoint Status</span>
                   <div className="flex items-center gap-3">
                     <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-                    <span className="text-lg md:text-2xl font-black text-white italic">OPERATIONAL</span>
+                    <span className="text-base md:text-2xl font-black text-white italic">OPERATIONAL</span>
                   </div>
                 </div>
-                <div className="p-5 md:p-6 rounded-2xl bg-black/40 border border-white/10">
+                <div className="p-4 md:p-6 rounded-2xl bg-black/40 border border-white/10">
                   <span className="text-[10px] md:text-xs uppercase font-black tracking-widest text-[#64748B] block mb-2">Tax Accuracy</span>
                   <div className="flex items-center gap-2">
-                    <span className="text-lg md:text-2xl font-black italic text-emerald-400">99.99%</span>
+                    <span className="text-base md:text-2xl font-black italic text-emerald-400">99.99%</span>
                   </div>
                 </div>
               </div>
