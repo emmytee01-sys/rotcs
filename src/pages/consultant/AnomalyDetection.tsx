@@ -1,4 +1,5 @@
 import { Row, Col, Progress, Button } from 'antd'
+import { useNavigate } from 'react-router-dom'
 import { Activity, Search, FileSearch, MousePointerClick } from 'lucide-react'
 import { 
   FRAUD_ALERTS, 
@@ -16,6 +17,7 @@ import {
 } from 'recharts'
 
 const ConsultantAnomalyDetection = () => {
+  const navigate = useNavigate()
   const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6']
 
   return (
@@ -68,7 +70,11 @@ const ConsultantAnomalyDetection = () => {
                 <Search className="text-[#94A3B8]" size={20} />
                 <span className="text-sm font-black text-white uppercase italic">Volume Deep Dive</span>
               </div>
-              <Button type="primary" className="w-full sm:w-auto bg-blue-600 border-none font-black text-[10px] uppercase rounded-lg h-9">
+              <Button 
+                type="primary" 
+                onClick={() => navigate('/consultant/forensics')}
+                className="w-full sm:w-auto bg-blue-600 border-none font-black text-[10px] uppercase rounded-lg h-9"
+              >
                 Open Forensics
               </Button>
             </div>
