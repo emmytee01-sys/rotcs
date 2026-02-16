@@ -28,17 +28,18 @@ const BuyingPowerHeatmap = () => {
 
     const initMap = async () => {
       try {
-        // Load the Google Maps script
-        const script = document.createElement('script')
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=visualization&v=weekly`
-        script.async = true
-        script.defer = true
-        
-        await new Promise<void>((resolve, reject) => {
-          script.onload = () => resolve()
-          script.onerror = () => reject(new Error('Failed to load Google Maps script'))
-          document.head.appendChild(script)
-        })
+        if (!window.google) {
+          await new Promise<void>((resolve, reject) => {
+            const script = document.createElement('script')
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=visualization&v=weekly`
+            script.async = true
+            script.defer = true
+            
+            script.onload = () => resolve()
+            script.onerror = () => reject(new Error('Failed to load Google Maps script'))
+            document.head.appendChild(script)
+          })
+        }
 
         if (!mapContainer.current || !window.google) return
 
@@ -86,11 +87,11 @@ const BuyingPowerHeatmap = () => {
 
           const infoWindow = new window.google.maps.InfoWindow({
             content: `
-              <div style="padding: 8px;">
-                <h3 style="margin: 0 0 8px 0; font-weight: bold;">${point.territory}</h3>
-                <p style="margin: 4px 0;"><strong>Total Spend:</strong> ₦${(point.spend / 1000000).toFixed(1)}M</p>
-                <p style="margin: 4px 0;"><strong>Spend Level:</strong> ${(point.weight * 100).toFixed(0)}%</p>
-                <p style="margin: 4px 0;"><strong>Transactions:</strong> ${Math.floor(point.weight * 10000).toLocaleString()}</p>
+              <div style="padding: 12px; color: #000000; font-family: sans-serif;">
+                <h3 style="margin: 0 0 8px 0; font-weight: bold; color: #000000; border-bottom: 1px solid #eee; padding-bottom: 4px;">${point.territory}</h3>
+                <p style="margin: 4px 0; font-size: 13px;"><strong>Total Spend:</strong> ₦${(point.spend / 1000000).toFixed(1)}M</p>
+                <p style="margin: 4px 0; font-size: 13px;"><strong>Spend Level:</strong> ${(point.weight * 100).toFixed(0)}%</p>
+                <p style="margin: 4px 0; font-size: 13px;"><strong>Transactions:</strong> ${Math.floor(point.weight * 10000).toLocaleString()}</p>
               </div>
             `,
           })

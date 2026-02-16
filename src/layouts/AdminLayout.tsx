@@ -3,12 +3,14 @@ import { Outlet, Link, useLocation } from 'react-router-dom'
 import { Layout, Menu, Drawer, Button } from 'antd'
 import { BarChart3, Map, Building2, LogOut, Menu as MenuIcon, MessageCircle, ShieldAlert } from 'lucide-react'
 import { useLogoutConfirm } from '@/hooks/useLogoutConfirm'
+import { useAuth } from '@/contexts/AuthContextCore'
 import logoImage from '@/assets/logo.png'
 
 const { Header, Sider, Content } = Layout
 
 const AdminLayout = () => {
   const location = useLocation()
+  const { user } = useAuth()
   const { showLogoutConfirm } = useLogoutConfirm()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
@@ -55,7 +57,9 @@ const AdminLayout = () => {
           />
         </div>
         <div className="text-center">
-          <span className="text-[10px] uppercase font-black tracking-[0.5em] text-emerald-500/90 drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]">Revenue Management</span>
+          <span className="text-[10px] uppercase font-black tracking-[0.5em] text-emerald-500/90 drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]">
+            {user?.state || 'Global'} Management
+          </span>
         </div>
       </div>
 
@@ -134,8 +138,10 @@ const AdminLayout = () => {
 
             <div className="flex items-center gap-6 shrink-0">
               <div className="hidden sm:flex flex-col items-end gap-1.5 border-r border-white/10 pr-6 mr-6">
-                <span className="text-[10px] font-black text-white uppercase tracking-tighter opacity-40 leading-none">Identified User</span>
-                <span className="text-xs text-emerald-400 font-black uppercase tracking-widest italic leading-none">State Commissioner</span>
+                <span className="text-[10px] font-black text-white uppercase tracking-tighter opacity-40 leading-none">{user?.name}</span>
+                <span className="text-xs text-emerald-400 font-black uppercase tracking-widest italic leading-none">
+                  {user?.state ? `${user.state} State Admin` : 'Federal Commissioner'}
+                </span>
               </div>
               <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
                 <div className="w-1 h-4 bg-emerald-500/40 rounded-full" />

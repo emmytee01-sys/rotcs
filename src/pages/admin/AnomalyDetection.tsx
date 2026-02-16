@@ -3,8 +3,10 @@ import { ShieldAlert, Zap, TrendingUp, AlertTriangle } from 'lucide-react'
 import { 
   FRAUD_ALERTS, 
   RISK_SCORE_DATA, 
-  FRAUD_TYPE_DISTRIBUTION 
+  FRAUD_TYPE_DISTRIBUTION,
+  LGA_RISK_DATA
 } from '@/utils/mockData'
+import { useAuth } from '@/contexts/AuthContextCore'
 import { 
   PieChart,
   Pie,
@@ -14,8 +16,18 @@ import {
 } from 'recharts'
 
 const AnomalyDetection = () => {
+  const { user } = useAuth()
   const activeAlerts = FRAUD_ALERTS.filter(a => a.status === 'active').length
   const COLORS = ['#10B981', '#3B82F6', '#F59E0B', '#EF4444']
+
+  const isStateAdmin = user?.role === 'admin'
+  const adminState = user?.state || (isStateAdmin ? 'Lagos' : null)
+  const riskData = adminState ? (LGA_RISK_DATA[adminState] || []) : RISK_SCORE_DATA
+  const riskTitle = adminState ? `LGA Risk Scores (${adminState})` : 'Regional Risk Scores'
+
+  // Calculate dynamic insight
+  const highestRiskRegion = [...riskData].sort((a, b) => b.score - a.score)[0]
+  const insightMessage = `Risk scores are calculated based on GGR flux, endpoint stability, and historical compliance patterns. ${highestRiskRegion?.region || 'Oyo'} sector requires immediate audit due to tax-gap warnings.`
 
   const columns = [
     {
@@ -107,9 +119,9 @@ const AnomalyDetection = () => {
 
         <Col xs={24} lg={8}>
           <div className="p-6 md:p-8 rounded-3xl bg-black/40 border-2 border-white/[0.05] shadow-2xl space-y-8 h-full">
-            <h3 className="text-xl bold-heading text-white m-0 uppercase tracking-widest">Regional Risk Scores</h3>
+            <h3 className="text-xl bold-heading text-white m-0 uppercase tracking-widest">{riskTitle}</h3>
             <div className="space-y-6">
-              {RISK_SCORE_DATA.map((item, idx) => (
+              {riskData.map((item, idx) => (
                 <div key={idx} className="space-y-2">
                   <div className="flex justify-between text-xs font-black uppercase tracking-widest text-[#64748B]">
                     <span>{item.region}</span>
@@ -133,7 +145,7 @@ const AnomalyDetection = () => {
                 <span className="text-sm font-black text-white uppercase italic">System Insight</span>
               </div>
               <p className="text-xs font-medium text-[#94A3B8] leading-relaxed">
-                Risk scores are calculated based on GGR flux, endpoint stability, and historical compliance patterns. Oyo sector requires immediate audit due to tax-gap warnings.
+                {insightMessage}
               </p>
             </div>
           </div>

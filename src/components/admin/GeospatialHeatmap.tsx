@@ -29,17 +29,18 @@ const GeospatialHeatmap = () => {
 
     const initMap = async () => {
       try {
-        // Load the Google Maps script
-        const script = document.createElement('script')
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=visualization&v=weekly`
-        script.async = true
-        script.defer = true
-        
-        await new Promise<void>((resolve, reject) => {
-          script.onload = () => resolve()
-          script.onerror = () => reject(new Error('Failed to load Google Maps script'))
-          document.head.appendChild(script)
-        })
+        if (!window.google) {
+          await new Promise<void>((resolve, reject) => {
+            const script = document.createElement('script')
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=visualization&v=weekly`
+            script.async = true
+            script.defer = true
+            
+            script.onload = () => resolve()
+            script.onerror = () => reject(new Error('Failed to load Google Maps script'))
+            document.head.appendChild(script)
+          })
+        }
 
         if (!mapContainer.current || !window.google) return
 
@@ -87,10 +88,14 @@ const GeospatialHeatmap = () => {
 
           const infoWindow = new window.google.maps.InfoWindow({
             content: `
-              <div style="padding: 8px;">
-                <h3 style="margin: 0 0 8px 0; font-weight: bold;">Territory ${index + 1}</h3>
-                <p style="margin: 4px 0;"><strong>Activity Level:</strong> ${(point.weight * 100).toFixed(0)}%</p>
-                <p style="margin: 4px 0;"><strong>Active Users:</strong> ${formatNumber(Math.floor(point.weight * 50000))}</p>
+              <div style="padding: 12px; color: #000000; font-family: sans-serif; min-width: 200px;">
+                <h3 style="margin: 0 0 8px 0; font-weight: bold; color: #000000; border-bottom: 1px solid #eee; padding-bottom: 4px;">Territory ${index + 1}</h3>
+                <p style="margin: 4px 0; font-size: 13px;"><strong>Activity Level:</strong> ${(point.weight * 100).toFixed(0)}%</p>
+                <p style="margin: 4px 0; font-size: 13px;"><strong>Active Users:</strong> ${formatNumber(Math.floor(point.weight * 50000))}</p>
+                <div style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed #eee;">
+                  <p style="margin: 2px 0; font-size: 12px; color: #1677ff;"><strong>Player Wins:</strong> ₦${(point.weight * 196).toFixed(1)}M</p>
+                  <p style="margin: 2px 0; font-size: 12px; color: #d97706;"><strong>Player Loss:</strong> ₦${(point.weight * 84).toFixed(1)}M</p>
+                </div>
               </div>
             `,
           })

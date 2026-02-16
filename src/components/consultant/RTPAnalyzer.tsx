@@ -44,7 +44,7 @@ const RTPAnalyzer = () => {
     <Card>
       <Title level={4}>
         <Gamepad2 className="inline mr-2" size={20} />
-        Return to Player (RTP) Analysis
+        Deep-dive into specific game IDs to detect anomalies
       </Title>
 
       <div className="mb-6 flex flex-col sm:flex-row gap-2">

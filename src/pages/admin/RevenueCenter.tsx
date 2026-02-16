@@ -11,9 +11,11 @@ import {
   TOTAL_PLAYER_WINS, 
   PROJECTED_REVENUE, 
   REVENUE_TREND_DATA,
-  TOTAL_TAX_COLLECTED 
+  TOTAL_TAX_COLLECTED,
+  TOTAL_NET_REVENUE 
 } from '@/utils/mockData'
 import { formatCurrency } from '@/utils/formatters'
+import { Zap } from 'lucide-react'
 
 const { Option } = Select
 
@@ -54,7 +56,7 @@ const RevenueCenter = () => {
 
       {/* Key Metrics - Oversized Industrial Cards */}
       <Row gutter={[24, 24]}>
-        <Col xs={24} sm={12} lg={8}>
+        <Col xs={24} sm={12} lg={6}>
           <div className="p-8 rounded-3xl bg-black/40 border-2 border-white/[0.05] relative overflow-hidden group hover:border-emerald-500/30 transition-all shadow-2xl">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
               <TrendingUp size={80} className="text-emerald-500" />
@@ -69,7 +71,7 @@ const RevenueCenter = () => {
             </div>
           </div>
         </Col>
-        <Col xs={24} sm={12} lg={8}>
+        <Col xs={24} sm={12} lg={6}>
           <div className="p-8 rounded-3xl bg-black/40 border-2 border-white/[0.05] relative overflow-hidden group hover:border-emerald-500/30 transition-all shadow-2xl">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
               <TrendingUp size={80} className="text-blue-500" />
@@ -84,7 +86,7 @@ const RevenueCenter = () => {
             </div>
           </div>
         </Col>
-        <Col xs={24} sm={12} lg={8}>
+        <Col xs={24} sm={12} lg={6}>
           <div className="p-8 rounded-3xl bg-black/40 border-2 border-white/[0.05] relative overflow-hidden group hover:border-emerald-500/30 transition-all shadow-2xl">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
               <CheckCircle size={80} className="text-emerald-500" />
@@ -95,6 +97,21 @@ const RevenueCenter = () => {
             </div>
             <div className="mt-4 flex items-center gap-2 text-emerald-400 text-xs font-black uppercase italic text-opacity-80">
               Integrity Check: PASSED
+            </div>
+          </div>
+        </Col>
+        <Col xs={24} sm={12} lg={6}>
+          <div className="p-8 rounded-3xl bg-black/40 border-2 border-white/[0.05] relative overflow-hidden group hover:border-emerald-500/30 transition-all shadow-2xl">
+            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+              <Zap size={80} className="text-amber-500" />
+            </div>
+            <span className="text-[10px] font-black tracking-[0.3em] text-[#64748B] uppercase block mb-4">Total Player Loss</span>
+            <div className="text-4xl md:text-5xl font-black text-white tabular-nums tracking-tighter drop-shadow-lg">
+              {formatCurrency(TOTAL_NET_REVENUE)}
+            </div>
+            <div className="mt-4 flex items-center gap-2 text-amber-500 text-xs font-black uppercase italic text-opacity-80">
+              <TrendingUp size={14} className="rotate-180" />
+              Net Operator GGR
             </div>
           </div>
         </Col>

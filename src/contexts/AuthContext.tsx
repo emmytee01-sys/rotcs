@@ -10,7 +10,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const storedUser = localStorage.getItem('rotcs_user')
     if (storedUser) {
       try {
-        setUser(JSON.parse(storedUser))
+        const parsedUser = JSON.parse(storedUser)
+        // Refresh user data from MOCK_USERS if available to get latest properties (like state)
+        const mockEntry = MOCK_USERS[parsedUser.email.toLowerCase()]
+        if (mockEntry) {
+          setUser(mockEntry.user)
+          localStorage.setItem('rotcs_user', JSON.stringify(mockEntry.user))
+        } else {
+          setUser(parsedUser)
+        }
       } catch (error) {
         console.error('Failed to parse stored user:', error)
         localStorage.removeItem('rotcs_user')

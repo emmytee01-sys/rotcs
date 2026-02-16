@@ -46,6 +46,28 @@ const territorialColumns = [
     sorter: (a: any, b: any) => a.ggr - b.ggr,
   },
   {
+    title: 'Player Wins',
+    dataIndex: 'playerWins',
+    key: 'playerWins',
+    render: (wins: number) => (
+      <span className="text-sm font-black text-blue-400 tabular-nums">
+        {formatCurrency(wins)}
+      </span>
+    ),
+    sorter: (a: any, b: any) => a.playerWins - b.playerWins,
+  },
+  {
+    title: 'Player Loss',
+    dataIndex: 'playerLosses',
+    key: 'playerLosses',
+    render: (losses: number) => (
+      <span className="text-sm font-black text-amber-500 tabular-nums">
+        {formatCurrency(losses)}
+      </span>
+    ),
+    sorter: (a: any, b: any) => a.playerLosses - b.playerLosses,
+  },
+  {
     title: 'Penetration',
     dataIndex: 'penetration',
     key: 'penetration',

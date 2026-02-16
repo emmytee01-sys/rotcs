@@ -145,18 +145,20 @@ export const REVENUE_TREND_DATA = [
 export interface TerritorialData {
   territory: string
   users: number
-  ggr: number
+  ggr: number // Total Gaming Value
+  playerWins: number
+  playerLosses: number // Net Revenue
   penetration: number
   color: string
 }
 
 export const TERRITORIAL_DATA: TerritorialData[] = [
-  { territory: 'Victoria Island', users: 32000, ggr: 280000000, penetration: 12.5, color: '#1890ff' },
-  { territory: 'Ikeja', users: 28000, ggr: 245000000, penetration: 9.8, color: '#52c41a' },
-  { territory: 'Lekki', users: 25000, ggr: 220000000, penetration: 11.2, color: '#fa8c16' },
-  { territory: 'Ikoyi', users: 22000, ggr: 195000000, penetration: 10.5, color: '#eb2f96' },
-  { territory: 'Surulere', users: 18000, ggr: 160000000, penetration: 7.5, color: '#722ed1' },
-  { territory: 'Yaba', users: 15000, ggr: 140000000, penetration: 8.9, color: '#13c2c2' },
+  { territory: 'Victoria Island', users: 32000, ggr: 280000000, playerWins: 196000000, playerLosses: 84000000, penetration: 12.5, color: '#1890ff' },
+  { territory: 'Ikeja', users: 28000, ggr: 245000000, playerWins: 171500000, playerLosses: 73500000, penetration: 9.8, color: '#52c41a' },
+  { territory: 'Lekki', users: 25000, ggr: 220000000, playerWins: 154000000, playerLosses: 66000000, penetration: 11.2, color: '#fa8c16' },
+  { territory: 'Ikoyi', users: 22000, ggr: 195000000, playerWins: 136500000, playerLosses: 58500000, penetration: 10.5, color: '#eb2f96' },
+  { territory: 'Surulere', users: 18000, ggr: 160000000, playerWins: 112000000, playerLosses: 48000000, penetration: 7.5, color: '#722ed1' },
+  { territory: 'Yaba', users: 15000, ggr: 140000000, playerWins: 98000000, playerLosses: 42000000, penetration: 8.9, color: '#13c2c2' },
 ]
 
 export interface BuyingPowerData {
@@ -227,12 +229,12 @@ export const CONSULTANT_PROJECTED_REVENUE = Math.round(CONSULTANT_TAX_DUE * 1.2)
 
 // Multi-state territorial data (aggregated across states)
 export const CONSULTANT_TERRITORIAL_DATA: TerritorialData[] = [
-  { territory: 'Lagos Metro', users: 160000, ggr: 1400000000, penetration: 12.5, color: '#1890ff' },
-  { territory: 'Ogun Industrial', users: 140000, ggr: 1225000000, penetration: 9.8, color: '#52c41a' },
-  { territory: 'Rivers Port', users: 125000, ggr: 1100000000, penetration: 11.2, color: '#fa8c16' },
-  { territory: 'Kano Commercial', users: 110000, ggr: 975000000, penetration: 10.5, color: '#eb2f96' },
-  { territory: 'Oyo Central', users: 90000, ggr: 800000000, penetration: 7.5, color: '#722ed1' },
-  { territory: 'Multi-State Rural', users: 75000, ggr: 700000000, penetration: 8.9, color: '#13c2c2' },
+  { territory: 'Lagos Metro', users: 160000, ggr: 1400000000, playerWins: 980000000, playerLosses: 420000000, penetration: 12.5, color: '#1890ff' },
+  { territory: 'Ogun Industrial', users: 140000, ggr: 1225000000, playerWins: 857500000, playerLosses: 367500000, penetration: 9.8, color: '#52c41a' },
+  { territory: 'Rivers Port', users: 125000, ggr: 1100000000, playerWins: 770000000, playerLosses: 330000000, penetration: 11.2, color: '#fa8c16' },
+  { territory: 'Kano Commercial', users: 110000, ggr: 975000000, playerWins: 682500000, playerLosses: 292500000, penetration: 10.5, color: '#eb2f96' },
+  { territory: 'Oyo Central', users: 90000, ggr: 800000000, playerWins: 560000000, playerLosses: 240000000, penetration: 7.5, color: '#722ed1' },
+  { territory: 'Multi-State Rural', users: 75000, ggr: 700000000, playerWins: 490000000, playerLosses: 210000000, penetration: 8.9, color: '#13c2c2' },
 ]
 
 // Multi-state buying power data
@@ -320,6 +322,36 @@ export const RISK_SCORE_DATA = [
   { region: 'Kano', score: 18 },
   { region: 'Oyo', score: 65 },
 ]
+
+export const LGA_RISK_DATA: Record<string, { region: string; score: number }[]> = {
+  'Lagos': [
+    { region: 'Ikeja', score: 8 },
+    { region: 'Alimosho', score: 15 },
+    { region: 'Lekki', score: 45 },
+    { region: 'Victoria Island', score: 5 },
+    { region: 'Surulere', score: 12 },
+  ],
+  'Ogun': [
+    { region: 'Abeokuta South', score: 22 },
+    { region: 'Ota', score: 55 },
+    { region: 'Sagamu', score: 40 },
+  ],
+  'Rivers': [
+    { region: 'Port Harcourt', score: 30 },
+    { region: 'Obio-Akpor', score: 20 },
+    { region: 'Eleme', score: 15 },
+  ],
+  'Kano': [
+    { region: 'Kano Municipal', score: 10 },
+    { region: 'Tarauni', score: 25 },
+    { region: 'Nassarawa', score: 18 },
+  ],
+  'Oyo': [
+    { region: 'Ibadan North', score: 70 },
+    { region: 'Ibadan South-West', score: 60 },
+    { region: 'Ogbomosho', score: 45 },
+  ],
+}
 
 export const FRAUD_TYPE_DISTRIBUTION = [
   { name: 'GGR Spikes', value: 45 },

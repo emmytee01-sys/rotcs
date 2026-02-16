@@ -8,9 +8,11 @@ import {
   CONSULTANT_TOTAL_TGV,
   CONSULTANT_TAX_COLLECTED,
   CONSULTANT_PLAYER_WINS,
-  CONSULTANT_STATES
+  CONSULTANT_STATES,
+  CONSULTANT_NET_REVENUE
 } from '@/utils/mockData'
 import { formatCurrency } from '@/utils/formatters'
+import { Zap } from 'lucide-react'
 
 const { Option } = Select
 
@@ -57,7 +59,7 @@ const MultiStateHub = () => {
 
       {/* Key Metrics - Multi-State Aggregated */}
       <Row gutter={[24, 24]} className="mb-10">
-        <Col xs={24} sm={12} lg={8}>
+        <Col xs={24} sm={12} lg={6}>
           <div className="p-8 rounded-3xl bg-black/40 border-2 border-white/[0.05] relative overflow-hidden group hover:border-emerald-500/30 transition-all shadow-2xl">
             <span className="text-[10px] font-black tracking-[0.3em] text-[#64748B] uppercase block mb-4">Total Gaming Value</span>
             <div className="text-4xl font-black text-white tabular-nums tracking-tighter">
@@ -68,7 +70,7 @@ const MultiStateHub = () => {
             </div>
           </div>
         </Col>
-        <Col xs={24} sm={12} lg={8}>
+        <Col xs={24} sm={12} lg={6}>
           <div className="p-8 rounded-3xl bg-black/40 border-2 border-white/[0.05] relative overflow-hidden group hover:border-emerald-500/30 transition-all shadow-2xl">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
               <TrendingUp size={80} className="text-blue-500" />
@@ -82,7 +84,7 @@ const MultiStateHub = () => {
             </div>
           </div>
         </Col>
-        <Col xs={24} sm={12} lg={8}>
+        <Col xs={24} sm={12} lg={6}>
           <div className="p-8 rounded-3xl bg-black/40 border-2 border-white/[0.05] relative overflow-hidden group hover:border-emerald-500/30 transition-all shadow-2xl">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
               <CheckCircle size={80} className="text-emerald-500" />
@@ -93,6 +95,20 @@ const MultiStateHub = () => {
             </div>
             <div className="mt-4 text-emerald-400 text-[10px] font-black uppercase italic">
               Integrity Verified
+            </div>
+          </div>
+        </Col>
+        <Col xs={24} sm={12} lg={6}>
+          <div className="p-8 rounded-3xl bg-black/40 border-2 border-white/[0.05] relative overflow-hidden group hover:border-emerald-500/30 transition-all shadow-2xl">
+            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+              <Zap size={80} className="text-amber-500" />
+            </div>
+            <span className="text-[10px] font-black tracking-[0.3em] text-[#64748B] uppercase block mb-4">Total Player Loss</span>
+            <div className="text-4xl font-black text-white tabular-nums tracking-tighter">
+              {formatCurrency(CONSULTANT_NET_REVENUE)}
+            </div>
+            <div className="mt-4 text-amber-500 text-[10px] font-black uppercase italic">
+              Portfolio Net GGR
             </div>
           </div>
         </Col>

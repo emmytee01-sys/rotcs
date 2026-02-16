@@ -7,6 +7,7 @@ export interface User {
   email: string
   role: UserRole
   name: string
+  state?: string
 }
 
 export interface AuthContextType {
@@ -35,6 +36,7 @@ export const MOCK_USERS: Record<string, { password: string; user: User }> = {
       email: 'admin@rotcs.gov',
       role: 'admin',
       name: 'Admin User',
+      state: 'Lagos',
     },
   },
   'consultant@rotcs.gov': {
