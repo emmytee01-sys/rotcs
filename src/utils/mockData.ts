@@ -192,19 +192,20 @@ export interface BettingRecord {
   payout: number
   time: string
   state: string
+  lga: string
 }
 
 export const INITIAL_BETTING_RECORDS: BettingRecord[] = [
-  { id: 1, playerName: 'Chidi O.', company: 'SportyBet', betType: 'Football - Premier League', stake: 5000, outcome: 'win', payout: 12500, time: 'Just now', state: 'Lagos' },
-  { id: 2, playerName: 'Amaka N.', company: 'Bet9ja', betType: 'Virtual Racing', stake: 2000, outcome: 'loss', payout: 0, time: 'Just now', state: 'Abuja' },
-  { id: 3, playerName: 'Tunde A.', company: 'BetKing', betType: 'Basketball - NBA', stake: 10000, outcome: 'win', payout: 18000, time: '1 min ago', state: 'Lagos' },
-  { id: 4, playerName: 'Ngozi M.', company: 'NairaBet', betType: 'Tennis - ATP', stake: 3500, outcome: 'win', payout: 7000, time: '2 mins ago', state: 'Rivers' },
-  { id: 5, playerName: 'Ibrahim K.', company: '1xBet', betType: 'Football - La Liga', stake: 8000, outcome: 'loss', payout: 0, time: '3 mins ago', state: 'Kano' },
-  { id: 6, playerName: 'Blessing U.', company: 'SportyBet', betType: 'Virtual Football', stake: 1500, outcome: 'win', payout: 4500, time: '5 mins ago', state: 'Oyo' },
-  { id: 7, playerName: 'Emeka P.', company: 'Bet9ja', betType: 'Cricket - IPL', stake: 6000, outcome: 'loss', payout: 0, time: '7 mins ago', state: 'Anambra' },
-  { id: 8, playerName: 'Fatima S.', company: '22Bet', betType: 'Football - Serie A', stake: 12000, outcome: 'win', payout: 24000, time: '10 mins ago', state: 'Kaduna' },
-  { id: 9, playerName: 'Oluwaseun D.', company: 'BetKing', betType: 'Boxing', stake: 4000, outcome: 'win', payout: 9200, time: '12 mins ago', state: 'Lagos' },
-  { id: 10, playerName: 'Chioma E.', company: 'NairaBet', betType: 'Horse Racing', stake: 7500, outcome: 'loss', payout: 0, time: '15 mins ago', state: 'Enugu' },
+  { id: 1, playerName: 'Chidi O.', company: 'SportyBet', betType: 'Football - Premier League', stake: 5000, outcome: 'win', payout: 12500, time: 'Just now', state: 'Lagos', lga: 'Ikeja' },
+  { id: 2, playerName: 'Amaka N.', company: 'Bet9ja', betType: 'Virtual Racing', stake: 2000, outcome: 'loss', payout: 0, time: 'Just now', state: 'Abuja', lga: 'Garki' },
+  { id: 3, playerName: 'Tunde A.', company: 'BetKing', betType: 'Basketball - NBA', stake: 10000, outcome: 'win', payout: 18000, time: '1 min ago', state: 'Lagos', lga: 'Surulere' },
+  { id: 4, playerName: 'Ngozi M.', company: 'NairaBet', betType: 'Tennis - ATP', stake: 3500, outcome: 'win', payout: 7000, time: '2 mins ago', state: 'Rivers', lga: 'Port Harcourt' },
+  { id: 5, playerName: 'Ibrahim K.', company: '1xBet', betType: 'Football - La Liga', stake: 8000, outcome: 'loss', payout: 0, time: '3 mins ago', state: 'Kano', lga: 'Kano Municipal' },
+  { id: 6, playerName: 'Blessing U.', company: 'SportyBet', betType: 'Virtual Football', stake: 1500, outcome: 'win', payout: 4500, time: '5 mins ago', state: 'Oyo', lga: 'Ibadan North' },
+  { id: 7, playerName: 'Emeka P.', company: 'Bet9ja', betType: 'Cricket - IPL', stake: 6000, outcome: 'loss', payout: 0, time: '7 mins ago', state: 'Anambra', lga: 'Awka' },
+  { id: 8, playerName: 'Fatima S.', company: '22Bet', betType: 'Football - Serie A', stake: 12000, outcome: 'win', payout: 24000, time: '10 mins ago', state: 'Kaduna', lga: 'Kaduna North' },
+  { id: 9, playerName: 'Oluwaseun D.', company: 'BetKing', betType: 'Boxing', stake: 4000, outcome: 'win', payout: 9200, time: '12 mins ago', state: 'Lagos', lga: 'Lekki' },
+  { id: 10, playerName: 'Chioma E.', company: 'NairaBet', betType: 'Horse Racing', stake: 7500, outcome: 'loss', payout: 0, time: '15 mins ago', state: 'Enugu', lga: 'Enugu East' },
 ]
 
 // Multi-state breakdown (5 states with consistent data)

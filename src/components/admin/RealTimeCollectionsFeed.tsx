@@ -3,12 +3,13 @@ import { TrendingUp, ArrowUpRight, ArrowDownRight } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { 
   COMPANIES, 
-  NIGERIAN_STATES, 
   BET_TYPES, 
   PLAYER_NAMES, 
   INITIAL_BETTING_RECORDS,
-  BettingRecord 
+  BettingRecord,
+  LGA_RISK_DATA
 } from '@/utils/mockData'
+import { useAuth } from '@/contexts/AuthContextCore'
 
 
 interface RealTimeCollectionsFeedProps {
@@ -16,7 +17,13 @@ interface RealTimeCollectionsFeedProps {
   selectedCompany: string
 }
 
-const RealTimeCollectionsFeed = ({ selectedState, selectedCompany }: RealTimeCollectionsFeedProps) => {
+const RealTimeCollectionsFeed = ({ selectedState: propSelectedState, selectedCompany }: RealTimeCollectionsFeedProps) => {
+  const { user } = useAuth()
+  const isStateAdmin = user?.role === 'admin'
+  // Prefer the auth state for admins, otherwise fallback to prop or 'Lagos'
+  const adminState = user?.state || (isStateAdmin ? 'Lagos' : null)
+  const effectiveState = adminState || propSelectedState || 'Lagos'
+
   const [records, setRecords] = useState<BettingRecord[]>(INITIAL_BETTING_RECORDS)
   const [currentPage, setCurrentPage] = useState(1)
   const pageSize = 5
@@ -30,6 +37,16 @@ const RealTimeCollectionsFeed = ({ selectedState, selectedCompany }: RealTimeCol
         const isWin = Math.random() > 0.5
         const multiplier = isWin ? (Math.random() * 2 + 1.5) : 0
         
+        const randomState = effectiveState
+        const lgas = LGA_RISK_DATA[randomState]
+        let lga = 'Municipal'
+        if (lgas && lgas.length > 0) {
+          lga = lgas[Math.floor(Math.random() * lgas.length)].region
+        } else {
+          const generics = ['Central', 'North', 'South', 'East', 'West']
+          lga = `${randomState} ${generics[Math.floor(Math.random() * generics.length)]}`
+        }
+
         const newRecord: BettingRecord = {
           id: Date.now(),
           playerName: PLAYER_NAMES[Math.floor(Math.random() * PLAYER_NAMES.length)],
@@ -39,7 +56,8 @@ const RealTimeCollectionsFeed = ({ selectedState, selectedCompany }: RealTimeCol
           outcome: isWin ? 'win' : 'loss',
           payout: Math.floor(stake * multiplier),
           time: 'Just now',
-          state: NIGERIAN_STATES[Math.floor(Math.random() * NIGERIAN_STATES.length)],
+          state: randomState,
+          lga: lga,
         }
         setRecords((prev) => [newRecord, ...prev])
         setCurrentPage(1)
@@ -51,7 +69,8 @@ const RealTimeCollectionsFeed = ({ selectedState, selectedCompany }: RealTimeCol
 
   // Filter records based on selected state and company
   const filteredRecords = records.filter((record) => {
-    const stateMatch = !selectedState || selectedState === 'all' || record.state === selectedState
+    // Only show records for the effective state
+    const stateMatch = record.state === effectiveState
     const companyMatch = selectedCompany === 'all' || record.company === selectedCompany
     return stateMatch && companyMatch
   })
@@ -64,7 +83,7 @@ const RealTimeCollectionsFeed = ({ selectedState, selectedCompany }: RealTimeCol
   // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1)
-  }, [selectedState, selectedCompany])
+  }, [effectiveState, selectedCompany])
 
   return (
     <div className="bg-[#0F172A] rounded-3xl border-2 border-white/[0.03] shadow-2xl overflow-hidden flex flex-col h-full">
@@ -115,7 +134,7 @@ const RealTimeCollectionsFeed = ({ selectedState, selectedCompany }: RealTimeCol
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-sm font-black text-white uppercase tracking-tight truncate">{record.playerName}</span>
-                    <span className="text-[10px] font-black text-emerald-400/80 uppercase tracking-widest bg-emerald-500/10 px-1.5 py-0.5 rounded-md">{record.state}</span>
+                    <span className="text-[10px] font-black text-emerald-400/80 uppercase tracking-widest bg-emerald-500/10 px-1.5 py-0.5 rounded-md">{record.lga}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-[11px] font-bold text-[#64748B] uppercase truncate">{record.betType}</span>
