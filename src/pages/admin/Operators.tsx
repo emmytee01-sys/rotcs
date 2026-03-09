@@ -1,29 +1,30 @@
-import { Card, Typography, Table, Tag, Badge, Row, Col, Statistic } from 'antd'
+import { Card, Typography, Table, Tag, Badge, Row, Col, Statistic, Spin, Alert } from 'antd'
 import { Building2, CheckCircle, XCircle, AlertCircle } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import OperatorDetailModal from '@/components/admin/OperatorDetailModal'
 import { calculateVariance } from '@/utils/variance'
-import { OPERATORS, TOTAL_MARKET_TGV } from '@/utils/mockData'
 import { formatCurrency } from '@/utils/formatters'
+import { useAuth } from '@/contexts/AuthContextCore'
 
 const { Title, Text } = Typography
 
 const getStatusConfig = (status: string) => {
-  switch (status) {
+  switch (status.toLowerCase()) {
+    case 'active':
     case 'compliant':
-      return { color: 'success', icon: <CheckCircle size={16} />, text: 'Compliant' }
+      return { color: 'success', icon: <CheckCircle size={16} />, text: 'Active' }
     case 'warning':
+    case 'inactive':
       return { color: 'warning', icon: <AlertCircle size={16} />, text: 'Review Required' }
+    case 'revoked':
     case 'default':
-      return { color: 'error', icon: <XCircle size={16} />, text: 'In Default' }
+      return { color: 'error', icon: <XCircle size={16} />, text: 'Revoked' }
     default:
       return { color: 'default', icon: null, text: 'Unknown' }
   }
 }
 
 const getVarianceTag = (variance: number) => {
-  // Variance thresholds based on documentation:
-  // Green: < 0.05%, Amber: 0.05% - 0.5%, Red: > 0.5%
   if (variance < 0.0005) return <Tag color="green">Green</Tag>
   if (variance < 0.005) return <Tag color="orange">Amber</Tag>
   return <Tag color="red">Red</Tag>
@@ -40,6 +41,12 @@ const columns = [
         <Text strong>{text}</Text>
       </div>
     ),
+  },
+  {
+    title: 'License',
+    dataIndex: 'license_number',
+    key: 'license_number',
+    render: (text: string) => <Text code>{text}</Text>,
   },
   {
     title: 'Status',
@@ -59,76 +66,64 @@ const columns = [
         />
       )
     },
-    filters: [
-      { text: 'Compliant', value: 'compliant' },
-      { text: 'Warning', value: 'warning' },
-      { text: 'Default', value: 'default' },
-    ],
-    onFilter: (value: any, record: any) => record.status === value,
   },
   {
-    title: 'TGV',
-    dataIndex: 'ggr',
-    key: 'ggr',
-    render: (ggr: number) => <Text>{formatCurrency(ggr)}</Text>,
-    sorter: (a: any, b: any) => a.ggr - b.ggr,
-  },
-  {
-    title: 'Tax Due',
-    dataIndex: 'taxDue',
-    key: 'taxDue',
-    render: (taxDue: number) => <Text>{formatCurrency(taxDue)}</Text>,
-  },
-  {
-    title: 'Tax Paid',
-    dataIndex: 'taxPaid',
-    key: 'taxPaid',
-    render: (taxPaid: number, record: any) => {
-      const isPaid = taxPaid >= record.taxDue
-      return (
-        <Text className={isPaid ? 'text-green-600' : 'text-red-600'}>
-          {formatCurrency(taxPaid)}
-        </Text>
-      )
-    },
-  },
-  {
-    title: 'Variance Status',
-    key: 'varianceStatus',
-    render: (_: any, record: any) => {
-      const variance = calculateVariance(record.taxDue, record.taxPaid)
-      return getVarianceTag(variance)
-    },
-  },
-  {
-    title: 'Variance %',
-    key: 'varianceValue',
-    render: (_: any, record: any) => {
-      const variance = calculateVariance(record.taxDue, record.taxPaid)
-      return <Text type="secondary">{(variance * 100).toFixed(2)}%</Text>
-    },
-    sorter: (a: any, b: any) => {
-      const varA = calculateVariance(a.taxDue, a.taxPaid)
-      const varB = calculateVariance(b.taxDue, b.taxPaid)
-      return varA - varB
-    },
-  },
-  {
-    title: 'Last Payment',
-    dataIndex: 'lastPayment',
-    key: 'lastPayment',
-    render: (date: string) => <Text type="secondary">{date}</Text>,
+    title: 'API Endpoint',
+    dataIndex: 'api_endpoint',
+    key: 'api_endpoint',
+    render: (url: string) => <Text type="secondary" className="text-xs">{url || 'N/A'}</Text>,
   },
 ]
 
 const Operators = () => {
+  const { user, token } = useAuth()
   const [modalVisible, setModalVisible] = useState(false)
   const [selectedOperator, setSelectedOperator] = useState<any>(null)
+  const [operators, setOperators] = useState<any[]>([])
+  const [stats, setStats] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  const compliantCount = OPERATORS.filter(op => op.status === 'compliant').length
-  const warningCount = OPERATORS.filter(op => op.status === 'warning').length
-  const defaultCount = OPERATORS.filter(op => op.status === 'default').length
-  const totalMarketTGV = TOTAL_MARKET_TGV
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true)
+        const [opsRes, statsRes] = await Promise.all([
+          fetch((import.meta.env.VITE_API_URL || 'http://localhost:5001/api') + '/dashboard/operators', {
+            headers: { 'Authorization': `Bearer ${token}` }
+          }),
+          fetch((import.meta.env.VITE_API_URL || 'http://localhost:5001/api') + '/dashboard/stats', {
+            headers: { 'Authorization': `Bearer ${token}` }
+          })
+        ])
+
+        if (!opsRes.ok || !statsRes.ok) throw new Error('Failed to fetch data')
+
+        const opsData = await opsRes.json()
+        const statsData = await statsRes.json()
+
+        setOperators(opsData)
+        setStats(statsData.metrics)
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (token) fetchData()
+  }, [token])
+
+  if (loading) return (
+    <div className="min-h-[60vh] flex items-center justify-center">
+      <Spin size="large" tip="Synchronizing Operator Records..." />
+    </div>
+  )
+
+  if (error) return <Alert message="Error" description={error} type="error" showIcon className="mt-12" />
+
+  const compliantCount = operators.filter(op => op.status === 'active').length
+  const totalGGR = Number(stats?.total_ggr || 0)
 
   const handleRowClick = (record: any) => {
     setSelectedOperator(record)
@@ -137,8 +132,8 @@ const Operators = () => {
 
   return (
     <div>
-      <Title level={2}>Operator Overview</Title>
-      <Text type="secondary">Operator status and compliance overview</Text>
+      <Title level={2}>{user?.state_name} Operator Fleet</Title>
+      <Text type="secondary">Licensed gaming entities operating within {user?.state_name}</Text>
 
       {/* Summary Cards */}
       <Row gutter={[16, 16]} className="mt-6">
@@ -146,7 +141,7 @@ const Operators = () => {
           <Card>
             <Statistic
               title="Total Operators"
-              value={OPERATORS.length}
+              value={operators.length}
               prefix={<Building2 size={20} className="text-blue-500" />}
             />
           </Card>
@@ -154,7 +149,7 @@ const Operators = () => {
         <Col xs={24} sm={12} lg={6}>
           <Card>
             <Statistic
-              title="Compliant"
+              title="Active Licenses"
               value={compliantCount}
               prefix={<CheckCircle size={20} className="text-green-500" />}
               valueStyle={{ color: '#3f8600' }}
@@ -164,42 +159,32 @@ const Operators = () => {
         <Col xs={24} sm={12} lg={6}>
           <Card>
             <Statistic
-              title="Under Review"
-              value={warningCount}
-              prefix={<AlertCircle size={20} className="text-orange-500" />}
-              valueStyle={{ color: '#fa8c16' }}
+              title="State GGR"
+              value={totalGGR}
+              formatter={(value) => formatCurrency(Number(value))}
+              prefix={<Badge status="processing" className="mr-2" />}
             />
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={6}>
           <Card>
             <Statistic
-              title="Late Payments"
-              value={defaultCount}
-              prefix={<XCircle size={20} className="text-red-500" />}
-              valueStyle={{ color: '#cf1322' }}
+              title="Compliance Rate"
+              value={operators.length ? (compliantCount / operators.length) * 100 : 0}
+              suffix="%"
+              precision={1}
             />
           </Card>
         </Col>
       </Row>
 
-      {/* Market Volume */}
-      <Card className="mt-6">
-        <Title level={4}>Total Gaming Value</Title>
-        <div className="text-4xl font-bold text-blue-600">
-          {formatCurrency(totalMarketTGV)}
-          <span className="text-sm font-normal text-gray-500 ml-2">(TGV)</span>
-        </div>
-        <Text type="secondary">Aggregate TGV across all operators</Text>
-      </Card>
-
       {/* Operator Status Grid */}
-      <Card className="mt-6">
-        <Title level={4}>Operator Status Grid</Title>
-        <Text type="secondary" className="block mb-4">Click on any row to view detailed information</Text>
+      <Card className="mt-6 border-0 shadow-sm bg-transparent">
+        <Title level={4}>License Registry</Title>
+        <Text type="secondary" className="block mb-4">Click row to inspect operator's real-time ingestion health</Text>
         <div className="overflow-x-auto">
           <Table
-            dataSource={OPERATORS}
+            dataSource={operators}
             columns={columns}
             pagination={{ pageSize: 10 }}
             rowKey="id"

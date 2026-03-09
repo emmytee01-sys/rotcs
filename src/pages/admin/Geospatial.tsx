@@ -1,10 +1,16 @@
-import { Table, Tabs, Row, Col } from 'antd'
+import { useState, useEffect } from 'react'
+import { Table, Tabs, Row, Col, Spin } from 'antd'
 import { MapPin, Users, TrendingUp, ShoppingCart } from 'lucide-react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 import GeospatialHeatmap from '@/components/admin/GeospatialHeatmap'
 import BuyingPowerHeatmap from '@/components/admin/BuyingPowerHeatmap'
-import { TERRITORIAL_DATA, BUYING_POWER_DATA } from '@/utils/mockData'
+import { TERRITORIAL_DATA_BY_STATE, BUYING_POWER_DATA_BY_STATE } from '@/utils/mockData'
 import { formatCurrency } from '@/utils/formatters'
+import { useAuth } from '@/contexts/AuthContextCore'
+
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5001/api'
+
+type TerritorialState = { state: string; stateCode: string; lgas: { territory: string; users: number; ggr: number; playerWins: number; playerLosses: number; penetration: number; color: string }[] }
 
 
 
@@ -134,6 +140,33 @@ const buyingPowerColumns = [
 ]
 
 const Geospatial = () => {
+  const { user, token } = useAuth()
+  const [territorialFromApi, setTerritorialFromApi] = useState<TerritorialState[] | null>(null)
+  const [territorialLoading, setTerritorialLoading] = useState(false)
+  const useDbTerritorial = user?.state_slug === 'ondo' || user?.state_slug === 'taraba'
+
+  useEffect(() => {
+    if (!useDbTerritorial || !token) return
+    setTerritorialLoading(true)
+    fetch(API_BASE + '/dashboard/territorial', { headers: { Authorization: `Bearer ${token}` } })
+      .then((r) => r.ok ? r.json() : Promise.reject(new Error('Failed to fetch')))
+      .then((data) => setTerritorialFromApi([{ state: data.state, stateCode: data.stateCode, lgas: data.lgas }]))
+      .catch(() => setTerritorialFromApi([]))
+      .finally(() => setTerritorialLoading(false))
+  }, [useDbTerritorial, token])
+
+  const territorialDataByStateRaw = useDbTerritorial && territorialFromApi ? territorialFromApi : TERRITORIAL_DATA_BY_STATE
+  const territorialDataByState =
+    user?.state_id && user?.state_code
+      ? territorialDataByStateRaw.filter((s) => s.stateCode === user.state_code)
+      : territorialDataByStateRaw
+
+  const buyingPowerDataByStateRaw = BUYING_POWER_DATA_BY_STATE
+  const buyingPowerDataByState =
+    user?.state_id && user?.state_code
+      ? buyingPowerDataByStateRaw.filter((s) => s.stateCode === user.state_code)
+      : buyingPowerDataByStateRaw
+
   const tabItems = [
     {
       key: 'territorial',
@@ -156,52 +189,83 @@ const Geospatial = () => {
 
           <Row gutter={[24, 24]}>
             <Col xs={24} lg={12}>
-              {/* Regional Leaderboard */}
+              {/* Regional Rankings — per state, each with its LGAs */}
               <div className="p-8 rounded-3xl bg-[#0F172A] border-2 border-white/[0.03] shadow-2xl h-full">
                 <div className="flex items-center gap-3 mb-8">
                   <TrendingUp className="text-emerald-500" size={20} />
                   <h4 className="text-xl bold-heading text-white m-0 uppercase italic tracking-tight">Regional Rankings</h4>
                 </div>
-                <div className="overflow-x-auto">
-                  <Table
-                    dataSource={TERRITORIAL_DATA}
-                    columns={territorialColumns}
-                    pagination={false}
-                    rowKey="territory"
-                    className="industrial-table"
-                    scroll={{ x: 'max-content' }}
-                  />
+                {territorialLoading ? (
+                  <div className="flex items-center justify-center py-12"><Spin size="large" tip="Loading from database..." /></div>
+                ) : (
+                <div className="space-y-8 overflow-x-auto">
+                  {territorialDataByState.map(({ state, stateCode, lgas }) => (
+                    <div key={state}>
+                      <div className="flex items-center gap-2 mb-4">
+                        <span className="text-xs font-black text-emerald-400/90 uppercase tracking-widest border border-emerald-500/30 px-2 py-1 rounded-md">
+                          {stateCode}
+                        </span>
+                        <h5 className="text-sm font-black text-white m-0 uppercase tracking-tight">{state}</h5>
+                      </div>
+                      <Table
+                        dataSource={lgas}
+                        columns={territorialColumns}
+                        pagination={false}
+                        rowKey="territory"
+                        className="industrial-table mb-6"
+                        scroll={{ x: 'max-content' }}
+                        size="small"
+                      />
+                    </div>
+                  ))}
                 </div>
+                )}
               </div>
             </Col>
             <Col xs={24} lg={12}>
-              {/* TGV Distribution Chart */}
+              {/* TGV Distribution — per state */}
               <div className="p-8 rounded-3xl bg-[#0F172A] border-2 border-white/[0.03] shadow-2xl h-full flex flex-col">
                 <h4 className="text-xl bold-heading text-white mb-8 uppercase italic tracking-tight">TGV Distribution</h4>
-                <div className="flex-1 min-h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={TERRITORIAL_DATA}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                      <XAxis 
-                        dataKey="territory" 
-                        axisLine={false} 
-                        tickLine={false} 
-                        tick={{ fill: '#64748B', fontSize: 10, fontWeight: 700 }}
-                      />
-                      <YAxis hide />
-                      <Tooltip 
-                        contentStyle={{ backgroundColor: '#020617', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
-                        itemStyle={{ color: '#10B981', fontWeight: 900 }}
-                        formatter={(value: any) => formatCurrency(value)} 
-                      />
-                      <Bar dataKey="ggr" radius={[6, 6, 0, 0]}>
-                        {TERRITORIAL_DATA.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} fillOpacity={0.8} />
-                        ))}
-                      </Bar>
-                    </BarChart>
-                  </ResponsiveContainer>
+                {territorialLoading ? (
+                  <div className="flex items-center justify-center flex-1 min-h-[300px]"><Spin size="large" /></div>
+                ) : (
+                <div className="space-y-8 flex-1 min-h-0">
+                  {territorialDataByState.map(({ state, stateCode, lgas }) => (
+                    <div key={state} className="min-h-[220px]">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-[10px] font-black text-emerald-400/90 uppercase tracking-widest border border-emerald-500/30 px-2 py-0.5 rounded">
+                          {stateCode}
+                        </span>
+                        <span className="text-xs font-bold text-[#94A3B8] uppercase tracking-tight">{state}</span>
+                      </div>
+                      <ResponsiveContainer width="100%" height={200}>
+                        <BarChart data={lgas} layout="vertical" margin={{ left: 8, right: 8 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={false} />
+                          <XAxis type="number" hide />
+                          <YAxis
+                            type="category"
+                            dataKey="territory"
+                            width={90}
+                            axisLine={false}
+                            tickLine={false}
+                            tick={{ fill: '#64748B', fontSize: 9, fontWeight: 700 }}
+                          />
+                          <Tooltip
+                            contentStyle={{ backgroundColor: '#020617', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
+                            itemStyle={{ color: '#10B981', fontWeight: 900 }}
+                            formatter={(value: any) => formatCurrency(value)}
+                          />
+                          <Bar dataKey="ggr" radius={[0, 4, 4, 0]}>
+                            {lgas.map((entry, index) => (
+                              <Cell key={`cell-${state}-${index}`} fill={entry.color} fillOpacity={0.8} />
+                            ))}
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  ))}
                 </div>
+                )}
               </div>
             </Col>
           </Row>
@@ -233,44 +297,67 @@ const Geospatial = () => {
                   <TrendingUp className="text-blue-500" size={20} />
                   <h4 className="text-xl bold-heading text-white m-0 uppercase italic tracking-tight">Spend Rankings</h4>
                 </div>
-                <div className="overflow-x-auto">
-                  <Table
-                    dataSource={BUYING_POWER_DATA}
-                    columns={buyingPowerColumns}
-                    pagination={false}
-                    rowKey="territory"
-                    className="industrial-table"
-                    scroll={{ x: 'max-content' }}
-                  />
+                <div className="space-y-8 overflow-x-auto">
+                  {buyingPowerDataByState.map(({ state, stateCode, lgas }) => (
+                    <div key={state}>
+                      <div className="flex items-center gap-2 mb-4">
+                        <span className="text-xs font-black text-blue-400/90 uppercase tracking-widest border border-blue-500/30 px-2 py-1 rounded-md">
+                          {stateCode}
+                        </span>
+                        <h5 className="text-sm font-black text-white m-0 uppercase tracking-tight">{state}</h5>
+                      </div>
+                      <Table
+                        dataSource={lgas}
+                        columns={buyingPowerColumns}
+                        pagination={false}
+                        rowKey="territory"
+                        className="industrial-table mb-6"
+                        scroll={{ x: 'max-content' }}
+                        size="small"
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
             </Col>
             <Col xs={24} lg={12}>
               <div className="p-8 rounded-3xl bg-[#0F172A] border-2 border-white/[0.03] shadow-2xl h-full flex flex-col">
                 <h4 className="text-xl bold-heading text-white mb-8 uppercase italic tracking-tight">Spend Distribution</h4>
-                <div className="flex-1 min-h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={BUYING_POWER_DATA}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                      <XAxis 
-                        dataKey="territory" 
-                        axisLine={false} 
-                        tickLine={false} 
-                        tick={{ fill: '#64748B', fontSize: 10, fontWeight: 700 }}
-                      />
-                      <YAxis hide />
-                      <Tooltip 
-                        contentStyle={{ backgroundColor: '#020617', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
-                        itemStyle={{ color: '#3B82F6', fontWeight: 900 }}
-                        formatter={(value: any) => formatCurrency(value)} 
-                      />
-                      <Bar dataKey="totalSpend" radius={[6, 6, 0, 0]}>
-                        {BUYING_POWER_DATA.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} fillOpacity={0.8} />
-                        ))}
-                      </Bar>
-                    </BarChart>
-                  </ResponsiveContainer>
+                <div className="space-y-8 flex-1 min-h-0">
+                  {buyingPowerDataByState.map(({ state, stateCode, lgas }) => (
+                    <div key={state} className="min-h-[220px]">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-[10px] font-black text-blue-400/90 uppercase tracking-widest border border-blue-500/30 px-2 py-0.5 rounded">
+                          {stateCode}
+                        </span>
+                        <span className="text-xs font-bold text-[#94A3B8] uppercase tracking-tight">{state}</span>
+                      </div>
+                      <ResponsiveContainer width="100%" height={200}>
+                        <BarChart data={lgas} layout="vertical" margin={{ left: 8, right: 8 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={false} />
+                          <XAxis type="number" hide />
+                          <YAxis
+                            type="category"
+                            dataKey="territory"
+                            width={90}
+                            axisLine={false}
+                            tickLine={false}
+                            tick={{ fill: '#64748B', fontSize: 9, fontWeight: 700 }}
+                          />
+                          <Tooltip
+                            contentStyle={{ backgroundColor: '#020617', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
+                            itemStyle={{ color: '#3B82F6', fontWeight: 900 }}
+                            formatter={(value: any) => formatCurrency(value)}
+                          />
+                          <Bar dataKey="totalSpend" radius={[0, 4, 4, 0]}>
+                            {lgas.map((entry, index) => (
+                              <Cell key={`cell-${state}-${index}`} fill={entry.color} fillOpacity={0.8} />
+                            ))}
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  ))}
                 </div>
               </div>
             </Col>
@@ -284,17 +371,19 @@ const Geospatial = () => {
     <div className="space-y-10">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h1 className="text-4xl md:text-5xl bold-heading text-white mb-2 uppercase tracking-tight">Regional Overview</h1>
+          <h1 className="text-4xl md:text-5xl bold-heading text-white mb-2 uppercase tracking-tight">
+            {user?.state_name || 'Regional'} Overview
+          </h1>
           <p className="text-[#94A3B8] font-bold text-sm tracking-widest uppercase italic border-l-2 border-emerald-500 pl-4">
-            Location-based Revenue Analysis
+            Location-based Revenue Analysis for {user?.state_name || 'Jurisdiction'}
           </p>
         </div>
       </div>
 
       <div className="p-2 md:p-4 rounded-[32px] bg-[#0F172A] border-2 border-white/[0.03] shadow-2xl">
-        <Tabs 
-          defaultActiveKey="territorial" 
-          items={tabItems} 
+        <Tabs
+          defaultActiveKey="territorial"
+          items={tabItems}
           size="large"
           className="custom-tabs"
         />

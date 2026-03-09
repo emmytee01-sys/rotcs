@@ -43,7 +43,7 @@ function App() {
       <Route path="/" element={<LandingPage />} />
 
       {/* Admin Routes - Protected */}
-      <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+      <Route element={<ProtectedRoute allowedRoles={['admin', 'state_admin']} />}>
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Navigate to="/admin/revenue" replace />} />
           <Route path="revenue" element={<RevenueCenter />} />
@@ -55,7 +55,7 @@ function App() {
       </Route>
 
       {/* Consultant Routes - Protected */}
-      <Route element={<ProtectedRoute allowedRoles={['consultant']} />}>
+      <Route element={<ProtectedRoute allowedRoles={['consultant', 'global_admin']} />}>
         <Route path="/consultant" element={<ConsultantLayout />}>
           <Route index element={<Navigate to="/consultant/hub" replace />} />
           <Route path="hub" element={<MultiStateHub />} />
@@ -69,7 +69,7 @@ function App() {
       </Route>
 
       {/* Operator Routes - Protected */}
-      <Route element={<ProtectedRoute allowedRoles={['operator']} />}>
+      <Route element={<ProtectedRoute allowedRoles={['operator', 'operator_admin']} />}>
         <Route path="/operator" element={<OperatorLayout />}>
           <Route index element={<Navigate to="/operator/home" replace />} />
           <Route path="home" element={<OperatorHome />} />

@@ -1,20 +1,26 @@
 import { createContext, useContext } from 'react'
 
-export type UserRole = 'admin' | 'consultant' | 'operator'
+export type UserRole = 'global_admin' | 'state_admin' | 'auditor' | 'operator_admin' | 'admin' | 'consultant' | 'operator'
 
 export interface User {
-  id: string
+  id: number | string
+  username?: string
   email: string
   role: UserRole
-  name: string
-  state?: string
+  name?: string
+  state_id?: number | null
+  state_name?: string | null
+  state_code?: string | null
+  state_slug?: string | null
+  state?: string // for backward compatibility if needed
 }
 
 export interface AuthContextType {
   user: User | null
-  login: (email: string, password: string) => Promise<void>
+  login: (username: string, password: string) => Promise<User>
   logout: () => void
   isLoading: boolean
+  token: string | null
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined)

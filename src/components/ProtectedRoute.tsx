@@ -25,12 +25,16 @@ const ProtectedRoute = ({ allowedRoles }: ProtectedRouteProps) => {
 
   // Redirect to user's dashboard if accessing wrong role's routes
   if (!allowedRoles.includes(user.role)) {
-    const dashboardPaths: Record<UserRole, string> = {
+    const dashboardPaths: Record<string, string> = {
       admin: '/admin/revenue',
+      state_admin: '/admin/revenue',
       consultant: '/consultant/hub',
+      global_admin: '/consultant/hub',
       operator: '/operator/home',
+      operator_admin: '/operator/home',
     }
-    return <Navigate to={dashboardPaths[user.role]} replace />
+    const targetPath = dashboardPaths[user.role] || '/'
+    return <Navigate to={targetPath} replace />
   }
 
   // User is authenticated and has correct role

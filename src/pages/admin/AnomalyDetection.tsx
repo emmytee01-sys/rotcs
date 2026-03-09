@@ -1,13 +1,13 @@
 import { Row, Col, Progress, Tag, Table } from 'antd'
 import { ShieldAlert, Zap, TrendingUp, AlertTriangle } from 'lucide-react'
-import { 
-  FRAUD_ALERTS, 
-  RISK_SCORE_DATA, 
+import {
+  FRAUD_ALERTS,
+  RISK_SCORE_DATA,
   FRAUD_TYPE_DISTRIBUTION,
   LGA_RISK_DATA
 } from '@/utils/mockData'
 import { useAuth } from '@/contexts/AuthContextCore'
-import { 
+import {
   PieChart,
   Pie,
   Cell,
@@ -20,8 +20,8 @@ const AnomalyDetection = () => {
   const activeAlerts = FRAUD_ALERTS.filter(a => a.status === 'active').length
   const COLORS = ['#10B981', '#3B82F6', '#F59E0B', '#EF4444']
 
-  const isStateAdmin = user?.role === 'admin'
-  const adminState = user?.state || (isStateAdmin ? 'Lagos' : null)
+  const isStateAdmin = user?.role === 'state_admin' || user?.role === 'admin'
+  const adminState = user?.state_name || (isStateAdmin ? 'Lagos' : null)
   const riskData = adminState ? (LGA_RISK_DATA[adminState] || []) : RISK_SCORE_DATA
   const riskTitle = adminState ? `LGA Risk Scores (${adminState})` : 'Regional Risk Scores'
 
@@ -79,9 +79,11 @@ const AnomalyDetection = () => {
     <div className="space-y-6 md:space-y-10 pt-6 md:pt-12">
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
-          <h1 className="text-4xl md:text-5xl bold-heading text-white mb-2 uppercase tracking-tight">Anomaly Detection</h1>
+          <h1 className="text-4xl md:text-5xl bold-heading text-white mb-2 uppercase tracking-tight">
+            {user?.state_name || ''} Anomaly Detection
+          </h1>
           <p className="text-[#94A3B8] font-bold text-sm tracking-widest uppercase italic border-l-2 border-red-500 pl-4">
-            Sentinel-X Real-time Threat Intelligence
+            Sentinel-X Real-time Threat Intelligence for {user?.state_name || 'Jurisdiction'}
           </p>
         </div>
 
@@ -106,9 +108,9 @@ const AnomalyDetection = () => {
             </div>
 
             <div className="overflow-x-auto scrollbar-hide">
-              <Table 
-                dataSource={FRAUD_ALERTS} 
-                columns={columns} 
+              <Table
+                dataSource={FRAUD_ALERTS}
+                columns={columns}
                 pagination={false}
                 className="custom-table min-w-[600px] lg:min-w-0"
                 rowClassName="hover:bg-red-500/5 transition-colors cursor-pointer"
@@ -127,10 +129,10 @@ const AnomalyDetection = () => {
                     <span>{item.region}</span>
                     <span className={item.score > 50 ? 'text-red-500' : 'text-white'}>{item.score}% Risk</span>
                   </div>
-                  <Progress 
-                    percent={item.score} 
-                    showInfo={false} 
-                    strokeColor={item.score > 50 ? '#EF4444' : '#10B981'} 
+                  <Progress
+                    percent={item.score}
+                    showInfo={false}
+                    strokeColor={item.score > 50 ? '#EF4444' : '#10B981'}
                     trailColor="rgba(255,255,255,0.05)"
                     strokeWidth={8}
                     className="m-0"
@@ -170,7 +172,7 @@ const AnomalyDetection = () => {
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip 
+                  <Tooltip
                     contentStyle={{ backgroundColor: '#020617', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
                     itemStyle={{ fontWeight: 900 }}
                   />

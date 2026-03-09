@@ -1,54 +1,71 @@
 import { useState, useEffect, ReactNode } from 'react'
-import { User, AuthContext, MOCK_USERS } from './AuthContextCore'
+import { User, AuthContext } from './AuthContextCore'
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api'
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null)
+  const [token, setToken] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  // Load user from localStorage on mount
+  // Load user and token from localStorage on mount
   useEffect(() => {
     const storedUser = localStorage.getItem('rotcs_user')
-    if (storedUser) {
+    const storedToken = localStorage.getItem('rotcs_token')
+
+    if (storedUser && storedToken) {
       try {
-        const parsedUser = JSON.parse(storedUser)
-        // Refresh user data from MOCK_USERS if available to get latest properties (like state)
-        const mockEntry = MOCK_USERS[parsedUser.email.toLowerCase()]
-        if (mockEntry) {
-          setUser(mockEntry.user)
-          localStorage.setItem('rotcs_user', JSON.stringify(mockEntry.user))
-        } else {
-          setUser(parsedUser)
-        }
+        setUser(JSON.parse(storedUser))
+        setToken(storedToken)
       } catch (error) {
         console.error('Failed to parse stored user:', error)
         localStorage.removeItem('rotcs_user')
+        localStorage.removeItem('rotcs_token')
       }
     }
     setIsLoading(false)
   }, [])
 
-  const login = async (email: string, password: string): Promise<void> => {
-    // Simulate API call delay
-    await new Promise((resolve) => setTimeout(resolve, 500))
+  const login = async (username: string, password: string): Promise<User> => {
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, password }),
+    })
 
-    const userRecord = MOCK_USERS[email.toLowerCase()]
-
-    if (!userRecord || userRecord.password !== password) {
-      throw new Error('Invalid email or password')
+    if (!response.ok) {
+      let message = 'Login failed'
+      try {
+        const errorData = await response.json()
+        message = errorData.message || message
+      } catch {
+        message = response.status === 500 ? 'Server error. Check if the database is running.' : message
+      }
+      throw new Error(message)
     }
 
-    const authenticatedUser = userRecord.user
+    const data = await response.json()
+    const authenticatedUser: User = data.user
+    const authToken: string = data.token
+
     setUser(authenticatedUser)
+    setToken(authToken)
     localStorage.setItem('rotcs_user', JSON.stringify(authenticatedUser))
+    localStorage.setItem('rotcs_token', authToken)
+    return authenticatedUser
   }
 
   const logout = () => {
     setUser(null)
+    setToken(null)
     localStorage.removeItem('rotcs_user')
+    localStorage.removeItem('rotcs_token')
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, login, logout, isLoading, token }}>
       {children}
     </AuthContext.Provider>
   )

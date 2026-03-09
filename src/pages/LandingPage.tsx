@@ -19,14 +19,19 @@ const LandingPage = () => {
   const [loading, setLoading] = useState(false)
   const [form] = Form.useForm()
 
+  const dashboardPaths: Record<string, string> = {
+    admin: '/admin/revenue',
+    state_admin: '/admin/revenue',
+    consultant: '/consultant/hub',
+    global_admin: '/consultant/hub',
+    operator: '/operator/home',
+    operator_admin: '/operator/home',
+  }
+
   useEffect(() => {
     if (user) {
-      const dashboardPaths = {
-        admin: '/admin/revenue',
-        consultant: '/consultant/hub',
-        operator: '/operator/home',
-      }
-      navigate(dashboardPaths[user.role], { replace: true })
+      const path = dashboardPaths[user.role] || '/admin/revenue'
+      navigate(path, { replace: true })
     }
   }, [user, navigate])
 
@@ -34,9 +39,12 @@ const LandingPage = () => {
     setError('')
     setLoading(true)
     try {
-      await login(values.email, values.password)
+      // Backend expects username; modal field is "email" but user types username (e.g. taraba_admin)
+      const loggedInUser = await login(values.email.trim(), values.password)
       setIsModalOpen(false)
       form.resetFields()
+      const path = dashboardPaths[loggedInUser.role] || '/admin/revenue'
+      navigate(path, { replace: true })
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Authentication failed')
     } finally {
@@ -327,9 +335,10 @@ const LandingPage = () => {
               <Form.Item
                 name="email"
                 rules={[{ required: true, message: 'Identity required' }]}
+                label={<span className="text-[#94A3B8]">Username</span>}
               >
                 <Input 
-                  placeholder="Government Email / ID" 
+                  placeholder="e.g. taraba_admin" 
                   className="h-12 bg-black/40 border-white/10 text-white rounded-xl focus:border-blue-500/50"
                 />
               </Form.Item>
@@ -337,18 +346,20 @@ const LandingPage = () => {
               <Form.Item
                 name="password"
                 rules={[{ required: true, message: 'Credentials required' }]}
+                label={<span className="text-[#94A3B8]">Password</span>}
               >
                 <Input.Password 
-                  placeholder="Access Key" 
+                  placeholder="admin123" 
                   className="h-12 bg-black/40 border-white/10 text-white rounded-xl focus:border-blue-500/50"
                 />
               </Form.Item>
 
               <Button 
                 type="primary" 
-                htmlType="submit" 
+                htmlType="button"
                 block 
                 loading={loading}
+                onClick={() => form.submit()}
                 className="h-12 bg-blue-600 hover:bg-blue-500 border-none font-bold text-base rounded-xl mt-4 shadow-lg shadow-blue-600/20"
               >
                 Sign In to Dashboard
@@ -356,11 +367,11 @@ const LandingPage = () => {
             </Form>
 
             <div className="mt-8 pt-8 border-t border-white/5 text-center">
-              <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#64748B]">System Credentials</span>
+              <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#64748B]">Use username + admin123</span>
               <div className="mt-4 grid grid-cols-1 gap-2">
-                <p className="text-[11px] font-medium text-[#94A3B8]">Admin: admin@rotcs.gov / admin123</p>
-                <p className="text-[11px] font-medium text-[#94A3B8]">Consultant: consultant@rotcs.gov / consultant123</p>
-                <p className="text-[11px] font-medium text-[#94A3B8]">Operator: operator@rotcs.gov / operator123</p>
+                <p className="text-[11px] font-medium text-[#94A3B8]">Taraba: taraba_admin / admin123</p>
+                <p className="text-[11px] font-medium text-[#94A3B8]">Lagos: lagos_admin / admin123</p>
+                <p className="text-[11px] font-medium text-[#94A3B8]">Global: global_consultant / admin123</p>
               </div>
             </div>
           </div>

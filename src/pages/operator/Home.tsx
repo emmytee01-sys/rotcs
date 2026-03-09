@@ -1,19 +1,23 @@
 import { Row, Col, Progress } from 'antd'
 import { CheckCircle } from 'lucide-react'
+import { useAuth } from '@/contexts/AuthContextCore'
 
 const OperatorHome = () => {
+  const { user } = useAuth()
   const taxDue = 48000000
   const taxPaid = 48000000
   const complianceScore = 98
 
   return (
     <div>
-        <div>
-          <h1 className="text-4xl md:text-5xl bold-heading text-white mb-2 uppercase tracking-tight">Welcome, Operator</h1>
-          <p className="text-[#94A3B8] font-bold text-sm tracking-widest uppercase italic border-l-2 border-emerald-500 pl-4">
-            Tactical Liability Oversight & Compliance Intel
-          </p>
-        </div>
+      <div>
+        <h1 className="text-4xl md:text-5xl bold-heading text-white mb-2 uppercase tracking-tight text-center md:text-left">
+          Welcome, {user?.username || 'Operator'}
+        </h1>
+        <p className="text-[#94A3B8] font-bold text-sm tracking-widest uppercase italic border-l-2 border-emerald-500 pl-4 text-center md:text-left">
+          Tactical Oversight & Compliance Intel for {user?.state_name || 'Jurisdiction'}
+        </p>
+      </div>
 
       {/* Tax Liability Counter */}
       <Row gutter={[24, 24]} className="mt-10">

@@ -1,38 +1,95 @@
-import { Row, Col, Select } from 'antd'
-import { TrendingUp, CheckCircle } from 'lucide-react'
+import { Row, Col, Select, Spin, Alert, Table } from 'antd'
+import { TrendingUp, CheckCircle, Zap, Receipt } from 'lucide-react'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { motion } from 'framer-motion'
 import RealTimeCollectionsFeed from '@/components/admin/RealTimeCollectionsFeed'
 import ExportButton from '@/components/ui/ExportButton'
-import { useState } from 'react'
-import { 
-  COMPANIES, 
-  TOTAL_MARKET_TGV, 
-  TOTAL_PLAYER_WINS, 
-  PROJECTED_REVENUE, 
-  REVENUE_TREND_DATA,
-  TOTAL_TAX_COLLECTED,
-  TOTAL_NET_REVENUE 
+import { useState, useEffect } from 'react'
+import { useAuth } from '@/contexts/AuthContextCore'
+import {
+  REVENUE_TREND_DATA
 } from '@/utils/mockData'
 import { formatCurrency } from '@/utils/formatters'
-import { Zap } from 'lucide-react'
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5001/api'
 const { Option } = Select
 
-const RevenueCenter = () => {
-  const [selectedCompany, setSelectedCompany] = useState<string>('all')
+type WithholdingData = {
+  withholdingTaxRate: number
+  totalPayout: number
+  taxWithheld: number
+  byOperator: { operator_name: string; total_payout: number; tax_withheld: number }[]
+}
 
-  const collectedMTD = TOTAL_TAX_COLLECTED
-  const projectedRevenue = PROJECTED_REVENUE
-  const progressPercent = (collectedMTD / projectedRevenue) * 100
+const RevenueCenter = () => {
+  const { user, token } = useAuth()
+  const [selectedCompany, setSelectedCompany] = useState<string>('all')
+  const [stats, setStats] = useState<any>(null)
+  const [operators, setOperators] = useState<any[]>([])
+  const [withholding, setWithholding] = useState<WithholdingData | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const isTaraba = user?.state_slug === 'taraba'
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true)
+        const reqs: Promise<Response>[] = [
+          fetch(API_BASE + '/dashboard/stats', { headers: { Authorization: `Bearer ${token}` } }),
+          fetch(API_BASE + '/dashboard/operators', { headers: { Authorization: `Bearer ${token}` } })
+        ]
+        if (isTaraba) reqs.push(fetch(API_BASE + '/dashboard/withholding', { headers: { Authorization: `Bearer ${token}` } }))
+        const [statsRes, operatorsRes, withholdingRes] = await Promise.all(reqs)
+
+        if (!statsRes.ok || !operatorsRes.ok) throw new Error('Failed to fetch dashboard data')
+
+        const statsData = await statsRes.json()
+        const operatorsData = await operatorsRes.json()
+        setStats(statsData.metrics)
+        setOperators(operatorsData)
+        if (isTaraba && withholdingRes?.ok) {
+          const w = await withholdingRes.json()
+          setWithholding(w)
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (token) {
+      fetchData()
+    }
+  }, [token, isTaraba])
+
+  if (loading) return (
+    <div className="min-h-[60vh] flex items-center justify-center">
+      <Spin size="large" tip="Loading Revenue Intelligence..." />
+    </div>
+  )
+
+  if (error) return <Alert message="Error" description={error} type="error" showIcon className="mt-12" />
+
+  const totalWager = Number(stats?.total_wager || 0)
+  const totalPayout = Number(stats?.total_payout || 0)
+  const totalGGR = Number(stats?.total_ggr || 0)
+  const totalTax = Number(stats?.total_tax_due || 0)
+
+  // For the progress bar, we'll use a local projection or keep it dynamic
+  const projectedRevenue = 50000000 // Mock projection for now or could be state-specific
+  const progressPercent = (totalTax / projectedRevenue) * 100
 
   return (
     <div className="space-y-10 pt-12">
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
-          <h1 className="text-4xl md:text-5xl bold-heading text-white mb-2 uppercase tracking-tight">Revenue Overview</h1>
+          <h1 className="text-4xl md:text-5xl bold-heading text-white mb-2 uppercase tracking-tight">
+            {user?.state_name || 'State'} Revenue Overview
+          </h1>
           <p className="text-[#94A3B8] font-bold text-sm tracking-widest uppercase italic border-l-2 border-emerald-500 pl-4">
-            Real-time Tax and Revenue Monitoring
+            {user?.state_code || 'State'} Regulatory Ingestion Pipeline
           </p>
         </div>
 
@@ -46,8 +103,8 @@ const RevenueCenter = () => {
             size="large"
           >
             <Option value="all">All Licensed Operators</Option>
-            {COMPANIES.map((company) => (
-              <Option key={company} value={company}>{company}</Option>
+            {operators.map((op) => (
+              <Option key={op.id} value={op.name}>{op.name}</Option>
             ))}
           </Select>
           <ExportButton data={REVENUE_TREND_DATA} filename="revenue-report-master" />
@@ -63,7 +120,7 @@ const RevenueCenter = () => {
             </div>
             <span className="text-[10px] font-black tracking-[0.3em] text-[#64748B] uppercase block mb-4">Total Gaming Value</span>
             <div className="text-4xl md:text-5xl font-black text-white tabular-nums tracking-tighter drop-shadow-lg">
-              {formatCurrency(TOTAL_MARKET_TGV)}
+              {formatCurrency(totalWager)}
             </div>
             <div className="mt-4 flex items-center gap-2 text-emerald-400 text-xs font-black uppercase italic">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -93,7 +150,7 @@ const RevenueCenter = () => {
             </div>
             <span className="text-[10px] font-black tracking-[0.3em] text-[#64748B] uppercase block mb-4">Total Players Payouts</span>
             <div className="text-4xl md:text-5xl font-black text-white tabular-nums tracking-tighter drop-shadow-lg">
-              {formatCurrency(TOTAL_PLAYER_WINS)}
+              {formatCurrency(totalPayout)}
             </div>
             <div className="mt-4 flex items-center gap-2 text-emerald-400 text-xs font-black uppercase italic text-opacity-80">
               Integrity Check: PASSED
@@ -105,9 +162,9 @@ const RevenueCenter = () => {
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
               <Zap size={80} className="text-amber-500" />
             </div>
-            <span className="text-[10px] font-black tracking-[0.3em] text-[#64748B] uppercase block mb-4">Total Player Loss</span>
+            <span className="text-[10px] font-black tracking-[0.3em] text-[#64748B] uppercase block mb-4">Gross Gaming Revenue</span>
             <div className="text-4xl md:text-5xl font-black text-white tabular-nums tracking-tighter drop-shadow-lg">
-              {formatCurrency(TOTAL_NET_REVENUE)}
+              {formatCurrency(totalGGR)}
             </div>
             <div className="mt-4 flex items-center gap-2 text-amber-500 text-xs font-black uppercase italic text-opacity-80">
               <TrendingUp size={14} className="rotate-180" />
@@ -129,9 +186,9 @@ const RevenueCenter = () => {
             <span className="text-xs font-black text-[#64748B] block uppercase tracking-widest mt-1">Target Met</span>
           </div>
         </div>
-        
+
         <div className="relative h-6 bg-white/5 rounded-full overflow-hidden mb-8">
-          <motion.div 
+          <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${progressPercent}%` }}
             transition={{ duration: 1.5, ease: 'circOut' }}
@@ -144,17 +201,64 @@ const RevenueCenter = () => {
           <Col xs={24} sm={12}>
             <div className="p-6 rounded-2xl bg-black/20 border border-white/5">
               <span className="text-[10px] font-black text-[#64748B] uppercase tracking-widest block mb-2">Collected MTD</span>
-              <span className="text-xl md:text-2xl font-black text-white tabular-nums">{formatCurrency(collectedMTD)}</span>
+              <span className="text-xl md:text-2xl font-black text-white tabular-nums">{formatCurrency(totalTax)}</span>
             </div>
           </Col>
           <Col xs={24} sm={12}>
             <div className="p-6 rounded-2xl bg-black/20 border border-white/5">
               <span className="text-[10px] font-black text-[#64748B] uppercase tracking-widest block mb-2">Remaining Deficit</span>
-              <span className="text-xl md:text-2xl font-black text-amber-500 tabular-nums">{formatCurrency(projectedRevenue - collectedMTD)}</span>
+              <span className="text-xl md:text-2xl font-black text-amber-500 tabular-nums">{formatCurrency(projectedRevenue - totalTax)}</span>
             </div>
           </Col>
         </Row>
       </div>
+
+      {/* Player Winning Withholding — Taraba: tax on winning tickets */}
+      {isTaraba && withholding && withholding.withholdingTaxRate > 0 && (
+        <div className="p-10 rounded-3xl bg-[#0F172A] border-2 border-amber-500/20 shadow-neon">
+          <div className="flex items-center gap-3 mb-6">
+            <Receipt className="text-amber-500" size={24} />
+            <h3 className="text-2xl bold-heading text-white m-0">Player Winning Withholding</h3>
+          </div>
+          <p className="text-[#94A3B8] text-sm mb-6">
+            Tax withheld at source on player payouts (winning tickets). Rate: <strong className="text-amber-400">{withholding.withholdingTaxRate}%</strong>.
+          </p>
+          <Row gutter={[24, 24]} className="mb-6">
+            <Col xs={24} sm={8}>
+              <div className="p-6 rounded-2xl bg-black/20 border border-white/5">
+                <span className="text-[10px] font-black text-[#64748B] uppercase tracking-widest block mb-2">Total Player Winnings</span>
+                <span className="text-xl font-black text-white tabular-nums">{formatCurrency(withholding.totalPayout)}</span>
+              </div>
+            </Col>
+            <Col xs={24} sm={8}>
+              <div className="p-6 rounded-2xl bg-black/20 border border-amber-500/20">
+                <span className="text-[10px] font-black text-[#64748B] uppercase tracking-widest block mb-2">Withholding Rate</span>
+                <span className="text-xl font-black text-amber-400 tabular-nums">{withholding.withholdingTaxRate}%</span>
+              </div>
+            </Col>
+            <Col xs={24} sm={8}>
+              <div className="p-6 rounded-2xl bg-black/20 border border-emerald-500/20">
+                <span className="text-[10px] font-black text-[#64748B] uppercase tracking-widest block mb-2">Tax Withheld (Revenue)</span>
+                <span className="text-xl font-black text-emerald-400 tabular-nums">{formatCurrency(withholding.taxWithheld)}</span>
+              </div>
+            </Col>
+          </Row>
+          <div className="overflow-x-auto">
+            <Table
+              dataSource={withholding.byOperator}
+              rowKey="operator_name"
+              pagination={false}
+              size="small"
+              className="industrial-table"
+              columns={[
+                { title: 'Operator', dataIndex: 'operator_name', key: 'operator_name', render: (t: string) => <span className="font-bold text-white">{t}</span> },
+                { title: 'Player Payouts', dataIndex: 'total_payout', key: 'total_payout', render: (v: number) => formatCurrency(v) },
+                { title: 'Tax Withheld', dataIndex: 'tax_withheld', key: 'tax_withheld', render: (v: number) => <span className="text-emerald-400 font-black">{formatCurrency(v)}</span> },
+              ]}
+            />
+          </div>
+        </div>
+      )}
 
       <Row gutter={[24, 24]}>
         {/* Real-Time Collections Feed */}
@@ -179,34 +283,34 @@ const RevenueCenter = () => {
                 <AreaChart data={REVENUE_TREND_DATA}>
                   <defs>
                     <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#10B981" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#10B981" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                  <XAxis 
-                    dataKey="month" 
-                    axisLine={false} 
-                    tickLine={false} 
+                  <XAxis
+                    dataKey="month"
+                    axisLine={false}
+                    tickLine={false}
                     tick={{ fill: '#64748B', fontSize: 12, fontWeight: 700 }}
                     dy={10}
                   />
-                  <YAxis 
-                    hide 
+                  <YAxis
+                    hide
                   />
-                  <Tooltip 
+                  <Tooltip
                     contentStyle={{ backgroundColor: '#020617', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '12px' }}
                     itemStyle={{ color: '#10B981', fontWeight: 900 }}
                     labelStyle={{ color: '#94A3B8', marginBottom: '4px' }}
-                    formatter={(value: any) => formatCurrency(value)} 
+                    formatter={(value: any) => formatCurrency(value)}
                   />
-                  <Area 
-                    type="monotone" 
-                    dataKey="revenue" 
-                    stroke="#10B981" 
-                    strokeWidth={4} 
-                    fillOpacity={1} 
-                    fill="url(#colorRev)" 
+                  <Area
+                    type="monotone"
+                    dataKey="revenue"
+                    stroke="#10B981"
+                    strokeWidth={4}
+                    fillOpacity={1}
+                    fill="url(#colorRev)"
                     animationDuration={2000}
                   />
                 </AreaChart>

@@ -46,19 +46,19 @@ const AdminLayout = () => {
     <div className="flex flex-col h-full bg-[#050811] border-r-2 border-emerald-500/10 relative overflow-hidden">
       {/* Background Decor */}
       <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-3xl -mr-16 -mt-16 rounded-full" />
-      
+
       <div className="h-[160px] flex flex-col items-center justify-center border-b border-white/5 relative z-10 gap-4">
         <div className="w-20 h-20 rounded-2xl bg-emerald-600/20 border-2 border-emerald-500/30 flex items-center justify-center shadow-neon relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/10 to-transparent" />
-          <img 
-            src={logoImage} 
-            alt="ROTCS Logo" 
+          <img
+            src={logoImage}
+            alt="ROTCS Logo"
             className="h-12 w-auto brightness-110 relative z-10 transition-transform group-hover:scale-110 duration-500"
           />
         </div>
         <div className="text-center">
           <span className="text-[10px] uppercase font-black tracking-[0.5em] text-emerald-500/90 drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]">
-            {user?.state || 'Global'} Management
+            {user?.state_name || 'Global'} Management
           </span>
         </div>
       </div>
@@ -76,7 +76,7 @@ const AdminLayout = () => {
       </div>
 
       <div className="p-6 border-t border-white/5 bg-black/20 relative z-10">
-        <button 
+        <button
           onClick={showLogoutConfirm}
           className="power-button w-full h-12 bg-red-600/10 hover:bg-red-600 border border-red-500/30 hover:border-red-500 text-red-500 hover:text-white transition-all shadow-none hover:shadow-[0_0_20px_rgba(239,68,68,0.3)]"
         >
@@ -138,9 +138,11 @@ const AdminLayout = () => {
 
             <div className="flex items-center gap-6 shrink-0">
               <div className="hidden sm:flex flex-col items-end gap-1.5 border-r border-white/10 pr-6 mr-6">
-                <span className="text-[10px] font-black text-white uppercase tracking-tighter opacity-40 leading-none">{user?.name}</span>
+                <span className="text-[10px] font-black text-white uppercase tracking-tighter opacity-40 leading-none">
+                  {user?.username || user?.name}
+                </span>
                 <span className="text-xs text-emerald-400 font-black uppercase tracking-widest italic leading-none">
-                  {user?.state ? `${user.state} State Admin` : 'Federal Commissioner'}
+                  {user?.state_name ? `${user.state_name} Admin` : 'Regulatory Commissioner'}
                 </span>
               </div>
               <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
@@ -159,7 +161,7 @@ const AdminLayout = () => {
           </Content>
         </Layout>
       </Layout>
-      
+
       <style>{`
         .ant-menu-item {
           border-radius: 12px !important;

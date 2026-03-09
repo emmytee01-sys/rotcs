@@ -161,6 +161,50 @@ export const TERRITORIAL_DATA: TerritorialData[] = [
   { territory: 'Yaba', users: 15000, ggr: 140000000, playerWins: 98000000, playerLosses: 42000000, penetration: 8.9, color: '#13c2c2' },
 ]
 
+/** Regional rankings and TGV per state — each state has its own LGAs. */
+export interface TerritorialDataByState {
+  state: string
+  stateCode: string
+  lgas: TerritorialData[]
+}
+
+export const TERRITORIAL_DATA_BY_STATE: TerritorialDataByState[] = [
+  {
+    state: 'Lagos State',
+    stateCode: 'LA',
+    lgas: [
+      { territory: 'Victoria Island', users: 32000, ggr: 280000000, playerWins: 196000000, playerLosses: 84000000, penetration: 12.5, color: '#1890ff' },
+      { territory: 'Ikeja', users: 28000, ggr: 245000000, playerWins: 171500000, playerLosses: 73500000, penetration: 9.8, color: '#52c41a' },
+      { territory: 'Lekki', users: 25000, ggr: 220000000, playerWins: 154000000, playerLosses: 66000000, penetration: 11.2, color: '#fa8c16' },
+      { territory: 'Ikoyi', users: 22000, ggr: 195000000, playerWins: 136500000, playerLosses: 58500000, penetration: 10.5, color: '#eb2f96' },
+      { territory: 'Surulere', users: 18000, ggr: 160000000, playerWins: 112000000, playerLosses: 48000000, penetration: 7.5, color: '#722ed1' },
+      { territory: 'Yaba', users: 15000, ggr: 140000000, playerWins: 98000000, playerLosses: 42000000, penetration: 8.9, color: '#13c2c2' },
+    ],
+  },
+  {
+    state: 'Ondo State',
+    stateCode: 'ON',
+    lgas: [
+      { territory: 'Akure South', users: 18500, ggr: 162000000, playerWins: 113400000, playerLosses: 48600000, penetration: 10.2, color: '#1890ff' },
+      { territory: 'Ondo West', users: 14200, ggr: 124000000, playerWins: 86800000, playerLosses: 37200000, penetration: 8.8, color: '#52c41a' },
+      { territory: 'Owo', users: 11800, ggr: 98000000, playerWins: 68600000, playerLosses: 29400000, penetration: 7.5, color: '#fa8c16' },
+      { territory: 'Akure North', users: 9200, ggr: 78000000, playerWins: 54600000, playerLosses: 23400000, penetration: 6.9, color: '#eb2f96' },
+      { territory: 'Idanre', users: 6500, ggr: 54000000, playerWins: 37800000, playerLosses: 16200000, penetration: 5.8, color: '#13c2c2' },
+    ],
+  },
+  {
+    state: 'Taraba State',
+    stateCode: 'TR',
+    lgas: [
+      { territory: 'Jalingo', users: 15800, ggr: 138000000, playerWins: 96600000, playerLosses: 41400000, penetration: 9.4, color: '#1890ff' },
+      { territory: 'Wukari', users: 11200, ggr: 96000000, playerWins: 67200000, playerLosses: 28800000, penetration: 7.8, color: '#52c41a' },
+      { territory: 'Sardauna', users: 8400, ggr: 72000000, playerWins: 50400000, playerLosses: 21600000, penetration: 6.5, color: '#fa8c16' },
+      { territory: 'Takum', users: 6200, ggr: 52000000, playerWins: 36400000, playerLosses: 15600000, penetration: 5.9, color: '#eb2f96' },
+      { territory: 'Zing', users: 4100, ggr: 34000000, playerWins: 23800000, playerLosses: 10200000, penetration: 4.8, color: '#13c2c2' },
+    ],
+  },
+]
+
 export interface BuyingPowerData {
   territory: string
   totalSpend: number
@@ -176,6 +220,50 @@ export const BUYING_POWER_DATA: BuyingPowerData[] = [
   { territory: 'Ikoyi', totalSpend: 340000000, transactions: 6900, avgOrderValue: 49275, color: '#eb2f96' },
   { territory: 'Surulere', totalSpend: 280000000, transactions: 5500, avgOrderValue: 50909, color: '#722ed1' },
   { territory: 'Yaba', totalSpend: 180000000, transactions: 4000, avgOrderValue: 45000, color: '#13c2c2' },
+]
+
+/** Buying power (spend) per state — each state has its own LGAs. */
+export interface BuyingPowerDataByState {
+  state: string
+  stateCode: string
+  lgas: BuyingPowerData[]
+}
+
+export const BUYING_POWER_DATA_BY_STATE: BuyingPowerDataByState[] = [
+  {
+    state: 'Lagos State',
+    stateCode: 'LA',
+    lgas: [
+      { territory: 'Victoria Island', totalSpend: 480000000, transactions: 9500, avgOrderValue: 50526, color: '#1890ff' },
+      { territory: 'Ikeja', totalSpend: 420000000, transactions: 8200, avgOrderValue: 51220, color: '#52c41a' },
+      { territory: 'Lekki', totalSpend: 380000000, transactions: 7800, avgOrderValue: 48718, color: '#fa8c16' },
+      { territory: 'Ikoyi', totalSpend: 340000000, transactions: 6900, avgOrderValue: 49275, color: '#eb2f96' },
+      { territory: 'Surulere', totalSpend: 280000000, transactions: 5500, avgOrderValue: 50909, color: '#722ed1' },
+      { territory: 'Yaba', totalSpend: 180000000, transactions: 4000, avgOrderValue: 45000, color: '#13c2c2' },
+    ],
+  },
+  {
+    state: 'Ondo State',
+    stateCode: 'ON',
+    lgas: [
+      { territory: 'Akure South', totalSpend: 248000000, transactions: 4900, avgOrderValue: 50510, color: '#1890ff' },
+      { territory: 'Ondo West', totalSpend: 186000000, transactions: 3700, avgOrderValue: 50270, color: '#52c41a' },
+      { territory: 'Owo', totalSpend: 142000000, transactions: 2850, avgOrderValue: 49825, color: '#fa8c16' },
+      { territory: 'Akure North', totalSpend: 118000000, transactions: 2350, avgOrderValue: 50213, color: '#eb2f96' },
+      { territory: 'Idanre', totalSpend: 82000000, transactions: 1650, avgOrderValue: 49697, color: '#13c2c2' },
+    ],
+  },
+  {
+    state: 'Taraba State',
+    stateCode: 'TR',
+    lgas: [
+      { territory: 'Jalingo', totalSpend: 198000000, transactions: 3950, avgOrderValue: 50127, color: '#1890ff' },
+      { territory: 'Wukari', totalSpend: 138000000, transactions: 2780, avgOrderValue: 49640, color: '#52c41a' },
+      { territory: 'Sardauna', totalSpend: 102000000, transactions: 2050, avgOrderValue: 49756, color: '#fa8c16' },
+      { territory: 'Takum', totalSpend: 76000000, transactions: 1520, avgOrderValue: 50000, color: '#eb2f96' },
+      { territory: 'Zing', totalSpend: 48000000, transactions: 980, avgOrderValue: 48980, color: '#13c2c2' },
+    ],
+  },
 ]
 
 // ============================================================================

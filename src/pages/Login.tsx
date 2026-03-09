@@ -12,16 +12,22 @@ const Login = () => {
   const [error, setError] = useState<string>('')
   const [loading, setLoading] = useState(false)
 
-  const onFinish = async (values: { email: string; password: string }) => {
+  const dashboardPaths: Record<string, string> = {
+    admin: '/admin/revenue',
+    state_admin: '/admin/revenue',
+    consultant: '/consultant/hub',
+    global_admin: '/consultant/hub',
+    operator: '/operator/home',
+    operator_admin: '/operator/home',
+  }
+
+  const onFinish = async (values: { username: string; password: string }) => {
     setError('')
     setLoading(true)
-
     try {
-      await login(values.email, values.password)
-      
-      // AuthContext will handle the redirect based on user role
-      // We'll navigate in the useEffect of a wrapper component
-      // For now, just wait for the context to update
+      const loggedInUser = await login(values.username, values.password)
+      const path = dashboardPaths[loggedInUser.role] || '/'
+      navigate(path, { replace: true })
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Authentication failed')
     } finally {
@@ -34,7 +40,7 @@ const Login = () => {
       <Card className="w-full max-w-md shadow-2xl">
         {/* Back to Home Link */}
         <div className="mb-4">
-          <Link 
+          <Link
             onClick={() => navigate('/')}
             className="flex items-center gap-2 text-gray-600 hover:text-green-600 transition-colors"
           >
@@ -70,14 +76,13 @@ const Login = () => {
           size="large"
         >
           <Form.Item
-            label="Email"
-            name="email"
+            label="Username"
+            name="username"
             rules={[
-              { required: true, message: 'Please input your email!' },
-              { type: 'email', message: 'Please enter a valid email!' },
+              { required: true, message: 'Please input your username!' },
             ]}
           >
-            <Input placeholder="Enter your email" />
+            <Input placeholder="Enter your username" />
           </Form.Item>
 
           <Form.Item
@@ -89,12 +94,12 @@ const Login = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button 
-              type="primary" 
-              htmlType="submit" 
-              block 
+            <Button
+              type="primary"
+              htmlType="submit"
+              block
               loading={loading}
-              style={{ 
+              style={{
                 background: loading ? undefined : 'linear-gradient(135deg, #008751 0%, #006d3f 100%)',
                 border: 'none'
               }}
@@ -109,13 +114,16 @@ const Login = () => {
             Test Credentials:
           </Text>
           <Text type="secondary" className="text-xs block">
-            Admin: admin@rotcs.gov / admin123
+            Lagos Admin: lagos_admin / admin123
           </Text>
           <Text type="secondary" className="text-xs block">
-            Consultant: consultant@rotcs.gov / consultant123
+            Ondo Admin: ondo_admin / admin123
           </Text>
           <Text type="secondary" className="text-xs block">
-            Operator: operator@rotcs.gov / operator123
+            Taraba Admin: taraba_admin / admin123
+          </Text>
+          <Text type="secondary" className="text-xs block">
+            Global: global_consultant / admin123
           </Text>
         </div>
 
