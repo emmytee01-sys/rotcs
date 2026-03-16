@@ -119,15 +119,15 @@ const LandingPage = () => {
       </header>
 
       {/* Hero Section */}
-      <main className="relative z-10 flex-1 flex items-center w-full min-h-0">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-4 lg:gap-8 items-center w-full py-2 lg:py-6 h-full">
+      <main className="relative z-10 flex-1 flex items-center w-full min-h-[650px] lg:min-h-0 pb-10 lg:pb-0">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-8 lg:gap-8 items-center w-full py-6 lg:py-6 h-full">
 
           {/* Left Content */}
           <motion.div
             initial={{ x: -40, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 1, ease: 'easeOut' }}
-            className="space-y-4 md:space-y-6 order-2 lg:order-1 flex flex-col justify-center h-full"
+            className="space-y-4 md:space-y-6 flex flex-col justify-center h-full order-1"
           >
             <div>
               <h1 className="text-4xl md:text-5xl lg:text-5xl xl:text-6xl bold-heading mb-3 md:mb-4 text-white leading-tight">
@@ -181,7 +181,7 @@ const LandingPage = () => {
             initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
             transition={{ duration: 1.2, delay: 0.3, ease: 'backOut' }}
-            className="relative order-1 lg:order-2 flex justify-center items-center h-full w-full"
+            className="relative flex justify-center items-center h-full w-full mt-4 lg:mt-0 order-2"
           >
             <div className="relative z-10 bg-[#0F172A] border-2 border-white/[0.05] rounded-[20px] lg:rounded-[32px] p-4 md:p-5 lg:p-6 aspect-[4/3] sm:aspect-square md:aspect-[4/3] lg:aspect-square flex flex-col items-center justify-center shadow-2xl md:shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden group w-full max-w-[220px] sm:max-w-[280px] lg:max-w-[320px] xl:max-w-[380px]">
               {/* Massive Glow Orb */}
