@@ -64,7 +64,7 @@ const LandingPage = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen w-full relative overflow-hidden bg-[#020617] text-white selection:bg-blue-500/30">
+    <div className="flex flex-col h-screen w-full relative overflow-hidden bg-[#020617] text-white selection:bg-blue-500/30">
       {/* Dynamic Background Elements */}
       <div className="absolute inset-0 z-0 bg-[#020617]">
         <video
@@ -85,7 +85,7 @@ const LandingPage = () => {
 
       {/* Header */}
       <header className="relative z-20 w-full flex-shrink-0">
-        <div className="max-w-7xl mx-auto px-6 py-6 lg:px-12 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-6 py-3 lg:py-4 lg:px-12 flex items-center justify-between">
           <motion.div
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -119,30 +119,30 @@ const LandingPage = () => {
       </header>
 
       {/* Hero Section */}
-      <main className="relative z-10 flex-1 flex items-center overflow-y-auto w-full">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-12 lg:gap-24 items-center w-full py-12 lg:py-24">
+      <main className="relative z-10 flex-1 flex items-center w-full min-h-0">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-4 lg:gap-8 items-center w-full py-2 lg:py-6 h-full">
 
           {/* Left Content */}
           <motion.div
             initial={{ x: -40, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 1, ease: 'easeOut' }}
-            className="space-y-10 md:space-y-12 order-2 lg:order-1"
+            className="space-y-4 md:space-y-6 order-2 lg:order-1 flex flex-col justify-center h-full"
           >
             <div>
-              <h1 className="text-5xl md:text-7xl lg:text-[88px] bold-heading mb-8 md:mb-10 text-white leading-tight">
+              <h1 className="text-4xl md:text-5xl lg:text-5xl xl:text-6xl bold-heading mb-3 md:mb-4 text-white leading-tight">
                 <span className="drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">Revenue</span><br />
                 <span className="bg-gradient-to-r from-emerald-400 via-white to-blue-400 bg-[length:200%_auto] animate-gradient bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(16,185,129,0.3)]">Transparency.</span>
               </h1>
 
-              <p className="text-lg md:text-xl lg:text-2xl text-[#94A3B8] max-w-xl mb-12 md:mb-16 leading-relaxed font-semibold">
+              <p className="text-sm md:text-base lg:text-lg xl:text-xl text-[#94A3B8] max-w-xl mb-4 md:mb-6 leading-relaxed font-semibold">
                 Real-time monitoring and automated auditing for state-wide gaming revenue. Secure, precise, and transparent reporting.
               </p>
 
-              <div className="flex flex-col sm:flex-row flex-wrap gap-5 md:gap-8">
+              <div className="flex flex-col sm:flex-row flex-wrap gap-3 md:gap-4">
                 <button
                   onClick={openModal}
-                  className="h-14 md:h-16 px-10 md:px-12 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-base md:text-lg rounded-xl hover:scale-105 active:scale-95 transition-all shadow-[0_0_25px_rgba(16,185,129,0.5)] flex items-center justify-center gap-3"
+                  className="h-10 md:h-12 px-6 md:px-8 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-sm rounded-xl hover:scale-105 active:scale-95 transition-all shadow-[0_0_25px_rgba(16,185,129,0.5)] flex items-center justify-center gap-2"
                 >
                   <Lock size={20} />
                   Sign In
@@ -151,9 +151,9 @@ const LandingPage = () => {
             </div>
 
             {/* Operator Logos */}
-            <div className="pt-10 md:pt-14 border-t-2 border-white/[0.05]">
-              <p className="text-[11px] font-black uppercase tracking-[0.3em] text-[#64748B] mb-8 md:mb-12 text-center lg:text-left">Validated Terminal Integrations</p>
-              <div className="grid grid-cols-4 items-center gap-4 sm:gap-6 md:gap-8 max-w-2xl">
+            <div className="border-t-2 border-white/[0.05]">
+              <p className="text-[8px] xl:text-[9px] font-black uppercase tracking-[0.3em] text-[#64748B] mb-2 md:mb-3 text-center lg:text-left">Validated Terminal Integrations</p>
+              <div className="grid grid-cols-4 items-center gap-2 max-w-[280px] md:max-w-sm mx-auto lg:mx-0">
                 {[
                   { img: betkingLogo, name: 'BetKing' },
                   { img: sportybetLogo, name: 'SportyBet' },
@@ -163,7 +163,7 @@ const LandingPage = () => {
                   <motion.div
                     key={i}
                     whileHover={{ scale: 1.1, y: -5 }}
-                    className="aspect-square rounded-xl bg-white/5 border border-white/10 p-3 md:p-4 flex items-center justify-center shadow-2xl transition-all cursor-pointer group hover:border-emerald-500/50"
+                    className="aspect-square rounded-xl bg-white/5 border border-white/10 p-1 md:p-1.5 lg:p-2 flex items-center justify-center shadow-2xl transition-all cursor-pointer group hover:border-emerald-500/50"
                   >
                     <img
                       src={op.img}
@@ -181,15 +181,15 @@ const LandingPage = () => {
             initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
             transition={{ duration: 1.2, delay: 0.3, ease: 'backOut' }}
-            className="relative order-1 lg:order-2 flex justify-center"
+            className="relative order-1 lg:order-2 flex justify-center items-center h-full w-full"
           >
-            <div className="relative z-10 bg-[#0F172A] border-2 border-white/[0.05] rounded-[32px] md:rounded-[48px] p-6 md:p-14 aspect-square flex flex-col items-center justify-center shadow-2xl md:shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden group w-full max-w-[500px] lg:max-w-none">
+            <div className="relative z-10 bg-[#0F172A] border-2 border-white/[0.05] rounded-[20px] lg:rounded-[32px] p-4 md:p-5 lg:p-6 aspect-[4/3] sm:aspect-square md:aspect-[4/3] lg:aspect-square flex flex-col items-center justify-center shadow-2xl md:shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden group w-full max-w-[220px] sm:max-w-[280px] lg:max-w-[320px] xl:max-w-[380px]">
               {/* Massive Glow Orb */}
               <div className="absolute top-[-20%] right-[-20%] w-[80%] h-[80%] bg-emerald-600/20 blur-[120px] pointer-events-none rounded-full" />
               <div className="absolute bottom-[-20%] left-[-20%] w-[80%] h-[80%] bg-blue-600/10 blur-[120px] pointer-events-none rounded-full" />
 
               {/* Visual Gauge Mockup - Holographic Layers */}
-              <div className="relative w-64 h-64 md:w-[420px] md:h-[420px]">
+              <div className="relative w-28 h-28 sm:w-36 sm:h-36 lg:w-44 lg:h-44 xl:w-[220px] xl:h-[220px]">
                 {/* Background Rings */}
                 <svg className="absolute inset-0 w-full h-full transform -rotate-90">
                   <circle cx="50%" cy="50%" r="42%" stroke="currentColor" strokeWidth="2" fill="transparent" className="text-white/5" />
@@ -230,35 +230,35 @@ const LandingPage = () => {
                 </motion.div>
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.5em] text-[#64748B] mb-2 drop-shadow-sm text-center">System Integrity Pulse</span>
+                  <span className="text-[7px] sm:text-[8px] xl:text-[9px] font-black uppercase tracking-[0.5em] text-[#64748B] mb-1 drop-shadow-sm text-center">System Integrity Pulse</span>
                   <motion.span
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 1, delay: 0.8 }}
-                    className="text-5xl md:text-9xl font-black text-white tabular-nums tracking-tighter drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)] leading-none"
+                    className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-white tabular-nums tracking-tighter drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)] leading-none"
                   >
-                    99.8<span className="text-2xl md:text-5xl text-emerald-400/80">%</span>
+                    99.8<span className="text-lg sm:text-xl lg:text-2xl xl:text-3xl text-emerald-400/80">%</span>
                   </motion.span>
-                  <div className="mt-8 px-6 py-2 rounded-full bg-emerald-500/10 md:backdrop-blur-md border border-emerald-500/20 text-emerald-400 text-xs md:text-sm font-black flex items-center gap-3 shadow-[0_0_20px_rgba(16,185,129,0.2)] md:shadow-[0_0_100px_#10b981]">
-                    <span className="animate-pulse w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_10px_#10b981]" />
+                  <div className="mt-2 lg:mt-3 xl:mt-4 px-2 lg:px-3 py-1 rounded-full bg-emerald-500/10 md:backdrop-blur-md border border-emerald-500/20 text-emerald-400 text-[7px] sm:text-[9px] xl:text-[10px] font-black flex items-center gap-1 sm:gap-1.5 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+                    <span className="animate-pulse w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-emerald-500 shadow-[0_0_10px_#10b981]" />
                     Sentinel-X Guard Active
                   </div>
                 </div>
               </div>
 
               {/* Data Grid Mockup - Industrial */}
-              <div className="grid grid-cols-2 gap-3 md:gap-8 w-full mt-8 md:mt-20">
-                <div className="p-4 md:p-6 rounded-2xl bg-black/40 border border-white/10">
-                  <span className="text-[10px] md:text-xs uppercase font-black tracking-widest text-[#64748B] block mb-2">Endpoint Status</span>
-                  <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-                    <span className="text-base md:text-2xl font-black text-white italic">OPERATIONAL</span>
+              <div className="grid grid-cols-2 gap-1.5 md:gap-2 xl:gap-3 w-full mt-2 sm:mt-3 lg:mt-5 max-w-[260px] sm:max-w-full">
+                <div className="p-1.5 sm:p-2 xl:p-3 rounded-lg xl:rounded-xl bg-black/40 border border-white/10">
+                  <span className="text-[6px] sm:text-[7px] xl:text-[8px] uppercase font-black tracking-widest text-[#64748B] block mb-0.5">Endpoint Status</span>
+                  <div className="flex items-center gap-1 xl:gap-1.5">
+                    <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                    <span className="text-[8px] sm:text-[10px] lg:text-xs xl:text-sm font-black text-white italic">OPERATIONAL</span>
                   </div>
                 </div>
-                <div className="p-4 md:p-6 rounded-2xl bg-black/40 border border-white/10">
-                  <span className="text-[10px] md:text-xs uppercase font-black tracking-widest text-[#64748B] block mb-2">Tax Accuracy</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-base md:text-2xl font-black italic text-emerald-400">99.99%</span>
+                <div className="p-1.5 sm:p-2 xl:p-3 rounded-lg xl:rounded-xl bg-black/40 border border-white/10">
+                  <span className="text-[6px] sm:text-[7px] xl:text-[8px] uppercase font-black tracking-widest text-[#64748B] block mb-0.5">Tax Accuracy</span>
+                  <div className="flex items-center gap-1 xl:gap-1.5">
+                    <span className="text-[8px] sm:text-[10px] lg:text-xs xl:text-sm font-black italic text-emerald-400">99.99%</span>
                   </div>
                 </div>
               </div>
@@ -272,13 +272,13 @@ const LandingPage = () => {
       </main>
 
       {/* Footer */}
-      <footer className="relative z-10 w-full border-t border-white/5 glass-panel">
-        <div className="max-w-7xl mx-auto px-6 py-8 lg:px-12 flex flex-col md:flex-row items-center justify-between gap-6">
+      <footer className="relative z-10 w-full border-t border-white/5 glass-panel flex-shrink-0">
+        <div className="max-w-7xl mx-auto px-6 py-2 lg:py-3 lg:px-12 flex flex-col md:flex-row items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-[#64748B] uppercase tracking-widest">Powered by</span>
-            <span className="text-xs font-black text-white uppercase tracking-tighter">Northernreach</span>
+            <span className="text-[10px] sm:text-xs font-bold text-[#64748B] uppercase tracking-widest">Powered by</span>
+            <span className="text-[10px] sm:text-xs font-black text-white uppercase tracking-tighter">Northernreach</span>
           </div>
-          <p className="text-[10px] md:text-xs font-medium text-[#64748B] text-center md:text-right">
+          <p className="text-[8px] sm:text-[10px] font-medium text-[#64748B] text-center md:text-right">
             © 2026 Regulatory Oversight & Tax Calculation System. All Rights Reserved.
           </p>
         </div>
