@@ -67,11 +67,11 @@ const LandingPage = () => {
     <div className="flex flex-col min-h-screen w-full relative overflow-hidden bg-[#020617] text-white selection:bg-blue-500/30">
       {/* Dynamic Background Elements */}
       <div className="absolute inset-0 z-0 bg-[#020617]">
-        <video 
-          autoPlay 
-          loop 
-          muted 
-          playsInline 
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
           preload="auto"
           className="absolute inset-0 w-full h-full object-cover opacity-40 brightness-75 transition-opacity"
         >
@@ -86,7 +86,7 @@ const LandingPage = () => {
       {/* Header */}
       <header className="relative z-20 w-full flex-shrink-0">
         <div className="max-w-7xl mx-auto px-6 py-6 lg:px-12 flex items-center justify-between">
-          <motion.div 
+          <motion.div
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             style={{ willChange: 'auto' }}
@@ -107,7 +107,7 @@ const LandingPage = () => {
             transition={{ delay: 0.1 }}
             style={{ willChange: 'auto' }}
           >
-            <Button 
+            <Button
               onClick={openModal}
               className="h-11 px-6 bg-emerald-600 hover:bg-emerald-500 border-none font-bold text-sm rounded-xl shadow-2xl shadow-emerald-600/40 transition-all flex items-center gap-2"
             >
@@ -121,7 +121,7 @@ const LandingPage = () => {
       {/* Hero Section */}
       <main className="relative z-10 flex-1 flex items-center overflow-y-auto w-full">
         <div className="max-w-7xl mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-12 lg:gap-24 items-center w-full py-12 lg:py-24">
-          
+
           {/* Left Content */}
           <motion.div
             initial={{ x: -40, opacity: 0 }}
@@ -134,12 +134,12 @@ const LandingPage = () => {
                 <span className="drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">Revenue</span><br />
                 <span className="bg-gradient-to-r from-emerald-400 via-white to-blue-400 bg-[length:200%_auto] animate-gradient bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(16,185,129,0.3)]">Transparency.</span>
               </h1>
-              
+
               <p className="text-lg md:text-xl lg:text-2xl text-[#94A3B8] max-w-xl mb-12 md:mb-16 leading-relaxed font-semibold">
                 Real-time monitoring and automated auditing for state-wide gaming revenue. Secure, precise, and transparent reporting.
               </p>
 
-               <div className="flex flex-col sm:flex-row flex-wrap gap-5 md:gap-8">
+              <div className="flex flex-col sm:flex-row flex-wrap gap-5 md:gap-8">
                 <button
                   onClick={openModal}
                   className="h-14 md:h-16 px-10 md:px-12 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-base md:text-lg rounded-xl hover:scale-105 active:scale-95 transition-all shadow-[0_0_25px_rgba(16,185,129,0.5)] flex items-center justify-center gap-3"
@@ -160,15 +160,15 @@ const LandingPage = () => {
                   { img: onexbetLogo, name: '1xBet' },
                   { img: bet9jaLogo, name: 'Bet9ja' }
                 ].map((op, i) => (
-                  <motion.div 
+                  <motion.div
                     key={i}
                     whileHover={{ scale: 1.1, y: -5 }}
                     className="aspect-square rounded-xl bg-white/5 border border-white/10 p-3 md:p-4 flex items-center justify-center shadow-2xl transition-all cursor-pointer group hover:border-emerald-500/50"
                   >
-                    <img 
-                      src={op.img} 
-                      alt={op.name} 
-                      className="max-w-full max-h-full object-contain brightness-110 transition-transform group-hover:scale-110" 
+                    <img
+                      src={op.img}
+                      alt={op.name}
+                      className="max-w-full max-h-full object-contain brightness-110 transition-transform group-hover:scale-110"
                     />
                   </motion.div>
                 ))}
@@ -187,7 +187,7 @@ const LandingPage = () => {
               {/* Massive Glow Orb */}
               <div className="absolute top-[-20%] right-[-20%] w-[80%] h-[80%] bg-emerald-600/20 blur-[120px] pointer-events-none rounded-full" />
               <div className="absolute bottom-[-20%] left-[-20%] w-[80%] h-[80%] bg-blue-600/10 blur-[120px] pointer-events-none rounded-full" />
-              
+
               {/* Visual Gauge Mockup - Holographic Layers */}
               <div className="relative w-64 h-64 md:w-[420px] md:h-[420px]">
                 {/* Background Rings */}
@@ -200,14 +200,14 @@ const LandingPage = () => {
                 {/* Main Progress Ring with Scanning Effect */}
                 <svg className="absolute inset-0 w-full h-full transform -rotate-90">
                   {/* Glowing Track */}
-                  <circle 
-                    cx="50%" cy="50%" r="45%" stroke="url(#holographic-gradient)" strokeWidth="22" fill="transparent" 
+                  <circle
+                    cx="50%" cy="50%" r="45%" stroke="url(#holographic-gradient)" strokeWidth="22" fill="transparent"
                     strokeLinecap="round" strokeDasharray="282.7%" strokeDashoffset="70.5%"
                     className="opacity-20 blur-sm"
                   />
                   {/* Sharp Progress */}
-                  <circle 
-                    cx="50%" cy="50%" r="45%" stroke="url(#holographic-gradient)" strokeWidth="18" fill="transparent" 
+                  <circle
+                    cx="50%" cy="50%" r="45%" stroke="url(#holographic-gradient)" strokeWidth="18" fill="transparent"
                     strokeLinecap="round" strokeDasharray="282.7%" strokeDashoffset="70.5%"
                     className="drop-shadow-[0_0_15px_rgba(16,185,129,0.5)]"
                   />
@@ -221,7 +221,7 @@ const LandingPage = () => {
                 </svg>
 
                 {/* Scanning Ray */}
-                <motion.div 
+                <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
                   className="absolute inset-0 origin-center pointer-events-none"
@@ -231,7 +231,7 @@ const LandingPage = () => {
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                   <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.5em] text-[#64748B] mb-2 drop-shadow-sm text-center">System Integrity Pulse</span>
-                  <motion.span 
+                  <motion.span
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 1, delay: 0.8 }}
@@ -306,7 +306,7 @@ const LandingPage = () => {
         <div className="relative">
           {/* Top Flare */}
           <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-blue-600/20 to-transparent z-0" />
-          
+
           <div className="p-10 relative z-10">
             <div className="text-center mb-8">
               <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600/20 border border-blue-500/20 rounded-2xl mb-6 shadow-inner">
@@ -337,8 +337,7 @@ const LandingPage = () => {
                 rules={[{ required: true, message: 'Identity required' }]}
                 label={<span className="text-[#94A3B8]">Username</span>}
               >
-                <Input 
-                  placeholder="e.g. taraba_admin" 
+                <Input
                   className="h-12 bg-black/40 border-white/10 text-white rounded-xl focus:border-blue-500/50"
                 />
               </Form.Item>
@@ -348,16 +347,15 @@ const LandingPage = () => {
                 rules={[{ required: true, message: 'Credentials required' }]}
                 label={<span className="text-[#94A3B8]">Password</span>}
               >
-                <Input.Password 
-                  placeholder="admin123" 
+                <Input.Password
                   className="h-12 bg-black/40 border-white/10 text-white rounded-xl focus:border-blue-500/50"
                 />
               </Form.Item>
 
-              <Button 
-                type="primary" 
+              <Button
+                type="primary"
                 htmlType="button"
-                block 
+                block
                 loading={loading}
                 onClick={() => form.submit()}
                 className="h-12 bg-blue-600 hover:bg-blue-500 border-none font-bold text-base rounded-xl mt-4 shadow-lg shadow-blue-600/20"
@@ -365,15 +363,6 @@ const LandingPage = () => {
                 Sign In to Dashboard
               </Button>
             </Form>
-
-            <div className="mt-8 pt-8 border-t border-white/5 text-center">
-              <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#64748B]">Use username + admin123</span>
-              <div className="mt-4 grid grid-cols-1 gap-2">
-                <p className="text-[11px] font-medium text-[#94A3B8]">Taraba: taraba_admin / admin123</p>
-                <p className="text-[11px] font-medium text-[#94A3B8]">Lagos: lagos_admin / admin123</p>
-                <p className="text-[11px] font-medium text-[#94A3B8]">Global: global_consultant / admin123</p>
-              </div>
-            </div>
           </div>
         </div>
       </Modal>
