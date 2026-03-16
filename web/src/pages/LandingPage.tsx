@@ -307,13 +307,12 @@ const LandingPage = () => {
           {/* Top Flare */}
           <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-blue-600/20 to-transparent z-0" />
 
-          <div className="p-10 relative z-10">
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600/20 border border-blue-500/20 rounded-2xl mb-6 shadow-inner">
-                <Lock className="text-blue-500" size={28} />
+          <div className="p-6 md:p-8 relative z-10">
+            <div className="text-center mb-6">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 border border-white/20 rounded-2xl mb-4 shadow-inner glass-panel">
+                <img src={logo} alt="ROTCS Logo" className="w-10 h-10 object-contain brightness-110" />
               </div>
-              <h2 className="text-2xl font-black text-white mb-2 tracking-tight">System Portal</h2>
-              <p className="text-[#94A3B8] text-sm font-medium">Log in to your dashboard</p>
+              <h2 className="text-2xl font-black text-white tracking-tight">ROTCS Portal</h2>
             </div>
 
             {error && (
@@ -321,7 +320,7 @@ const LandingPage = () => {
                 message={error}
                 type="error"
                 showIcon
-                className="mb-6 rounded-xl border-red-500/20 bg-red-500/10 text-red-500 font-bold"
+                className="mb-4 rounded-xl border-red-500/20 bg-red-500/10 text-red-500 font-bold py-2"
               />
             )}
 
@@ -353,14 +352,13 @@ const LandingPage = () => {
               </Form.Item>
 
               <Button
-                type="primary"
                 htmlType="button"
                 block
                 loading={loading}
                 onClick={() => form.submit()}
-                className="h-12 bg-blue-600 hover:bg-blue-500 border-none font-bold text-base rounded-xl mt-4 shadow-lg shadow-blue-600/20"
+                className="h-12 bg-emerald-600 hover:!bg-emerald-700 border !border-white/20 hover:!border-white/20 font-black !text-white hover:!text-white text-base rounded-xl mt-2 shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all hover:scale-[1.02] hover:shadow-[0_0_25px_rgba(16,185,129,0.5)] active:scale-95"
               >
-                Sign In to Dashboard
+                Login
               </Button>
             </Form>
           </div>
