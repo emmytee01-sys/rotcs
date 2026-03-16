@@ -3,6 +3,12 @@ import { MapPin } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { formatNumber } from '@/utils/formatters'
 
+declare global {
+  interface Window {
+    google: any;
+  }
+}
+
 const { Title, Text } = Typography
 
 // Mock data for heatmap points - weights spread out for visible color differentiation
@@ -35,7 +41,7 @@ const GeospatialHeatmap = () => {
             script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=visualization&v=weekly`
             script.async = true
             script.defer = true
-            
+
             script.onload = () => resolve()
             script.onerror = () => reject(new Error('Failed to load Google Maps script'))
             document.head.appendChild(script)

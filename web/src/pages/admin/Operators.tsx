@@ -1,8 +1,7 @@
-import { Card, Typography, Table, Tag, Badge, Row, Col, Statistic, Spin, Alert } from 'antd'
+import { Card, Typography, Table, Badge, Row, Col, Statistic, Spin, Alert } from 'antd'
 import { Building2, CheckCircle, XCircle, AlertCircle } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import OperatorDetailModal from '@/components/admin/OperatorDetailModal'
-import { calculateVariance } from '@/utils/variance'
 import { formatCurrency } from '@/utils/formatters'
 import { useAuth } from '@/contexts/AuthContextCore'
 
@@ -24,11 +23,6 @@ const getStatusConfig = (status: string) => {
   }
 }
 
-const getVarianceTag = (variance: number) => {
-  if (variance < 0.0005) return <Tag color="green">Green</Tag>
-  if (variance < 0.005) return <Tag color="orange">Amber</Tag>
-  return <Tag color="red">Red</Tag>
-}
 
 const columns = [
   {

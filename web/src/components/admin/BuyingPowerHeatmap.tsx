@@ -2,6 +2,12 @@ import { Card, Typography } from 'antd'
 import { TrendingUp } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
+declare global {
+  interface Window {
+    google: any;
+  }
+}
+
 const { Title, Text } = Typography
 
 // Mock data for buying power heatmap points - weights spread out for visible color differentiation
@@ -34,7 +40,7 @@ const BuyingPowerHeatmap = () => {
             script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=visualization&v=weekly`
             script.async = true
             script.defer = true
-            
+
             script.onload = () => resolve()
             script.onerror = () => reject(new Error('Failed to load Google Maps script'))
             document.head.appendChild(script)

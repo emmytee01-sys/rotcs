@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth, UserRole } from '@/contexts/AuthContextCore'
+import { useAuth } from '@/contexts/AuthContextCore'
 import Login from './Login'
 
 // Wrapper component to handle automatic redirect after login
@@ -11,7 +11,7 @@ const AuthPage = () => {
   useEffect(() => {
     if (user) {
       // Redirect based on user role
-      const dashboardPaths: Record<UserRole, string> = {
+      const dashboardPaths: Record<string, string> = {
         admin: '/admin/revenue',
         consultant: '/consultant/hub',
         operator: '/operator/home',
